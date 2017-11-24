@@ -8,17 +8,21 @@
         mc:Ignorable="d"
         Title="族库浏览" WindowStartupLocation="CenterOwner" Closing="Window_Closing" d:DesignWidth="725" d:DesignHeight="460" Icon="Pixadex.ico">
     <Window.Resources>
-        <ResourceDictionary Source="Palette.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Palette.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Window.DataContext>
         <local:FamilyBrowserVM/>
     </Window.DataContext>
     <Grid>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}">
-            <TextBlock Height="26" TextWrapping="Wrap" Text="顶部区域，留给以后放菜单按钮等等" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
+            <TextBlock TextWrapping="Wrap" Text="顶部区域，留给以后放菜单按钮等等" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,27,0,0"/>
         </StackPanel>
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}">
-            <TextBlock Height="26" TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
+            <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
         </StackPanel>
         <Border BorderBrush="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" BorderThickness="1" HorizontalAlignment="Left" Margin="0,55,0,40" Width="216">
             <TextBlock TextWrapping="Wrap" Text="{Binding status}" VerticalAlignment="Top" d:LayoutOverrides="Width" Margin="0,64,0,0" TextAlignment="Center"/>
