@@ -59,12 +59,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RevitAPI">
-      <HintPath>..\..\Program\Autodesk\Revit 2017\RevitAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>lib\RevitAPI.dll</HintPath>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\Program\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>lib\RevitAPIUI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
