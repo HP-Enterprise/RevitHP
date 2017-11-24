@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,59 @@ namespace RevitHP
         public MainWindow()
         {
             InitializeComponent();
+
+            var western = new Conference("族库")
+            {
+                Teams =
+                {
+                    new Team("电气专业"){ Players = { "市电供", "三级菜单显示" }},
+                    new Team("暖通专业"),
+                    new Team("给排水专业及消防专业"){ Players = { "三级菜单显示", "三级菜单显示" }},
+                    new Team("弱电专业"),
+                    new Team("建筑结构及装修专业"),                   
+                }
+            };
+            var eastern = new Conference("主目录")
+            {
+
+                Teams =
+                {
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("Philadelphia Union 2010")
+                }
+            };
+            var three = new Conference("主目录")
+            {
+                Teams =
+                {
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("测试数据二"),
+                    new Team("Philadelphia Union 2010")
+                }
+            };
+            var league = new Collection<Conference>() { western, eastern, three };
+
+            
+            DataContext = new
+            {
+                WesternConference = western,
+                EasternConference = eastern,
+                League = league
+            };
+
         }
+       
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -42,5 +95,7 @@ namespace RevitHP
                 e.Cancel = false;
             }
         }
+
+
     }
 }

@@ -95,7 +95,9 @@
     <Compile Include="FamilyBrowserVM.cs" />
     <Compile Include="LiteDB.cs" />
     <Compile Include="RevitBiz.cs" />
+    <Compile Include="Conference.cs" />
     <Compile Include="RibbonPanel.cs" />
+    <Compile Include="Team.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
