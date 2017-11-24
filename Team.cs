@@ -17,7 +17,7 @@ namespace RevitHP
 
         public string Name { get; private set; }
         public ObservableCollection<string> Players { get; private set; }
-     
+        ObservableCollection<string> Paaa = new ObservableCollection<string>();
         
     }
 }
