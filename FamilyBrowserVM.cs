@@ -20,6 +20,7 @@ namespace RevitHP
         {
             get {
                 m_biz.init();
+                var top = m_biz.Top;
                 return m_status;
             }
             set {

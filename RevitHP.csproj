@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CataItem.cs" />
     <Compile Include="FamilyBrowserVM.cs" />
     <Compile Include="LiteDB.cs" />
     <Compile Include="RevitBiz.cs" />

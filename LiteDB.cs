@@ -134,6 +134,26 @@ namespace RevitHP
             }
         }
 
+        public SQLiteDataReader ExecuteReader(SQLiteCommand cmd)
+        {
+            return cmd.ExecuteReader();
+        }
+
+        public object ExecuteScalar(SQLiteCommand cmd)
+        {
+            return cmd.ExecuteScalar();
+        }
+
+        public int ExecuteNoQuery(SQLiteCommand cmd)
+        {
+            return cmd.ExecuteNonQuery();
+        }
+
+        public SQLiteCommand CreateCommand()
+        {
+            return m_cnn.CreateCommand();
+        }
+
         private void Exec(Stream stream, SQLiteCommand cmd = null)
         {
             SQLiteCommand myCmd = null;

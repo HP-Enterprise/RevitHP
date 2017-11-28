@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,11 @@ namespace RevitHP
         // 缓存文件夹
         private string m_folder;
 
+        // 数据库
         private LiteDB m_liteDB;
+
+        // 层级结构
+        Dictionary<int, CataItem> dictCatalog = null;
 
         public RevitBiz()
         {
@@ -45,6 +50,19 @@ namespace RevitHP
             m_liteDB.Upgrade();
         }
 
+        public CataItem Top
+        {
+            get
+            {
+                if (dictCatalog == null) {
+                    LoadCatalog();
+                }
+
+                return null;
+                // return dictCatalog[1];
+            }
+        }
+
         private void pull() {
             // TODO: 从远程拉一个数据库的新版本下来
         }
@@ -54,6 +72,23 @@ namespace RevitHP
             // 为了安全，强制要求远程服务器执行检查逻辑
             // PUSH时带上修订前数据库的MD5值，如果和服务器端的不匹配，表明已经有其它修订发生
             // 服务器端直接返回失败,要求客户端重新PULL新的修订版后再重试PUSH
+        }
+
+        private void LoadCatalog()
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id,name,parent FROM catalog";
+                using (var reader = cmd.ExecuteReader()) {
+                    while (reader.Read()) {
+                        // TODO: 构造 dictCatalog
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                        int parent = reader.GetInt32(2);
+                        Debug.WriteLine($"{id} {name} {parent}");
+                    }
+                }
+            }
         }
     }
 }
