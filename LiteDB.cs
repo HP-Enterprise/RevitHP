@@ -4,9 +4,11 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Resources;
 
 namespace RevitHP
 {
@@ -91,29 +93,85 @@ namespace RevitHP
         // 升级数据库
         public void Upgrade()
         {
-            int count = 0;
-            using (var cmd = new SQLiteCommand(m_cnn)) {
-                cmd.CommandText = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='version'";
-                var obj = cmd.ExecuteScalar();
-                count = Convert.ToInt32(obj);
-            }
+            // 检查脚本及MD5值
+            // 只需要检查最后一个脚本即可,先前的脚本我们视为已经发布,不可以再修订了
+            string script = "20171124";
 
-            if (count == 0) Exec("20171124.sql");
-        }
+            var ri = LoadScript(script);
 
-        // 执行内崁脚本
-        private void Exec(string script)
-        {
-            var asm = typeof(LiteDB).Assembly;
-            var res = Application.GetResourceStream(new Uri($"pack://application:,,,/{asm.FullName};component/script/{script}", UriKind.RelativeOrAbsolute));
-
-            using (var reader = new StreamReader(res.Stream)) 
+            using (ri.Stream)
             using (var cmd = m_cnn.CreateCommand())
             {
-                cmd.CommandText = reader.ReadToEnd();
-                cmd.ExecuteNonQuery();
+                string md5 = CalcMD5(ri.Stream);
+
+                cmd.CommandText = $"SELECT md5 FROM version WHERE script = @script";
+                cmd.Parameters.AddWithValue("@script", script);
+
+                bool bMatched;
+                try
+                {
+                    string scriptMD5 = cmd.ExecuteScalar() as string;
+                    bMatched = (scriptMD5 == md5);
+                }
+                catch (SQLiteException) {
+                    // 表不存在
+                    bMatched = false;
+                }
+
+                if (!bMatched) {
+                    // rollback
+                    var rb = LoadScript($"{script}~");
+                    Exec(rb.Stream, cmd);
+
+                    // patch
+                    ri.Stream.Seek(0, SeekOrigin.Begin);
+                    Exec(ri.Stream, cmd);
+
+                    cmd.CommandText = "REPLACE INTO version(script,md5,tm) VALUES(@script,@md5,datetime('now'))";
+                    cmd.Parameters.AddWithValue("@md5", md5);
+                    cmd.ExecuteNonQuery();
+                }
             }
-            
+        }
+
+        private void Exec(Stream stream, SQLiteCommand cmd = null)
+        {
+            SQLiteCommand myCmd = null;
+            if (cmd == null) {
+                myCmd = m_cnn.CreateCommand();
+                cmd = myCmd;
+            }
+
+            try
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    cmd.CommandText = reader.ReadToEnd();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            finally {
+                if (myCmd != null) myCmd.Dispose();
+            }
+        }
+
+        // 获取资源信息
+        private static StreamResourceInfo LoadScript(string script)
+        {
+            var asm = typeof(LiteDB).Assembly;
+            var res = Application.GetResourceStream(new Uri($"pack://application:,,,/{asm.FullName};component/script/{script}.sql", UriKind.RelativeOrAbsolute));
+            return res;
+        }
+
+        // 计算一个stream的md5值，以16进制大写字符串的形式返回结果
+        private static string CalcMD5(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var bufMD5 = md5.ComputeHash(stream);
+                string strMD5 = BitConverter.ToString(bufMD5);
+                return strMD5.Replace("-", String.Empty);
+            }
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿CREATE TABLE version(
-	major tinyint not null,
-	minor tinyint not null,
-	fix   tinyint not null,
-	tm    datetime not null, -- timestamp
-
-	primary key(major, minor, fix)
+	script varchar not null primary key,
+	md5    varchar not null,
+	tm     datetime not null -- timestamp
 );
-
-INSERT INTO version(major, minor, fix, tm)
-VALUES(1, 0, 0, datetime('now'));
