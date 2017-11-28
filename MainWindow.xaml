@@ -1,4 +1,4 @@
-﻿<Window
+<Window x:Class="RevitHP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,58 +12,55 @@
     <Grid>
 
 
-        <TreeView>
-            <TreeViewItem Header="主目录" ItemsSource="{Binding WesternConference.Teams}">
-                <TreeViewItem.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                    </DataTemplate>
-                </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
-            <TreeViewItem Header='Eastern Conference' ItemsSource="{Binding WesternConference.Teams}">
-                <TreeViewItem.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                    </DataTemplate>
-                </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
-            <TreeViewItem Header='Eastern Conference' ItemsSource="{Binding EasternConference.Teams}">
-                <TreeViewItem.ItemTemplate>
-                    <DataTemplate>
-                        <!-- Team name -->
-                        <TextBlock Text="{Binding Name}" />
-                    </DataTemplate>
-                </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
-        </TreeView>
-        
-        
-        
-        
-        
-        
+
+
+
+
         <!--三级菜单测试-->
         <!--" 绑定根目录节点-->
-        <TreeView ItemsSource="{Binding League}" Margin="567,0,10,0">
-            <!-- Conference template -->
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Teams}">
-                    <TextBlock Foreground="Red" Text="{Binding Name}" />
-                    <!-- Team template -->
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Players}">
-                            <TextBlock Text="{Binding Name}" />
-                            <!-- Player template -->
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" />
-                                </DataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                     </HierarchicalDataTemplate>
-                   </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+
+
+
+        <DataGrid HorizontalAlignment="Left" Height="639" CanUserAddRows="False" ItemsSource="{Binding}"  AutoGenerateColumns="False"  Margin="317,0,0,0" VerticalAlignment="Top" Width="513"  Name="Datagrid1" SelectionChanged="Datagrid1_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn  Binding="{Binding ID}" IsReadOnly="true" Header="族名称" ClipboardContentBinding="{x:Null}" Visibility="Collapsed"/>
+                <DataGridTextColumn  Binding="{Binding ID}"  IsReadOnly="true" Header="族名称" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Binding="{Binding Name}" IsReadOnly="true" Header="族分类" ClipboardContentBinding="{x:Null}"/>
+                <DataGridTextColumn Binding="{Binding GroupCaalassification}" IsReadOnly="true" Header="精细度" ClipboardContentBinding="{x:Null}"/>
+                <DataGridTextColumn Binding="{Binding FineDegreeOf}" IsReadOnly="true" ClipboardContentBinding="{x:Null}"/>
+                <DataGridTextColumn Binding="{Binding Time}" Header="上传时间" IsReadOnly="true" ClipboardContentBinding="{x:Null}"/>
+                <DataGridTextColumn Binding="{Binding ReviewTheStatus}" Header="审核状态" IsReadOnly="true" ClipboardContentBinding="{x:Null}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TabControl HorizontalAlignment="Left" Height="629" Margin="10,10,0,0" VerticalAlignment="Top" Width="302">
+            <TabItem Header="BIM构建图">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="我的上传">
+                <Grid Background="#FFE5E5E5">
+                    <TreeView ItemsSource="{Binding League}" x:Name="Treeview1" MouseDoubleClick="TreeView_MouseDoubleClick">
+                        <!-- Conference template -->
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Teams}">
+                                <TextBlock Foreground="Red" Text="{Binding Name}" />
+                                <!-- Team template -->
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Players}">
+                                        <TextBlock Text="{Binding Name}" />
+                                        <!-- Player template -->
+                                        <HierarchicalDataTemplate.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" />
+                                            </DataTemplate>
+                                        </HierarchicalDataTemplate.ItemTemplate>
+                                    </HierarchicalDataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
 
     </Grid>
