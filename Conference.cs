@@ -11,12 +11,13 @@ namespace RevitHP
     {
         public Conference(string name)
         {
-            Name = name;
-            Teams = new ObservableCollection<Team>();
-        }
 
+            Name = name;
+            Items = new ObservableCollection<CataItem>();
+        }
+        public int ID { get; set; }
         public string Name { get; set; }
-        public ObservableCollection<Team> Teams { get; set; }
+        public ObservableCollection<CataItem> Items { get; set; }
        
     }
 }

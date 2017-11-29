@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace RevitHP
 {
+
+ 
     class RevitBiz
     {
         // 缓存文件夹
@@ -18,7 +23,7 @@ namespace RevitHP
 
         // 层级结构
         Dictionary<int, CataItem> dictCatalog = null;
-
+        
         public RevitBiz()
         {
             // 建立缓存文件夹
@@ -27,6 +32,7 @@ namespace RevitHP
             Directory.CreateDirectory(m_folder);
 
             m_liteDB = new LiteDB(m_folder);
+
         }
 
         // 初始化
@@ -48,6 +54,7 @@ namespace RevitHP
             }
             m_liteDB.Open(rev.Value);
             m_liteDB.Upgrade();
+
         }
 
         public CataItem Top
@@ -57,9 +64,8 @@ namespace RevitHP
                 if (dictCatalog == null) {
                     LoadCatalog();
                 }
-
-                return null;
-                // return dictCatalog[1];
+              
+                 return dictCatalog[1];
             }
         }
 
@@ -74,21 +80,55 @@ namespace RevitHP
             // 服务器端直接返回失败,要求客户端重新PULL新的修订版后再重试PUSH
         }
 
-        private void LoadCatalog()
+        public ObservableCollection<CataItem> LoadCatalog()
         {
+            dictCatalog = new Dictionary<int, CataItem>();
+            List<CataItem> treeCata = new List<CataItem>();
+            ObservableCollection<CataItem> treeItem = new ObservableCollection<CataItem>();          
+ 
             using (var cmd = m_liteDB.CreateCommand())
             {
+                
                 cmd.CommandText = "SELECT id,name,parent FROM catalog";
-                using (var reader = cmd.ExecuteReader()) {
-                    while (reader.Read()) {
-                        // TODO: 构造 dictCatalog
-                        int id = reader.GetInt32(0);
-                        string name = reader.GetString(1);
-                        int parent = reader.GetInt32(2);
-                        Debug.WriteLine($"{id} {name} {parent}");
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {     
+
+                        //组装字典
+                        CataItem item = new CataItem();
+                        item.Id  = reader.GetInt32(0);
+                        item.Name = reader.GetString(1);
+                        item.Parent = new CataItem();
+                        item.Parent.Id  = reader.GetInt32(2);
+                        dictCatalog.Add(item.Id,item);
+                    
                     }
                 }
+
+                //建立 族 根节点
+
+                //建立 专业 节点
+                var lst = dictCatalog.Values.Where(c => c.ParentID == 1);
+                foreach (var item in lst)
+                {
+                    var  items =  dictCatalog.Values.Where(c => c.ParentID == item.Id).ToList();
+                    if (items.Count > 0)
+                    {
+                        item.Children = items;
+                        Debug.WriteLine(items.ToString());
+                    }
+                }
+                return new ObservableCollection <CataItem> (lst);     
+              
+                //建立 三级节点
+
             }
+
+
+
+            
+       
         }
     }
 }

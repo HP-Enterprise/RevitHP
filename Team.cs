@@ -9,13 +9,26 @@ namespace RevitHP
 {
    public class Team
     {
+        //public Team(string name)
+        //{
+        //    Name = name;
+        //    ChildrenForDisplay = new ObservableCollection<string>();
+        //}
+
+        //public string Name { get; set; }
+        //public ObservableCollection<string> ChildrenForDisplay { get; set; }
+
+
         public Team(string name)
         {
             Name = name;
-            Players = new ObservableCollection<string>();
+            ChildrenForDisplay = new ObservableCollection<CataItem>();
         }
-        
+
         public string Name { get; private set; }
-        public ObservableCollection<string> Players { get; private set; }       
+        public ObservableCollection<CataItem> ChildrenForDisplay { get; private set; }
+        
+
+
     }
 }
