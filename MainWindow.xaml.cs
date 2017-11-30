@@ -26,15 +26,15 @@ namespace RevitHP
         {
             InitializeComponent();
 
-            RevitBiz biz = new RevitBiz();
-            biz.init();
-            var items = biz.LoadCatalog();
-            var root = items.First(c => c.Parent == null);                
-            var league = new Collection<CataItem>() { root };     
-            DataContext = new
-            {
-                Root = league
-            };
+            //RevitBiz biz = new RevitBiz();
+            //biz.init();
+            //var items = biz.LoadCatalog();
+            //var root = items.First(c => c.Parent == null);                
+            //var league = new Collection<CataItem>() { root };     
+            //DataContext = new
+            //{
+            //    Root = league
+            //};
 
         }                  
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,24 @@ namespace RevitHP
                 m_status = value;
             }
         }
+        
+        public Collection<CataItem> TreeViewBinding
+        {
+            get
+            {
+                m_biz.init();
+                var items = m_biz.LoadCatalog();
+                var root = items.First(c => c.Parent == null);
+                var league = new Collection<CataItem>() { root }; 
+                return league;
+            }
+            set
+            {
+
+            }
+           
+
+        }
+
     }
 }

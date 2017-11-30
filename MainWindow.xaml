@@ -30,7 +30,7 @@
         </Border>
         
         <!-- 树形结点 -->
-        <TreeView ItemsSource="{Binding Root}" Margin="221,55,235,40" Name="Treeview1">
+        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="221,55,235,40" Name="Treeview1">
             <!-- 二级菜单数据 -->
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
