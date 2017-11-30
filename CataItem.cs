@@ -15,15 +15,10 @@ namespace RevitHP
             Id = id;
             Children = new List<CataItem>();
         }
-        public CataItem( )
-        {
-          
+        public CataItem()
+        {        
             Children = new List<CataItem>();
         }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public CataItem Parent { get; set; }
         public int ParentID
         {
             get
@@ -34,25 +29,21 @@ namespace RevitHP
                     return 0;
             }
         }
-
-
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public CataItem Parent { get; set; }     
         public List<CataItem> Children { get; set; }
-        public ObservableCollection<CataItem> ChildrenForDisplay
+        public ObservableCollection<CataItem> Items
         {
             get 
             {
                 return new ObservableCollection<CataItem>(Children);
             }
-            set
-            {
-
-            }
+            
         }
-        public string Names { get; private set; }
-        public CataItem (string name)
+        public CataItem(string name)
         {
-            Names = name;
-            ChildrenForDisplay = new ObservableCollection<CataItem>();
+            Name = name;            
         }
     }
 }

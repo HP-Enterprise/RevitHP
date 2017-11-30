@@ -28,18 +28,15 @@ namespace RevitHP
 
             RevitBiz biz = new RevitBiz();
             biz.init();
-            var root = new Conference("族");
-            root.Items = biz.LoadCatalog();  
-            var league = new Collection<Conference>() { root };
-
+            var items = biz.LoadCatalog();
+            var root = items.First(c => c.Parent == null);                
+            var league = new Collection<CataItem>() { root };     
             DataContext = new
             {
                 Root = league
-
             };
 
-
-        }      
+        }                  
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -62,8 +59,7 @@ namespace RevitHP
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
             if (item != null)
-            { 
-         
+            {        
             string tex = item.Id.ToString();
             MessageBox.Show(tex);
              }

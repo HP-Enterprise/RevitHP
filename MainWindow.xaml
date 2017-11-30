@@ -28,31 +28,26 @@
             <TextBlock TextWrapping="Wrap" Text="{Binding status}" VerticalAlignment="Top" d:LayoutOverrides="Width" Margin="0,64,0,0" TextAlignment="Center"/>
             
         </Border>
+        
+        <!-- 树形结点 -->
         <TreeView ItemsSource="{Binding Root}" Margin="221,55,235,40" Name="Treeview1">
-
-            <!-- Conference template -->
+            <!-- 二级菜单数据 -->
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
                     <TextBlock Foreground="Red" Text="{Binding Name}" />
-
-                    <!-- Team template -->
+                    <!--三级菜单-->
                     <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding ChildrenForDisplay}">
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                             <TextBlock Text="{Binding Name}" />
-
-                            
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name }" MouseDown="TreeView_MouseDoubleClick" />
                                 </DataTemplate>
                             </HierarchicalDataTemplate.ItemTemplate>
-
                         </HierarchicalDataTemplate>
                     </HierarchicalDataTemplate.ItemTemplate>
-
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-
         </TreeView>
 
     </Grid>
