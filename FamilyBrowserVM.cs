@@ -15,36 +15,21 @@ namespace RevitHP
         public FamilyBrowserVM()
         {
         }
-
-        private string m_status = "I'm Ready!";
-        public string status
-        {
-            get {
-                m_biz.init();
-                //var top = m_biz.Top;
-                return m_status;
-            }
-            set {
-                m_status = value;
-            }
-        }
-        
+        //绑定树形结点
         public Collection<CataItem> TreeViewBinding
         {
+            
             get
             {
-                m_biz.init();
-                var items = m_biz.LoadCatalog();
-                var root = items.First(c => c.Parent == null);
-                var league = new Collection<CataItem>() { root }; 
+                
+                m_biz.init();              
+                var root = m_biz.LoadCatalog().First(c => c.Parent == null);
+                var league = new Collection<CataItem>() { root };
                 return league;
             }
             set
             {
-
             }
-           
-
         }
 
     }

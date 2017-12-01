@@ -29,8 +29,8 @@ namespace RevitHP
             //RevitBiz biz = new RevitBiz();
             //biz.init();
             //var items = biz.LoadCatalog();
-            //var root = items.First(c => c.Parent == null);                
-            //var league = new Collection<CataItem>() { root };     
+            //var root = items.First(c => c.Parent == null);
+            //var league = new Collection<CataItem>() { root };
             //DataContext = new
             //{
             //    Root = league

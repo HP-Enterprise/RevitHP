@@ -32,7 +32,7 @@ namespace RevitHP
         public int Id { get; set; }
         public string Name { get; set; }
         public CataItem Parent { get; set; }     
-        public List<CataItem> Children { get; set; }
+        public List<CataItem> Children { get;private set; }
         public ObservableCollection<CataItem> Items
         {
             get 
