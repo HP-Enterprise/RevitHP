@@ -14,23 +14,19 @@ namespace RevitHP
 
         public FamilyBrowserVM()
         {
+            m_biz.init();
         }
+
         //绑定树形结点
         public Collection<CataItem> TreeViewBinding
         {
             
             get
             {
-                
-                m_biz.init();              
-                var root = m_biz.LoadCatalog().First(c => c.Parent == null);
-                var league = new Collection<CataItem>() { root };
+                var league = new Collection<CataItem>() { m_biz.Top };
                 return league;
             }
-            set
-            {
-            }
         }
-
+        
     }
 }

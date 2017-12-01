@@ -113,7 +113,7 @@ namespace RevitHP
              */
         }
 
-        public ObservableCollection<CataItem> LoadCatalog()
+        private void LoadCatalog()
         {
 
             var dictPID = new Dictionary<int, int>();
@@ -157,14 +157,6 @@ namespace RevitHP
                         parent.Children.Add(c);
                     }
                 }
-                //获取 root 节点               
-                //var root = dictCatalog.Values.First(c => c.Parent == null);
-                ////获取二级节点
-                ////建立 专业 节点(二级节点 )
-                //var lst = dictCatalog.Values.Where(c => c.ParentID == root.ParentID);
-                                  
-                return new ObservableCollection<CataItem>(dictCatalog.Values);
-
             }
         }
 
