@@ -24,13 +24,9 @@
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}">
             <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
         </StackPanel>
-        <Border BorderBrush="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" BorderThickness="1" HorizontalAlignment="Left" Margin="0,55,0,40" Width="216">
-            <TextBlock TextWrapping="Wrap" Text="{Binding status}" VerticalAlignment="Top" d:LayoutOverrides="Width" Margin="0,64,0,0" TextAlignment="Center"/>
-            
-        </Border>
-        
+
         <!-- 树形结点 -->
-        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="221,55,235,40" Name="Treeview1">
+        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="29,60,548,45" Name="Treeview1" >
             <!-- 二级菜单数据 -->
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
