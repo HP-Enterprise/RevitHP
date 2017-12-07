@@ -93,9 +93,23 @@
     </ApplicationDefinition>
     <Compile Include="CataItem.cs" />
     <Compile Include="FamilyBrowserVM.cs" />
+    <Compile Include="FamilyMessage.cs" />
     <Compile Include="LiteDB.cs" />
+    <Compile Include="LoginForm.xaml.cs">
+      <DependentUpon>LoginForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RevitBiz.cs" />
     <Compile Include="RibbonPanel.cs" />
+    <Compile Include="TreeIndex.xaml.cs">
+      <DependentUpon>TreeIndex.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TreeUpdate.xaml.cs">
+      <DependentUpon>TreeUpdate.xaml</DependentUpon>
+    </Compile>
+    <Page Include="LoginForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,6 +123,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Palette.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TreeIndex.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TreeUpdate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

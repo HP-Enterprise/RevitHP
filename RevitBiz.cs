@@ -5,7 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -144,7 +144,6 @@ namespace RevitHP
                 {
                     //找到当前节点
                     var c = dictCatalog[key];
-
                     //获取当前节点的父节点id
                     var parentID = dictPID[c.Id];
                     if (dictCatalog.ContainsKey(parentID))
@@ -160,6 +159,28 @@ namespace RevitHP
             }
         }
 
+        //private void FamilyMessageBing()
+        //{
+           
+        //    //using (var cmd = m_liteDB.CreateCommand())
+        //    //{
+        //    //    cmd.CommandText = "select f.Color from Filelinknode f,catalog c where f.catalogID=c.id and catalogID=21";
+        //    //    var reader = cmd.ExecuteReader();
+        //    //    while (reader.Read())
+        //    //    {
+                
+        //    //    }
+        //    //}        
+        //}
+
+        //添加标识
+        //public void isInsertIdentifying(string Name,int catalogID)
+        //{
+        //    var cmd = m_liteDB.CreateCommand();
+        //    cmd.CommandText = string.Format("insert into Filelinknode(id,Color,catalogID) values('{0}','{1}','{2}')",150,Name,catalogID);
+        //    //cmd.CommandText = "Delete from Filelinknode";
+        //    cmd.ExecuteNonQuery();
+        //}
 
 
 

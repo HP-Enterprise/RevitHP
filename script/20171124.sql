@@ -44,3 +44,29 @@ INSERT INTO catalog(id,name,parent) VALUES
 		(57, '机房环境系统', 5),
 		(58, '其他', 5),
 	(6, '建筑结构及装修专业', 1);
+
+--CREATE TABLE familymessage
+--(
+--id varchar primary key,
+--fm_name varchar not null,
+--fm_classify varchar not null,
+--fm_fineness varchar not null,
+--fm_uploadtime varchar not null,
+--fm_versionnumber varchar not null
+--)
+--INSERT INTO familymessage values('25','UPS-施耐德','Upsa系统','产品族','2017-1-1','11')
+--Delete  familymessage
+--INSERT INTO familymessage(id,fm_name,fm_classify,fm_fineness,fm_uploadtime,fm_versionnumber) VALUES
+--(25,'UPS-施耐德','Upsa系统','产品族','2017-1-1',11),
+--(55,'UPs-施耐庵','Upsaa系统','产品族','2017-1-1',12),
+--(33,'UPS-吖','Upsaaa系统','产品族','2017-1-1',30)
+--INSERT INTO familymessage(id,fm_name,fm_classify,fm_fineness,fm_uploadtime,fm_versionnumber) VALUES(112,'adfw','awfaw','awfawf','2017-7-7',2)
+
+
+
+
+
+
+
+
+

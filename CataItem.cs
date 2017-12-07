@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RevitHP
 {
-    public class CataItem
+    public class CataItem : INotifyPropertyChanged
     {
         public CataItem(string name, int id)
         {
             Name = name;
             Id = id;
-            Children = new List<CataItem>();
+            Children = new ObservableCollection<CataItem>();
         }
         public CataItem()
-        {        
-            Children = new List<CataItem>();
+        {
+            Children = new ObservableCollection<CataItem>();
         }
         public int ParentID
         {
@@ -28,22 +29,59 @@ namespace RevitHP
                 else
                     return 0;
             }
+            set
+            {
+                if (this.ParentID != value)
+                {
+                    this.ParentID = value;
+                }
+            }
         }
         public int Id { get; set; }
-        public string Name { get; set; }
-        public CataItem Parent { get; set; }     
-        public List<CataItem> Children { get;private set; }
-        public ObservableCollection<CataItem> Items
+        public int id
         {
-            get 
+            get { return id; }
+            set
             {
-                return new ObservableCollection<CataItem>(Children);
+                if (this.Id != value)
+                {
+                    this.id = value;
+                }
             }
-            
         }
-        public CataItem(string name)
+        public string Name { get; set; }
+
+        public string name
         {
-            Name = name;            
+            get { return Name; }
+            set
+            {
+                if (this.Name != value)
+                {
+                    this.Name = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("Name"));
+                }
+            }
         }
+        public CataItem Parent { get; set; }
+        public ObservableCollection<CataItem> Children { get; set; }
+        public ObservableCollection<CataItem> children
+        {
+            get
+            {
+                return Children;
+            }
+            set
+            {
+                if (this.Children != value)
+                {
+                    this.Children = value;
+                    //OnPropertyChanged("Children");
+                }
+            }
+        }
+      public event PropertyChangedEventHandler PropertyChanged = delegate { };
+      public  enum Stater { Input=0,Delete=1,Update=2}
+      public int Identifying { get; set; }
     }
 }

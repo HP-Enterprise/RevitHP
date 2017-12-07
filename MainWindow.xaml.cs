@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +27,11 @@ namespace RevitHP
         public MainWindow()
         {
             InitializeComponent();
+            //测试查询数据
+            //RevitBiz biz = new RevitBiz();
+            //biz.init();          
+            //this.textbox.Text = biz.FindBing();
+           
         }                  
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -48,8 +55,8 @@ namespace RevitHP
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
             if (item != null)
-            {        
-            string tex = item.Id.ToString();
+            {                  
+            string tex = item.Id.ToString();            
             MessageBox.Show(tex);
              }
         }
@@ -66,5 +73,96 @@ namespace RevitHP
             ////string result = Txt.Row[0].ToString();
             //MessageBox.Show(result);
         }
+
+        private void Treeview1_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //CataItem item = Treeview1.SelectedItem as CataItem;          
+            //if (item != null)
+            //{
+            //    TreeIndex index = new TreeIndex(item);
+            //    index.ShowDialog();
+            //    string tex = item.ParentID.ToString();
+            //    MessageBox.Show(tex);
+            //}
+
+        }
+
+        private void InputNode_Click(object sender, RoutedEventArgs e)
+        {
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            if (item != null)
+            {
+                TreeIndex index = new TreeIndex(item);
+                index.ShowDialog();
+                string tex = item.Id.ToString();
+                MessageBox.Show(tex);
+            }
+            else
+            {
+                MessageBox.Show("请选择父级节点");
+            }
+        }
+
+        private void DeleteNode_Click(object sender, RoutedEventArgs e)
+        { 
+            CataItem item = Treeview1.SelectedItem as CataItem;
+           
+            //((RevitHP.FamilyBrowserVM)Treeview1.DataContext).TreeViewBinding[0].Children[0].children.Add(list);
+            if (item == null)
+            {
+                MessageBox.Show("请选择要删除的节点");
+            }
+            //获取当前选中节点的父类
+            CataItem parent = item.Parent as CataItem;
+            if (parent != null)
+            {
+                //在父节点中删除选中的子节点
+                //parent.Children.Remove(item);
+                item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
+                MessageBox.Show(item.Name.ToString());
+            }
+            else
+            {
+                MessageBox.Show("父节点不能删除");
+            }
+        }
+
+        private void UpdateNode_Click(object sender, RoutedEventArgs e)
+        {
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            MessageBox.Show(item.Identifying.ToString());
+            if (item != null)
+            {
+                TreeUpdate update = new TreeUpdate(item);
+                update.ShowDialog();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoginForm login = new LoginForm();
+            login.ShowDialog();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            HttpClientDoPost();
+        }
+
+        public async void HttpClientDoPost()
+        {
+            using (var client = new HttpClient())
+            {
+                FamilyMessage family = new FamilyMessage();
+                var values = new List<KeyValuePair<string, string>>();
+                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN",(family.ACCESS_TOKEN)));
+                //values.Add(new KeyValuePair<string, string>("password",Password));
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync("http://114.113.234.159:8074/bim/revit/revit/logout", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                MessageBox.Show(responseString.ToString());
+            }
+        }
+
     }
 }

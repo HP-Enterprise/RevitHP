@@ -24,27 +24,30 @@
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}">
             <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
         </StackPanel>
-
-        <!-- 树形结点 -->
-        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="29,60,548,45" Name="Treeview1" >
-            <!-- 二级菜单数据 -->
+        <!--树形结点-->
+        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45" Name="Treeview1" Width="155" HorizontalAlignment="Left" MouseRightButtonDown="Treeview1_MouseRightButtonDown" >
+            <!--菜单-->
+            <TreeView.ContextMenu>
+                <ContextMenu >
+                    <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
+                    <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
+                    <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                    <TextBlock Foreground="Red" Text="{Binding Name}" />
-                    <!--三级菜单-->
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <TextBlock Text="{Binding Name}" />
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name }" MouseDown="TreeView_MouseDoubleClick" />
-                                </DataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                        </HierarchicalDataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock  Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-
+        <Button Content="Button" HorizontalAlignment="Left" Margin="171,365,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" />
+        <Button Content="注销" HorizontalAlignment="Left" Margin="262,365,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,0.211" Click="Button_Click_1"/>
+        <!--<DataGrid Margin="157,60,219,45" Name="DataGridview1" ItemsSource="">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="awf" Width="80" />
+                <DataGridTextColumn Header="颜色" Width="50"/>
+                <DataGridTextColumn Header="ParentID" Width="50" />
+            </DataGrid.Columns>
+        </DataGrid>-->
     </Grid>
 </Window>
