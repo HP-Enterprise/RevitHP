@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace RevitHP
 {
@@ -140,8 +142,40 @@ namespace RevitHP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginForm login = new LoginForm();
-            login.ShowDialog();
+            //LoginForm login = new LoginForm();
+            //login.ShowDialog();
+            loginAsync();
+        }
+        FamilyMessage family = new FamilyMessage();
+        public async Task loginAsync()
+        {
+            using (var client = new HttpClient())
+            {
+                var values = new List<KeyValuePair<string, string>>();
+                values.Add(new KeyValuePair<string, string>("username","admin"));
+                values.Add(new KeyValuePair<string, string>("password", "admin"));
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync("http://114.113.234.159:8074/bim/revit/revit/login", content);
+                //获取登陆头部信息
+                //var Headers = responsea.Headers.ToString();             
+                //获得["ACCESS-TOKEN"]
+                //MessageBox.Show(((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString());
+                //获取登陆后主体信息                           
+                family.ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
+                var responseString = await response.Content.ReadAsStringAsync();
+                //Newtonsoft.Json.Linq.JObject obj =(Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(responseString);
+                JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
+                //obj.GetValue("obj")["roles"][0]["id"].ToString()
+
+                MessageBox.Show(obj.GetValue("obj")["roles"][0]["roleName"].ToString());
+
+                //var tagValues = JObject.Parse(obj["success"].ToString()).ToObject<Dictionary<string, List<string>>>();
+                //MessageBox.Show(tagValues.ToString());
+                //var obj = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(responseString);
+                //MessageBox.Show(obj.GetValue("roleName").ToString());
+
+                //MessageBox.Show(responseString.ToString());
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -153,7 +187,7 @@ namespace RevitHP
         {
             using (var client = new HttpClient())
             {
-                FamilyMessage family = new FamilyMessage();
+                
                 var values = new List<KeyValuePair<string, string>>();
                 values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN",(family.ACCESS_TOKEN)));
                 //values.Add(new KeyValuePair<string, string>("password",Password));

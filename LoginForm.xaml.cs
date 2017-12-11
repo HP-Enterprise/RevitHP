@@ -48,10 +48,7 @@ namespace RevitHP
                 //var responseString = await responsea.Content.ReadAsStringAsync();
                 FamilyMessage family = new FamilyMessage();
                 family.ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
-            }
-
-           
+            }         
         }
-
     }
 }
