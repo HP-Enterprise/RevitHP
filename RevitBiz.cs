@@ -13,13 +13,15 @@ namespace RevitHP
 {
 
 
-    class RevitBiz
+   public class RevitBiz
     {
+       
         // 缓存文件夹
         private string m_folder;
 
         // 数据库
         private LiteDB m_liteDB;
+        public string sqlLitepath;
 
         // 层级结构
         Dictionary<int, CataItem> dictCatalog = null;
@@ -28,13 +30,13 @@ namespace RevitHP
         {
             // 建立缓存文件夹
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            //缓存文件路径
             m_folder = Path.Combine(appData, "RevitHP");
+            sqlLitepath = m_folder;
             Directory.CreateDirectory(m_folder);
-
             m_liteDB = new LiteDB(m_folder);
-
         }
-
+        
         // 初始化
         public void init()
         {
@@ -126,7 +128,6 @@ namespace RevitHP
                 {
                     while (reader.Read())
                     {
-
                         //组装字典
                         CataItem item = new CataItem();
                         item.Id = reader.GetInt32(0);

@@ -19,7 +19,26 @@
     </Window.DataContext>
     <Grid>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}">
-            <TextBlock TextWrapping="Wrap" Text="顶部区域，留给以后放菜单按钮等等" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,27,0,0"/>
+           
+            <Menu DockPanel.Dock="Top" Height="20" Margin="0,0,485,0">
+                <MenuItem Header="菜单">
+                    <!--菜单项为MenuItem，文字使用属性 Header--> 
+                    <MenuItem Header="测试按钮" Name="CeshiLogin" Click="CeshiLogin_Click"></MenuItem>
+                    <MenuItem Header="测试按钮"></MenuItem>
+                    <MenuItem Name="login_state" Header="登录" Click="Button_Click"></MenuItem>
+                   
+                </MenuItem>
+                <MenuItem Header="View"></MenuItem>
+                <MenuItem Header="About"></MenuItem>
+            </Menu>
+            <ToolBar Height="34">
+                <!--ToolBar和StatusBar就是一个容器-->
+                <Button Content="打开族文件" Name="Ceshi" Click="Ceshi_Click"/>
+                <Button Content="族上传" Name="clanuploading" Click="clanuploading_Click" />
+                <Button Content="下载" Name="download" Click="download_Click"/>
+                <Button Content="Start"/>
+                <Button Content="Test"/>
+            </ToolBar>
         </StackPanel>
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}">
             <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
@@ -40,14 +59,6 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="171,365,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" />
-        <Button Content="注销" HorizontalAlignment="Left" Margin="262,365,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,0.211" Click="Button_Click_1"/>
-        <!--<DataGrid Margin="157,60,219,45" Name="DataGridview1" ItemsSource="">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="awf" Width="80" />
-                <DataGridTextColumn Header="颜色" Width="50"/>
-                <DataGridTextColumn Header="ParentID" Width="50" />
-            </DataGrid.Columns>
-        </DataGrid>-->
+        <Label Content="未登录" x:Name="welcome"  Margin="0,60,43,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="123"/>
     </Grid>
 </Window>
