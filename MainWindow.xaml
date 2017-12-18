@@ -1,10 +1,10 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RevitHP"
-        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="RevitHP.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:RevitHP"
+    x:Class="RevitHP.MainWindow"
         mc:Ignorable="d"
         Title="族库浏览" WindowStartupLocation="CenterOwner" Closing="Window_Closing" d:DesignWidth="725" d:DesignHeight="460" Icon="Pixadex.ico">
     <Window.Resources>
@@ -19,26 +19,31 @@
     </Window.DataContext>
     <Grid>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}">
-           
-            <Menu DockPanel.Dock="Top" Height="20" Margin="0,0,485,0">
-                <MenuItem Header="菜单">
-                    <!--菜单项为MenuItem，文字使用属性 Header--> 
-                    <MenuItem Header="测试按钮" Name="CeshiLogin" Click="CeshiLogin_Click"></MenuItem>
-                    <MenuItem Header="测试按钮"></MenuItem>
-                    <MenuItem Name="login_state" Header="登录" Click="Button_Click"></MenuItem>
-                   
-                </MenuItem>
-                <MenuItem Header="View"></MenuItem>
-                <MenuItem Header="About"></MenuItem>
-            </Menu>
-            <ToolBar Height="34">
-                <!--ToolBar和StatusBar就是一个容器-->
+            <ToolBar Height="53">
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="uploading_Click">
+                    <StackPanel>
+                        <Image Width="33"  Source="upload.jpg"/>
+                        <TextBlock Text="上传" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Height="53" Margin="0,0,0,-5" Width="55" Name="login" Click="login_Click" >
+                    <StackPanel>
+                        <Image Width="33"  Source="login.jpg"/>
+                        <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+
+            <!--<ToolBar Height="56">
+                -->
+            <!--ToolBar和StatusBar就是一个容器-->
+            <!--
                 <Button Content="打开族文件" Name="Ceshi" Click="Ceshi_Click"/>
                 <Button Content="族上传" Name="clanuploading" Click="clanuploading_Click" />
                 <Button Content="下载" Name="download" Click="download_Click"/>
                 <Button Content="Start"/>
                 <Button Content="Test"/>
-            </ToolBar>
+            </ToolBar>-->
         </StackPanel>
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}">
             <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
@@ -59,6 +64,6 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Label Content="未登录" x:Name="welcome"  Margin="0,60,43,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="123"/>
+        <Label Content="未登录" x:Name="welcome"  Margin="0,60,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="156"/>
     </Grid>
 </Window>

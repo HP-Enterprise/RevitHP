@@ -28,10 +28,15 @@ namespace RevitHP
         {
             InitializeComponent();
         }
+        //实例化
+        ServeManagement Serve = new ServeManagement();
+        
+
         //添加一个委托
         public delegate void PassDataBetweenFormHandler(object sender, LoginState e);
         //添加一个PassDataBetweenFormHandler类型的事件
         public event PassDataBetweenFormHandler PassDataBetweenForm;
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -47,42 +52,55 @@ namespace RevitHP
         }
         //声明公开静态ACCESS_TOKEN参数
         public static string family_ACCESS_TOKEN;
-       
-        public async void HttpClientDoPost(string Name,string Password)
+
+        public async void HttpClientDoPost(string Name, string Password)
         {
 
-            using (var client = new HttpClient())
+            //using (var client = new HttpClient())
+            //{
+            //    var values = new List<KeyValuePair<string, string>>();
+            //    values.Add(new KeyValuePair<string, string>("username", "admin"));
+            //    values.Add(new KeyValuePair<string, string>("password", "admin"));
+            //    var content = new FormUrlEncodedContent(values);
+            //    //var response = await client.PostAsync("http://192.168.10.54:9007/revit/login",content);
+
+
+            //    var response = await client.PostAsync("http://114.113.234.159:8074/bim/revit/revit/login", content);
+            //    //获取登陆头部信息
+            //    //var Headers = responsea.Headers.ToString();             
+            //    //获得["ACCESS-TOKEN"]
+            //    //((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
+            //    //获取登陆后主体信息
+            //    //var responseString = await responsea.Content.ReadAsStringAsync();             
+            //    var responseString = await response.Content.ReadAsStringAsync();
+            //    JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
+            //    string islogin = obj.GetValue("success").ToString();
+            //    if (islogin == "True")
+            //    {
+            //        string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
+            //        family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
+            //        LoginState args = new LoginState(roleName);
+            //        PassDataBetweenForm(this, args);
+            //        this.Close();
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("登录失败：用户名或者密码不正确");
+            //    }
+            //}
+            var obj= await Serve.HttpClientDoPostAsync("admin", "admin");
+            string islogin = obj.GetValue("success").ToString();
+            if (islogin == "True")
             {
-                var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("username","admin"));
-                values.Add(new KeyValuePair<string, string>("password","admin"));             
-                var content = new FormUrlEncodedContent(values);
-                //var response = await client.PostAsync("http://192.168.10.54:9007/revit/login",content);
-
-
-                var response = await client.PostAsync("http://114.113.234.159:8074/bim/revit/revit/login", content);
-                //获取登陆头部信息
-                //var Headers = responsea.Headers.ToString();             
-                //获得["ACCESS-TOKEN"]
-                //((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
-                //获取登陆后主体信息
-                //var responseString = await responsea.Content.ReadAsStringAsync();             
-                var responseString = await response.Content.ReadAsStringAsync();
-                JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
-                string islogin = obj.GetValue("success").ToString();              
-                if (islogin == "True")
-                {
-                    string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
-                    family_ACCESS_TOKEN=((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
-                    LoginState args = new LoginState(roleName);
-                    PassDataBetweenForm(this,args);
-                    this.Close();                
-                }
-                else
-                {
-                    MessageBox.Show("登录失败：用户名或者密码不正确");
-                }
-            }         
+                string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();              
+                LoginState args = new LoginState(roleName);
+                PassDataBetweenForm(this, args);
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("登录失败：用户名或者密码不正确");
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
