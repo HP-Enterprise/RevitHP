@@ -234,14 +234,14 @@ namespace RevitHP
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
 
-            string fullPath = "F:/Ceshi.txt";
-            if (System.IO.File.Exists(fullPath))
-            {
-                using (StreamWriter sw = new StreamWriter(fullPath, false, Encoding.Default))
-                {
-                    sw.WriteLine("测试文件2");
-                }
-            }
+            //string fullPath = "F:/Ceshi.txt";
+            //if (System.IO.File.Exists(fullPath))
+            //{
+            //    using (StreamWriter sw = new StreamWriter(fullPath, false, Encoding.Default))
+            //    {
+            //        sw.WriteLine("测试文件2");
+            //    }
+            //}
         }
     }
 }

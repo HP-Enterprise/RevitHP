@@ -57,28 +57,22 @@ namespace RevitHP
         //file  文件
         //MD5 上传相同文件带旧文件MD5码
         public void ClanUploadingInfo(string ACCESS_TOKEN,string filePath)
-        {
-            string ceshiPath = "F:\\经济头脑.png";
-            string fileName = "1.0.27";
-            ////var client = new RestClient(REMOTE_URL+"/file/upload");
-            //var client = new RestClient(REMOTE_URL+ "/file/upload");
-            //var request = new RestRequest(Method.POST);
-            //request.AddHeader("Postman-Token", "a279ed3d-968f-3b7a-84e0-534040c070fd");
-            //request.AddHeader("Cache-Control", "no-cache");
-            //request.AddHeader("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-            //request.AddParameter("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW", "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"ACCESS-TOKEN\"\r\n\r\n"+ACCESS_TOKEN+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"version\n\"\r\n\r\n"+ fileName + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" + ceshiPath + "\r\nContent-Type: text/plain\r\n\r\n\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--", ParameterType.RequestBody);
-            //IRestResponse response = client.Execute(request);
-
+        {          
+            //postman 代码（待改）
+            //测试指定文件路径
+            string path= @"E:\546b16a243822.jpg";
+            string fileName = "1.0.25.3";
             var client = new RestClient(REMOTE_URL+"/file/upload");
             var request = new RestRequest(Method.POST);
-            request.AddHeader("Postman-Token", "c80bd569-f2fa-b699-5e20-6d45d5cb32d8");
+            request.AddHeader("Postman-Token", "6bc4f905-d3ae-2481-2906-9c97b56da90e");
             request.AddHeader("Cache-Control", "no-cache");
             request.AddHeader("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-            request.AddParameter("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW", "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"ACCESS-TOKEN\"\r\n\r\n"+ACCESS_TOKEN+"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"version\"\r\n\r\n"+ fileName+ "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"file\"; filename=\""+ ceshiPath +"\r\nContent-Type: text/plain\r\n\r\n\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"MD5\"\r\n\r\nb91d715eecceb19686b6560fa23b6a4d\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--", ParameterType.RequestBody);
+            request.AddParameter("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW", "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"ACCESS-TOKEN\"\r\n\r\n"+ACCESS_TOKEN+ "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"version\"\r\n\r\n"+fileName+ "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"file\"; filename=\""+ path + "\r\nContent-Type: text/plain\r\n\r\n\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"MD5\"\r\n\r\nb78ac8a1dd3396d12ee938a240d92bf7\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
             var obj = (JObject)JsonConvert.DeserializeObject(response.Content);
             //获取MD5码
             string mD5 = obj.GetValue("obj")["md5"].ToString();
+
         }
  
         
@@ -90,10 +84,10 @@ namespace RevitHP
                 var values = new List<KeyValuePair<string, string>>();
                 values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", ACCESS_TOKEN));              
                 var content = new FormUrlEncodedContent(values);             
-                var response = client.PostAsync(REMOTE_URL+ "/file/download/189d1769de111b7a17012e4ba7eb56f4", content).Result;
+                var response = client.PostAsync(REMOTE_URL+ "/file/download/7b35b266de9c17f743e70c993b40ea26", content).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    using (FileStream fs = File.Create(@"C:\1.png"))
+                    using (FileStream fs = File.Create(@"E:\RH5.jpg"))
                     {
                         Stream streamFromService = response.Content.ReadAsStreamAsync().Result;
                         streamFromService.CopyTo(fs);                       
