@@ -19,17 +19,29 @@
     </Window.DataContext>
     <Grid>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}">
-            <ToolBar Height="53">
+            <ToolBar Height="53">  
+                <Button Height="53" Margin="0,0,0,-5" Width="55" Name="login" Click="login_Click" >
+                    <StackPanel>
+                        <Image Width="33"  Source="Img/login.jpg"/>
+                        <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="uploading_Click">
                     <StackPanel>
-                        <Image Width="33"  Source="upload.jpg"/>
+                        <Image Width="33"  Source="Img/upload.jpg"/>
                         <TextBlock Text="上传" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55" Name="login" Click="login_Click" >
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="download" Click="download_Click_1">
                     <StackPanel>
-                        <Image Width="33"  Source="login.jpg"/>
-                        <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
+                        <Image Width="33"  Source="Img/download.jpg"/>
+                        <TextBlock Text="下载" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="MD5" Click="MD5_Click">
+                    <StackPanel>
+                        <Image Width="33"  Source="Img/download.jpg"/>
+                        <TextBlock Text="MD5测试" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </ToolBar>

@@ -31,16 +31,11 @@ namespace RevitHP
     /// </summary>
     public partial class MainWindow : Window
     {
-        ServeManagement serve = new ServeManagement();
-        const string UploadURL = " http://192.168.10.54:9007/revit/file/upload";
+        ServerManagement serve = new ServerManagement();
+      
         public MainWindow()
         {
-            InitializeComponent();
-            //测试查询数据
-            //RevitBiz biz = new RevitBiz();
-            //biz.init();          
-            //this.textbox.Text = biz.FindBing();
-
+            InitializeComponent();         
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -165,9 +160,9 @@ namespace RevitHP
             }
             else if(this.login_state.Text=="注销")
             {
-                if (ServeManagement.family_ACCESS_TOKEN != null)
+                if (ServerManagement.family_ACCESS_TOKEN != null)
                 {
-                    HttpClientDoPost(ServeManagement.family_ACCESS_TOKEN);                            
+                    HttpClientDoPost(ServerManagement.family_ACCESS_TOKEN);                    
                 }
                 else
                 {
@@ -186,7 +181,7 @@ namespace RevitHP
                 values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", ACCESS_TOKEN));
                 //values.Add(new KeyValuePair<string, string>("password",Password));
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync("http://114.113.234.159:8074/bim/revit/revit/logout", content);
+                var response = await client.PostAsync( ServerManagement.REMOTE_URL+"/logout", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
                 if (obj.HasValues)
@@ -200,7 +195,7 @@ namespace RevitHP
 
         private void Ceshi_Click(object sender, RoutedEventArgs e)
         {
-          
+           
         }
 
         //上传
@@ -210,34 +205,43 @@ namespace RevitHP
         }
         
        
-
-
-        public static byte[] ConvertToBinary(string Path)
-        {
-            using (FileStream fs = File.OpenRead(@"F:\\ceshi.txt"))
-            { 
-                byte[] buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, Convert.ToInt32(fs.Length));
-                return buffer;
-            }         
-        }
-
-
-
-
         //下载事件
         private void download_Click(object sender, RoutedEventArgs e)
         {
             //DownloadAsync(LoginForm.family_ACCESS_TOKEN);
         }
-
+        static List<string> SqllitePathList = new List<string>();
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-           
-            byte[] ceshi = System.Text.Encoding.Default.GetBytes("asie");
-            //转成 Base64 形式的 System.String        
-            MessageBox.Show(Convert.ToBase64String(ceshi));
+            RevitBiz biz = new RevitBiz();
+            string[] paths = Directory.GetFiles(biz.sqlLitepath);
+            foreach (var item in paths)
+            {
+                //获取文件后缀名  
+                string extension = System.IO.Path.GetExtension(item).ToLower();
+                SqllitePathList.Add(item);        
+            }
+            //调用上传方法
+            serve.ClanUploadingInfo(ServerManagement.family_ACCESS_TOKEN,SqllitePathList[0]);
+        }
+        
+        private void download_Click_1(object sender, RoutedEventArgs e)
+        {
+           //调用下载方法
+            serve.DownloadAsync(ServerManagement.family_ACCESS_TOKEN);
+        }
 
+        private void MD5_Click(object sender, RoutedEventArgs e)
+        {
+
+            string fullPath = "F:/Ceshi.txt";
+            if (System.IO.File.Exists(fullPath))
+            {
+                using (StreamWriter sw = new StreamWriter(fullPath, false, Encoding.Default))
+                {
+                    sw.WriteLine("测试文件2");
+                }
+            }
         }
     }
 }

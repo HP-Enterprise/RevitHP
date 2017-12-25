@@ -29,12 +29,15 @@ namespace RevitHP
         public RevitBiz()
         {
             // 建立缓存文件夹
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            // var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var appData = Environment.CurrentDirectory;
             //缓存文件路径
             m_folder = Path.Combine(appData, "RevitHP");
             sqlLitepath = m_folder;
             Directory.CreateDirectory(m_folder);
             m_liteDB = new LiteDB(m_folder);
+           
         }
         
         // 初始化
