@@ -22,25 +22,25 @@
             <ToolBar Height="53">  
                 <Button Height="53" Margin="0,0,0,-5" Width="55" Name="login" Click="login_Click" >
                     <StackPanel>
-                        <Image Width="33"  Source="Img/login.jpg"/>
+                        <Image Width="33"  Source="Img/login.png"/>
                         <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="uploading_Click">
                     <StackPanel>
-                        <Image Width="33"  Source="Img/upload.jpg"/>
+                        <Image Width="33"  Source="Img/upload.png"/>
                         <TextBlock Text="上传" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="download" Click="download_Click_1">
                     <StackPanel>
-                        <Image Width="33"  Source="Img/download.jpg"/>
+                        <Image Width="33"  Source="Img/download.png"/>
                         <TextBlock Text="下载" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="MD5" Click="MD5_Click">
                     <StackPanel>
-                        <Image Width="33"  Source="Img/download.jpg"/>
+                        <Image Width="33"  Source="Img/download.png"/>
                         <TextBlock Text="MD5测试" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
@@ -61,7 +61,7 @@
             <TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>
         </StackPanel>
         <!--树形结点-->
-        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45" Name="Treeview1" Width="155" HorizontalAlignment="Left" MouseRightButtonDown="Treeview1_MouseRightButtonDown" >
+        <TreeView ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45" Name="Treeview1" Width="171" HorizontalAlignment="Left" MouseRightButtonDown="Treeview1_MouseRightButtonDown"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >

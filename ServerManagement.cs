@@ -31,20 +31,30 @@ namespace RevitHP
             using (var client = new HttpClient())
             {
                 var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("username", "admin"));
-                values.Add(new KeyValuePair<string, string>("password", "admin"));
+                values.Add(new KeyValuePair<string, string>("username", Name));
+                values.Add(new KeyValuePair<string, string>("password", Password));
                 var content = new FormUrlEncodedContent(values);
               
                 var response = await client.PostAsync(REMOTE_URL+"/login", content);
+               
                 //获取登陆头部信息
                 //var Headers = responsea.Headers.ToString();             
                 //获得["ACCESS-TOKEN"]
-                family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
+              
                 //获取登陆后主体信息
                 //var responseString = await responsea.Content.ReadAsStringAsync();             
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
-                return obj;
+                if (obj.GetValue("success").ToString()== "True")
+                {
+
+                    family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
+                    return obj;
+                }
+                else
+                {
+                    return null;
+                }     
             }
         }
 
@@ -59,7 +69,7 @@ namespace RevitHP
         {
             //postman 代码（待改）
             //测试指定文件路径
-          
+     
             string fileName = "1.0.25.3";
             var client = new RestClient(REMOTE_URL + "/file/upload");
             var request = new RestRequest(Method.POST);

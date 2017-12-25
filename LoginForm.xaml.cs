@@ -55,11 +55,10 @@ namespace RevitHP
 
         public async void HttpClientDoPostLogin(string Name, string Password)
         {       
-            var obj= await Serve.HttpClientDoPostLogin("admin", "admin");
-            string islogin = obj.GetValue("success").ToString();
-            if (islogin == "True")
+            var obj= await Serve.HttpClientDoPostLogin(Name,Password);
+            if (obj!=null)
             {
-                string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();              
+                string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
                 LoginState args = new LoginState(roleName);
                 PassDataBetweenForm(this, args);
                 this.Close();
