@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="登录" Height="314.655" Width="348.276" WindowStartupLocation="CenterScreen">
     <Grid Margin="-1,0,2,3">
-        <Label Content="用户名：" HorizontalAlignment="Left" Margin="69,62,0,0" VerticalAlignment="Top" Height="25" Width="56"/>
-        <TextBox Name="tb_username" TabIndex="0"  HorizontalAlignment="Left" Height="23" Margin="144,64,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Tag=""/>
-        <Label Content="密码："  HorizontalAlignment="Left" Margin="71,115,0,0" VerticalAlignment="Top" Height="28" Width="47"/>     
-        <PasswordBox HorizontalAlignment="Left" Name="tb_password" Margin="146,118,0,0" VerticalAlignment="Top" Height="26" Width="117" Tag=""/>
+        <Label Content="用户名：" HorizontalAlignment="Left" Margin="68,69,0,0" VerticalAlignment="Top" Height="25" Width="56"/>
+        <TextBox Name="tb_username" TabIndex="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="23" Margin="144,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Tag=""/>
+        <Label Content="密码："  HorizontalAlignment="Left" Margin="71,119,0,0" VerticalAlignment="Top" Height="28" Width="47"/>
+        <PasswordBox HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tb_password" Margin="144,119,0,0" VerticalAlignment="Top" Height="23" Width="120" Tag=""/>
         <Button Content="登录" HorizontalAlignment="Left" Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="取消" HorizontalAlignment="Left" Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
 

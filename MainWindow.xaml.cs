@@ -35,8 +35,10 @@ namespace RevitHP
       
         public MainWindow()
         {
-            InitializeComponent();         
+            InitializeComponent();
+           
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -91,6 +93,16 @@ namespace RevitHP
             //}
 
         }
+
+
+
+
+
+
+
+
+
+
         //添加节点事件
         private void InputNode_Click(object sender, RoutedEventArgs e)
         {
@@ -187,8 +199,7 @@ namespace RevitHP
                 if (obj.HasValues)
                 {
                     this.login_state.Text = "登录";
-                    this.welcome.Content = "未登录";
-                    MessageBox.Show("注销成功");
+                    this.welcome.Content = "未登录";                 
                 }
             }
         }
