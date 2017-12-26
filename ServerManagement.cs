@@ -19,37 +19,31 @@ namespace RevitHP
     {
         private static string s_strBimBase;
 
-<<<<<<< HEAD
+        //访问服务器地址（配置文件中）
         public static string REMOTE_URL
         {
             get
             {
-                if (s_strBimBase == null) {
+                if (s_strBimBase == null)
+                {
                     s_strBimBase = ConfigurationManager.AppSettings["BimSrv"];
                 }
-
                 return $"{s_strBimBase}/bim/revit/revit";
             }
         }
-      
-        //声明公开静态ACCESS_TOKEN参数
-        public static string family_ACCESS_TOKEN;
-
         public ServerManagement()
         {
 
         }
 
-=======
-        //访问服务器地址
-        private static string  REMOTE_URL= "http://114.113.234.159:8074/bim/revit/revit";
+          
         //声明私有静态ACCESS_TOKEN参数
         private static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
 
        
->>>>>>> 逻辑结构
+
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
@@ -98,6 +92,8 @@ namespace RevitHP
                 //values.Add(new KeyValuePair<string, string>("password",Password));
                 var content = new FormUrlEncodedContent(values);
                 var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);
+                
+
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
                 if (obj.HasValues)

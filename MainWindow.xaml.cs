@@ -165,15 +165,16 @@ namespace RevitHP
             }
             else if (this.login_state.Text == "注销")
             {
-               logoutAsync();
+                logoutAsync();
             }
 
         }
 
-        public async Task logoutAsync()
-        {
-            bool logout = await vM.islogout();
-            if (logout)
+        public void logoutAsync()
+        {          
+            var islogout = Task.Run(vM.islogout);         
+            islogout.Wait();
+            if (islogout.Result)
             {
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
