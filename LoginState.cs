@@ -8,7 +8,7 @@ namespace RevitHP
 {
     public class LoginState
     {     
-        public string ACCESS_TOKEN {get;set;}
+        public static string ACCESS_TOKEN {get;set;}
         private string _rolename;
         public string RoleName
         {

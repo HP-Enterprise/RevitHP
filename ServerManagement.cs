@@ -19,6 +19,7 @@ namespace RevitHP
     {
         private static string s_strBimBase;
 
+<<<<<<< HEAD
         public static string REMOTE_URL
         {
             get
@@ -39,10 +40,20 @@ namespace RevitHP
 
         }
 
+=======
+        //访问服务器地址
+        private static string  REMOTE_URL= "http://114.113.234.159:8074/bim/revit/revit";
+        //声明私有静态ACCESS_TOKEN参数
+        private static string family_ACCESS_TOKEN;
+        //声明公开的用户登录名
+        public static string roleName;
+
+       
+>>>>>>> 逻辑结构
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
-        public async Task<JObject> HttpClientDoPostLogin(string Name, string Password)
+        public async Task<bool> HttpClientDoPostLogin(string Name, string Password)
         {
             using (var client = new HttpClient())
             {
@@ -50,27 +61,54 @@ namespace RevitHP
                 values.Add(new KeyValuePair<string, string>("username", Name));
                 values.Add(new KeyValuePair<string, string>("password", Password));
                 var content = new FormUrlEncodedContent(values);
-              
-                var response = await client.PostAsync(REMOTE_URL+"/login", content);
-               
+
+                var response = await client.PostAsync(REMOTE_URL + "/login", content);
+
                 //获取登陆头部信息
                 //var Headers = responsea.Headers.ToString();             
                 //获得["ACCESS-TOKEN"]
-              
+
                 //获取登陆后主体信息
                 //var responseString = await responsea.Content.ReadAsStringAsync();             
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
-                if (obj.GetValue("success").ToString()== "True")
+                if (obj.GetValue("success").ToString() == "True")
                 {
 
                     family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
-                    return obj;
+                    roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
+                    return true;
                 }
                 else
                 {
-                    return null;
-                }     
+                    return false;
+                }
+            }
+        }
+       
+
+
+        //注销
+        public async Task<bool> HttpClientDoPostLogout()
+        {         
+            using (var client = new HttpClient())
+            {
+                var values = new List<KeyValuePair<string, string>>();
+                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));
+                //values.Add(new KeyValuePair<string, string>("password",Password));
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
+                if (obj.HasValues)
+                {
+                    family_ACCESS_TOKEN = null;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

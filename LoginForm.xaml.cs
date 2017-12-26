@@ -29,8 +29,10 @@ namespace RevitHP
             InitializeComponent();
         }
         //实例化
-        ServerManagement Serve = new ServerManagement();
-        
+
+        RevitBiz revit= new RevitBiz();
+
+        FamilyBrowserVM vM = new FamilyBrowserVM();
 
         //添加一个委托
         public delegate void PassDataBetweenFormHandler(object sender, LoginState e);
@@ -45,21 +47,18 @@ namespace RevitHP
                 MessageBox.Show("请输入用户名和密码!");
             }
             else
-            {
-                HttpClientDoPostLogin(this.tb_username.Text, this.tb_password.Password);
+            {          
+                  HttpClientDoPostLogin(tb_username.Text, tb_password.Password);          
             }
 
         }
-        //声明公开静态ACCESS_TOKEN参数
-        public static string family_ACCESS_TOKEN;
 
         public async void HttpClientDoPostLogin(string Name, string Password)
-        {       
-            var obj= await Serve.HttpClientDoPostLogin(Name,Password);
-            if (obj!=null)
-            {
-                string roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
-                LoginState args = new LoginState(roleName);
+        {
+            bool obj = await vM.isloginAsync(Name,Password);
+            if (obj)
+            {              
+                LoginState args = new LoginState(ServerManagement.roleName);
                 PassDataBetweenForm(this, args);
                 this.Close();
             }

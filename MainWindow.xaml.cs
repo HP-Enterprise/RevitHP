@@ -25,20 +25,20 @@ using RestSharp;
 
 namespace RevitHP
 {
-   
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        ServerManagement serve = new ServerManagement();
-      
+        FamilyBrowserVM vM = new FamilyBrowserVM();
+
         public MainWindow()
         {
             InitializeComponent();
-           
+          
         }
-
+       
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -57,6 +57,8 @@ namespace RevitHP
                 e.Cancel = false;
             }
         }
+
+
 
         private void TreeView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -93,15 +95,6 @@ namespace RevitHP
             //}
 
         }
-
-
-
-
-
-
-
-
-
 
         //添加节点事件
         private void InputNode_Click(object sender, RoutedEventArgs e)
@@ -152,7 +145,7 @@ namespace RevitHP
                 TreeUpdate update = new TreeUpdate(item);
                 update.ShowDialog();
             }
-        }      
+        }
 
         //委托监控
         private void FrmChild_PassDataBetweenForm(object sender, LoginState e)
@@ -160,98 +153,78 @@ namespace RevitHP
             this.welcome.Content = e.RoleName;
             this.login_state.Text = "注销";
         }
-    
+
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
         {
-            if (this.login_state.Text=="登录")
+            if (this.login_state.Text == "登录")
             {
-            LoginForm login = new LoginForm();
-            login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
-            login.ShowDialog();
+                LoginForm login = new LoginForm();
+                login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
+                login.ShowDialog();
             }
-            else if(this.login_state.Text=="注销")
+            else if (this.login_state.Text == "注销")
             {
-                if (ServerManagement.family_ACCESS_TOKEN != null)
-                {
-                    HttpClientDoPost(ServerManagement.family_ACCESS_TOKEN);                    
-                }
-                else
-                {
-                    MessageBox.Show("您还未登录！");
-                }
+               logoutAsync();
             }
 
         }
 
-        //注销方法
-        public async void HttpClientDoPost(string ACCESS_TOKEN)
+        public async Task logoutAsync()
         {
-            using (var client = new HttpClient())
+            bool logout = await vM.islogout();
+            if (logout)
             {
-                var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", ACCESS_TOKEN));
-                //values.Add(new KeyValuePair<string, string>("password",Password));
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync( ServerManagement.REMOTE_URL+"/logout", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
-                if (obj.HasValues)
-                {
-                    this.login_state.Text = "登录";
-                    this.welcome.Content = "未登录";                 
-                }
+                this.welcome.Content = "未登录";
+                this.login_state.Text = "登录";
             }
-        }
-
-        private void Ceshi_Click(object sender, RoutedEventArgs e)
-        {
-           
-        }
-
-        //上传
-        private void clanuploading_Click(object sender, RoutedEventArgs e)
-        {
-            //ClanUploadingInfo(LoginForm.family_ACCESS_TOKEN);
         }
         
-       
-        //下载事件
-        private void download_Click(object sender, RoutedEventArgs e)
-        {
-            //DownloadAsync(LoginForm.family_ACCESS_TOKEN);
-        }
         static List<string> SqllitePathList = new List<string>();
+        //上传事件
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-            RevitBiz biz = new RevitBiz();
-            string[] paths = Directory.GetFiles(biz.sqlLitepath);
-            foreach (var item in paths)
+            if (this.welcome.Content.ToString() == "未登录")
             {
-                //获取文件后缀名  
-                string extension = System.IO.Path.GetExtension(item).ToLower();
-                SqllitePathList.Add(item);        
+                MessageBox.Show("请登录再上传文件！");
             }
-            //调用上传方法
-            serve.ClanUploadingInfo(ServerManagement.family_ACCESS_TOKEN,SqllitePathList[0]);
+            else
+            {
+                RevitBiz biz = new RevitBiz();
+                string[] paths = Directory.GetFiles(biz.sqlLitepath);
+                foreach (var item in paths)
+                {
+                    //获取文件后缀名  
+                    string extension = System.IO.Path.GetExtension(item).ToLower();
+                    SqllitePathList.Add(item);
+                }
+                //调用上传方法
+                //serve.ClanUploadingInfo(ServerManagement.family_ACCESS_TOKEN, SqllitePathList[0]);
+            }
         }
-        
+
         private void download_Click_1(object sender, RoutedEventArgs e)
         {
-           //调用下载方法
-            serve.DownloadAsync(ServerManagement.family_ACCESS_TOKEN);
+            //调用下载方法
+            //serve.DownloadAsync(ServerManagement.family_ACCESS_TOKEN);
         }
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
+            foreach (var item in Treeview1.Items)
+            {             
+                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);            
+                ((TreeViewItem)dObject).ExpandSubtree();
+            }
+          
+        }
 
-            //string fullPath = "F:/Ceshi.txt";
-            //if (System.IO.File.Exists(fullPath))
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //foreach (var item in Treeview1.Items)
             //{
-            //    using (StreamWriter sw = new StreamWriter(fullPath, false, Encoding.Default))
-            //    {
-            //        sw.WriteLine("测试文件2");
-            //    }
+            //    DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
+            //    ((TreeViewItem)dObject).ExpandSubtree();
             //}
         }
     }

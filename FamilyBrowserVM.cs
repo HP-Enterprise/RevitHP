@@ -26,15 +26,19 @@ namespace RevitHP
                 return league;
             }
         }
+        //登录
+        public async Task<bool> isloginAsync(string Name, string Password)
+        {
+            bool islogin = await m_biz.IsloginAsync(Name, Password);        
+            return islogin;
+        }
 
-        //绑定族基本信息
-        //public Collection<FamilyMessage> familyMessagebinding
-        //{
-        //    get
-        //    {
-        //        var league = new Collection<FamilyMessage>() { };
-        //        return league;
-        //    }
-        //}
+        //注销
+        public async Task<bool> islogout()
+        {
+            bool islogout = await m_biz.IslogoutAsync();
+            return islogout;
+        }
+
     }
 }

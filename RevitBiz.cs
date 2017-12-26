@@ -26,6 +26,10 @@ namespace RevitHP
         // 层级结构
         Dictionary<int, CataItem> dictCatalog = null;
 
+
+        //实例
+        ServerManagement server = new ServerManagement();
+
         public RevitBiz()
         {
             // 建立缓存文件夹
@@ -163,30 +167,16 @@ namespace RevitHP
             }
         }
 
-        //private void FamilyMessageBing()
-        //{
-           
-        //    //using (var cmd = m_liteDB.CreateCommand())
-        //    //{
-        //    //    cmd.CommandText = "select f.Color from Filelinknode f,catalog c where f.catalogID=c.id and catalogID=21";
-        //    //    var reader = cmd.ExecuteReader();
-        //    //    while (reader.Read())
-        //    //    {
-                
-        //    //    }
-        //    //}        
-        //}
-
-        //添加标识
-        //public void isInsertIdentifying(string Name,int catalogID)
-        //{
-        //    var cmd = m_liteDB.CreateCommand();
-        //    cmd.CommandText = string.Format("insert into Filelinknode(id,Color,catalogID) values('{0}','{1}','{2}')",150,Name,catalogID);
-        //    //cmd.CommandText = "Delete from Filelinknode";
-        //    cmd.ExecuteNonQuery();
-        //}
-
-
+        //登录
+        public async Task<bool> IsloginAsync(string Name,string Password)
+        {
+           return  await server.HttpClientDoPostLogin(Name, Password);             
+        }
+        //注销
+        public async Task<bool> IslogoutAsync()
+        {
+            return await server.HttpClientDoPostLogout();
+        }
 
     }
 }
