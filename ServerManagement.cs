@@ -4,6 +4,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,13 +17,28 @@ namespace RevitHP
 {
     public class ServerManagement
     {
-        // local http://114.113.234.159:8074/bim/revit/
-        // remote http://114.113.234.159:8074/bim/revit
+        private static string s_strBimBase;
 
-        public static string  REMOTE_URL= "http://114.113.234.159:8074/bim/revit/revit";
+        public static string REMOTE_URL
+        {
+            get
+            {
+                if (s_strBimBase == null) {
+                    s_strBimBase = ConfigurationManager.AppSettings["BimSrv"];
+                }
+
+                return $"{s_strBimBase}/bim/revit/revit";
+            }
+        }
       
         //声明公开静态ACCESS_TOKEN参数
         public static string family_ACCESS_TOKEN;
+
+        public ServerManagement()
+        {
+
+        }
+
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
