@@ -24,15 +24,12 @@ namespace RevitHP
     /// </summary>
     public partial class LoginForm : Window
     {
-        public LoginForm()
+        private FamilyBrowserVM vM;
+        public LoginForm(FamilyBrowserVM browserVM)
         {
             InitializeComponent();
-        }
-        //实例化
-
-        RevitBiz revit= new RevitBiz();
-
-        FamilyBrowserVM vM = new FamilyBrowserVM();
+            vM = browserVM;
+        } 
 
         //添加一个委托
         public delegate void PassDataBetweenFormHandler(object sender, LoginState e);

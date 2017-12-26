@@ -71,6 +71,7 @@ namespace RevitHP
 
                     family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
                     roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
+                    MainWindow.LoginState = false;
                     return true;
                 }
                 else
@@ -81,19 +82,15 @@ namespace RevitHP
         }
        
 
-
         //注销
         public async Task<bool> HttpClientDoPostLogout()
         {         
             using (var client = new HttpClient())
             {
                 var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));
-                //values.Add(new KeyValuePair<string, string>("password",Password));
+                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));             
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);
-                
-
+                var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);     
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
                 if (obj.HasValues)

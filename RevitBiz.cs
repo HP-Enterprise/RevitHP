@@ -172,7 +172,7 @@ namespace RevitHP
         {
            return  await server.HttpClientDoPostLogin(Name, Password);             
         }
-        //注销
+        //注销 
         public async Task<bool> IslogoutAsync()
         {
             return await server.HttpClientDoPostLogout();

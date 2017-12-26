@@ -38,7 +38,8 @@ namespace RevitHP
             InitializeComponent();
           
         }
-       
+        public static bool LoginState=true;
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -135,7 +136,7 @@ namespace RevitHP
                 MessageBox.Show("父节点不能删除");
             }
         }
-        //删除节点事件
+        //修改节点事件
         private void UpdateNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
@@ -153,17 +154,17 @@ namespace RevitHP
             this.welcome.Content = e.RoleName;
             this.login_state.Text = "注销";
         }
-
+       
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
         {
-            if (this.login_state.Text == "登录")
+            if (LoginState)
             {
-                LoginForm login = new LoginForm();
+                LoginForm login = new LoginForm(vM);
                 login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
                 login.ShowDialog();
             }
-            else if (this.login_state.Text == "注销")
+            else 
             {
                 logoutAsync();
             }
@@ -176,6 +177,7 @@ namespace RevitHP
             islogout.Wait();
             if (islogout.Result)
             {
+                LoginState = true;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
             }
@@ -214,7 +216,7 @@ namespace RevitHP
         {
             foreach (var item in Treeview1.Items)
             {             
-                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);            
+                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);      
                 ((TreeViewItem)dObject).ExpandSubtree();
             }
           
