@@ -214,21 +214,21 @@ namespace RevitHP
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in Treeview1.Items)
-            {             
-                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);      
-                ((TreeViewItem)dObject).ExpandSubtree();
-            }
+            
+
           
         }
+        
+
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //foreach (var item in Treeview1.Items)
-            //{
-            //    DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
-            //    ((TreeViewItem)dObject).ExpandSubtree();
-            //}
+            foreach (var item in Treeview1.Items)
+            {
+                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);              
+                ((TreeViewItem)dObject).IsExpanded = true;
+            }
         }
     }
 }

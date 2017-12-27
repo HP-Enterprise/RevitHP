@@ -36,13 +36,13 @@ namespace RevitHP
 
         }
 
-          
+
         //声明私有静态ACCESS_TOKEN参数
         private static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
 
-       
+
 
         //登录方法
         //参数1.Name 用户名
@@ -80,17 +80,17 @@ namespace RevitHP
                 }
             }
         }
-       
+
 
         //注销
         public async Task<bool> HttpClientDoPostLogout()
-        {         
+        {
             using (var client = new HttpClient())
             {
                 var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));             
+                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);     
+                var response = await client.PostAsync(ServerManagement.REMOTE_URL + "/logout", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
                 if (obj.HasValues)
@@ -112,11 +112,11 @@ namespace RevitHP
         //version 版本名称
         //file  文件
         //MD5 上传相同文件带旧文件MD5码
-        public void ClanUploadingInfo(string ACCESS_TOKEN,string filePath)
+        public void ClanUploadingInfo(string ACCESS_TOKEN, string filePath)
         {
             //postman 代码（待改）
             //测试指定文件路径
-     
+
             string fileName = "1.0.25.3";
             var client = new RestClient(REMOTE_URL + "/file/upload");
             var request = new RestRequest(Method.POST);
@@ -129,25 +129,25 @@ namespace RevitHP
             //获取MD5码
             string mD5 = obj.GetValue("obj")["md5"].ToString();
         }
- 
-        
+
+
         //下载方法
         public void DownloadAsync(string ACCESS_TOKEN)
         {
             using (var client = new HttpClient())
             {
                 var values = new List<KeyValuePair<string, string>>();
-                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", ACCESS_TOKEN));              
-                var content = new FormUrlEncodedContent(values);             
-                var response = client.PostAsync(REMOTE_URL+ "/file/download/7b35b266de9c17f743e70c993b40ea26", content).Result;
+                values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", ACCESS_TOKEN));
+                var content = new FormUrlEncodedContent(values);
+                var response = client.PostAsync(REMOTE_URL + "/file/download/7b35b266de9c17f743e70c993b40ea26", content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (FileStream fs = File.Create(@"E:\RH7.jpg"))
                     {
                         Stream streamFromService = response.Content.ReadAsStreamAsync().Result;
-                        streamFromService.CopyTo(fs);                       
+                        streamFromService.CopyTo(fs);
                     }
-                }            
+                }
             }
         }
 
@@ -177,6 +177,15 @@ namespace RevitHP
                 throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
             }
         }
+
+        //上传方法测试
+        //public void upload(String localFile)
+        //{
+
+           
+
+        //}
+
 
     }
 }

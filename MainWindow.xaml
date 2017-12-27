@@ -19,8 +19,9 @@
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="368*"/>
-            <ColumnDefinition Width="349*"/>
+            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="146*"/>
+            <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
             <ToolBar Height="53">
@@ -45,7 +46,7 @@
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="MD5" Click="MD5_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="MD5测试" HorizontalAlignment="Center"/>
+                        <TextBlock Text="功能测试" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </ToolBar>
@@ -56,7 +57,7 @@
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45" Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" Width="182"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
