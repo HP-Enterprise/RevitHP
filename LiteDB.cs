@@ -51,7 +51,7 @@ namespace RevitHP
             m_cnn = new SQLiteConnection($"Data Source={pathSQLiteFile};Version=3;");
             m_cnn.Open();
         }
-
+        //关闭
         public void Close()
         {
             if (m_cnn != null) {

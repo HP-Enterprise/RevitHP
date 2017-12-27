@@ -214,9 +214,10 @@ namespace RevitHP
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
-            
-
-          
+            ServerManagement server = new ServerManagement();
+            //server.DownloadAsync();
+            server.upload();
+            //server.ClanUploadingInfo("C:\\ceshi.txt");
         }
         
 
