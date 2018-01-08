@@ -23,6 +23,8 @@ namespace RevitHP
 
         // SQLite
         private SQLiteConnection m_cnn;
+        //sqlliteDB 所在路径
+        public static string sqlDBpath;
 
 
         public LiteDB(string folder)
@@ -43,15 +45,17 @@ namespace RevitHP
             SQLiteConnection.CreateFile(ResolveSQLiteFile());
         }
 
+   
         public void Open(uint rev)
         {
             Debug.Assert(m_cnn == null);
             this.Rev = rev;
             var pathSQLiteFile = ResolveSQLiteFile();
-            m_cnn = new SQLiteConnection($"Data Source={pathSQLiteFile};Version=3;");
+            sqlDBpath = ResolveSQLiteFile();
+            m_cnn = new SQLiteConnection($"Data Source={pathSQLiteFile};Version=3;");         
             m_cnn.Open();
         }
-        //关闭
+       
         public void Close()
         {
             if (m_cnn != null) {
@@ -59,6 +63,8 @@ namespace RevitHP
                 m_cnn = null;
             }
         }
+       
+
 
         // IDisposable
         public void Dispose()
@@ -66,7 +72,7 @@ namespace RevitHP
             Close();
         }
 
-        private string ResolveSQLiteFile()
+        public string ResolveSQLiteFile()
         {
             return Path.Combine(m_folder, $"{c_liteName}.{this.Rev}");
         }
@@ -76,7 +82,6 @@ namespace RevitHP
         {
             uint? max = null;
             uint rev;
-
             foreach (var file in Directory.GetFiles(folder, $"{c_liteName}.*"))
             {
                 string ext = Path.GetExtension(file);
@@ -193,5 +198,7 @@ namespace RevitHP
                 return strMD5.Replace("-", String.Empty);
             }
         }
+
+
     }
 }

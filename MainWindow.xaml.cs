@@ -30,8 +30,8 @@ namespace RevitHP
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        FamilyBrowserVM vM = new FamilyBrowserVM();
+    { 
+   
 
         public MainWindow()
         {
@@ -101,6 +101,7 @@ namespace RevitHP
         private void InputNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
+
             if (item != null)
             {
                 TreeIndex index = new TreeIndex(item);
@@ -139,8 +140,8 @@ namespace RevitHP
         //修改节点事件
         private void UpdateNode_Click(object sender, RoutedEventArgs e)
         {
-            CataItem item = Treeview1.SelectedItem as CataItem;
-            MessageBox.Show(item.Identifying.ToString());
+            CataItem item = Treeview1.SelectedItem as CataItem;      
+            
             if (item != null)
             {
                 TreeUpdate update = new TreeUpdate(item);
@@ -160,7 +161,7 @@ namespace RevitHP
         {
             if (LoginState)
             {
-                LoginForm login = new LoginForm(vM);
+                LoginForm login = new LoginForm(this.DataContext as FamilyBrowserVM);
                 login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
                 login.ShowDialog();
             }
@@ -171,9 +172,11 @@ namespace RevitHP
 
         }
 
+
         public void logoutAsync()
-        {          
-            var islogout = Task.Run(vM.islogout);         
+        {
+            var vm = this.DataContext as FamilyBrowserVM;
+            var islogout = Task.Run(vm.islogout);         
             islogout.Wait();
             if (islogout.Result)
             {
@@ -184,52 +187,85 @@ namespace RevitHP
         }
         
         static List<string> SqllitePathList = new List<string>();
-        //上传事件
+        //上传事件 
+     
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-            if (this.welcome.Content.ToString() == "未登录")
-            {
-                MessageBox.Show("请登录再上传文件！");
-            }
-            else
-            {
-                RevitBiz biz = new RevitBiz();
-                string[] paths = Directory.GetFiles(biz.sqlLitepath);
-                foreach (var item in paths)
-                {
-                    //获取文件后缀名  
-                    string extension = System.IO.Path.GetExtension(item).ToLower();
-                    SqllitePathList.Add(item);
-                }
-                //调用上传方法
-                //serve.ClanUploadingInfo(ServerManagement.family_ACCESS_TOKEN, SqllitePathList[0]);
-            }
+          
+            var vM = this.DataContext as FamilyBrowserVM;
+            //调用上传
+            vM.FileUplod();
+
         }
 
         private void download_Click_1(object sender, RoutedEventArgs e)
         {
-            //调用下载方法
-            //serve.DownloadAsync(ServerManagement.family_ACCESS_TOKEN);
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.IsDownload();
+
+
+
         }
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
-            ServerManagement server = new ServerManagement();
-            //server.DownloadAsync();
-            server.upload();
-            //server.ClanUploadingInfo("C:\\ceshi.txt");
+            //复制文件
+            //string targetPath = @"C:\Users\wangxu\AppData\Local\RevitHP\RevHP.1";
+            //System.IO.File.Copy(LiteDB.sqlDBpath.ToString(), targetPath, true);
+
+            //var vM = this.DataContext as FamilyBrowserVM;         
+            //vM.OpenDB();
+            //UnfoldTreeview();
+
+            //var b = server.GetMD5HashFromFile(LiteDB.sqlDBpath.ToString()); 
+            //System.IO.Path.GetExtension("路径");
+
+            var vM = this.DataContext as FamilyBrowserVM;
+            //vM.IsDownload();
+            vM.FileUplod();
         }
-        
+
+        //实例化Timer类，设置间隔时间为10000毫秒；   
 
 
-
+        //设置计时器多少秒实现一次
+        const int Time = 300;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.DeleteFile();
+            
+            //时间
+            System.Timers.Timer t = new System.Timers.Timer(Time*1000);
+            t.Elapsed += new System.Timers.ElapsedEventHandler(theout);
+            //设置是执行一次（false）还是一直执行(true)；
+            t.AutoReset = true;
+            //启动计时器
+            t.Enabled = true;       
+            UnfoldTreeview();
+           
+            
+        }
+        //计时器事件
+        public void theout(object source, System.Timers.ElapsedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.IsDownload();
+        }
+        //展开树形节点
+        private void UnfoldTreeview()
+        {       
             foreach (var item in Treeview1.Items)
-            {
-                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);              
+            {          
+                DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
             }
+        }
+
+
+        private void copy_Click(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }

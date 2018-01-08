@@ -57,7 +57,8 @@ namespace RevitHP
             {              
                 LoginState args = new LoginState(ServerManagement.roleName);
                 PassDataBetweenForm(this, args);
-                this.Close();
+                vM.IsDownload();
+                this.Close();               
             }
             else
             {

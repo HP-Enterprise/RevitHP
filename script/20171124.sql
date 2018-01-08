@@ -9,7 +9,10 @@ CREATE TABLE version(
 CREATE TABLE catalog(
 	id     int not null primary key,
 	name   varchar not null,
-	parent smallint not null -- parent id, 0 means top level
+	parent smallint not NULL, -- parent id, 0 means top level
+	newname varchar,
+	NameID INT,
+	identifying INT
 );
 
 INSERT INTO catalog(id,name,parent) VALUES

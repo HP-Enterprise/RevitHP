@@ -34,19 +34,25 @@
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="uploading_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/upload.png"/>
-                        <TextBlock Text="上传" HorizontalAlignment="Center"/>
+                        <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="download" Click="download_Click_1">
                     <StackPanel>
                         <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="下载" HorizontalAlignment="Center"/>
+                        <TextBlock Text="下载测试" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="MD5" Click="MD5_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="功能测试" HorizontalAlignment="Center"/>
+                        <TextBlock Text="改变数据库" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="copy" Click="copy_Click">
+                    <StackPanel>
+                        <Image Width="33"  Source="Img/download.png"/>
+                        <TextBlock Text="拷贝" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </ToolBar>

@@ -37,6 +37,8 @@ namespace RevitHP
             {
                 _parentItem.name = this.UpdateName.Text;
                 _parentItem.Identifying = Convert.ToInt32(CataItem.Stater.Update);
+
+
                 if (_parentItem.name== this.UpdateName.Text)
                 {
                     this.Close();

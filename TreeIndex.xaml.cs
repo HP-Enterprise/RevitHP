@@ -35,7 +35,9 @@ namespace RevitHP
             //list.ParentID = 0;
             list.Identifying = Convert.ToInt32(CataItem.Stater.Input);
             list.Name = this.NodeInput.Text;
-            _parentItem.Children.Add(list);          
+            _parentItem.Children.Add(list);        
+            
+
         }
     }
 }
