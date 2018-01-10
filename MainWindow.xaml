@@ -74,6 +74,29 @@
             </TreeView.ContextMenu>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}" >
+                    <!--<TextBlock  Text="{Binding Name}" />-->
+                    <TextBlock>  
+                <Run Text="{Binding  Name}" />  
+                <Run Text="{Binding  Id}" />
+                    </TextBlock>
+
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            
+        </TreeView>
+        
+        
+        <TreeView  ItemsSource="{Binding}" Margin="10,60,0,45"  x:Name="Treeview1_Copy" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.Column="1"  >
+            <!--菜单-->
+            <TreeView.ContextMenu>
+                <ContextMenu >
+                    <MenuItem Header="添加" x:Name="InputNode1" Click="InputNode_Click"/>
+                    <MenuItem Header="删除" x:Name="DeleteNode1" Click="DeleteNode_Click"/>
+                    <MenuItem Header="修改" x:Name="UpdateNode1" Click="UpdateNode_Click"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}" >
                     <TextBlock  Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

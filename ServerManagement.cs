@@ -52,7 +52,7 @@ namespace RevitHP
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
-        public async Task<bool> HttpClientDoPostLogin(string Name, string Password)
+        public bool HttpClientDoPostLogin(string Name, string Password)
         {
             //using (var client = new HttpClient())
             //{
@@ -75,18 +75,34 @@ namespace RevitHP
             //    {
             //        return false;
             //    }
-            var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/login");
+            var client = new RestClient(REMOTE_URL+"/login");
             var request = new RestRequest(Method.POST);
             request.AddParameter("username", Name);
             request.AddParameter("password", Password);
             IRestResponse response = client.Execute(request);
-            JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
 
+           
+            if (!response.IsSuccessful)
+            {
+                throw response.ErrorException;
+            }
+
+            JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
+            var dicheaders = new List<KeyValuePair<string, string>>();        
+            for (int i = 0; i < response.Headers.Count; i++){
+
+                string name = response.Headers[i].Name;
+                string values = response.Headers[i].Value.ToString();
+                dicheaders.Add(new KeyValuePair<string, string>(name,values));
+            }
+
+          
             if (obj.GetValue("success").ToString() == "True")
             {
-                family_ACCESS_TOKEN = response.Headers[1].Value.ToString();
-                roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
+                family_ACCESS_TOKEN = dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value;
+                roleName = obj.GetValue("obj")["roles"][0]["roleName"].Values().ToString(); 
                 MainWindow.LoginState = false;
+               
                 return true;
             }
             else
@@ -159,9 +175,9 @@ namespace RevitHP
         //下载最新版本的文件
         public void DownloadNew(string filepath)
         {
-
-            string urlstr = @"http://1411018008.tunnel.echomod.cn/revit/file/pull";
-            FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+            //http://114.113.234.159:8074/revit//file/pull
+            string urlstr = @"http://114.113.234.159:8074/revit//file/pull";
+            FileStream fs = new FileStream(@"E:\AA.HTML", FileMode.Create, FileAccess.Write);
             Uri url = new Uri(urlstr);
             HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             myHttpWebRequest.Headers.Add("MD5", "00000000000000000000000000000000");
@@ -187,15 +203,14 @@ namespace RevitHP
         //发送下载请求，返回Status Code
         public int DownloadStatusCode(string filepath, string MD5)
         {
-            string urlstr = @"http://1411018008.tunnel.echomod.cn/revit/file/pull";
+            string urlstr = @"http://114.113.234.159:8074/revit//file/pull";
             FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
             Uri url = new Uri(urlstr);
             HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             myHttpWebRequest.Headers.Add("MD5", MD5);
-            //a224afa3e3977791901ece03bc48148e
-            //00000000000000000000000000000000
+        
             myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
-            myHttpWebRequest.Method = "GET";
+            myHttpWebRequest.Method = "POST";
             HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
             //获取StatusCode 的返回值
             fs.Close();

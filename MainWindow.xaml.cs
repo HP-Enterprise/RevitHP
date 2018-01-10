@@ -30,15 +30,15 @@ namespace RevitHP
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    { 
-   
+    {
+
 
         public MainWindow()
         {
             InitializeComponent();
-          
+
         }
-        public static bool LoginState=true;
+        public static bool LoginState = true;
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -95,16 +95,19 @@ namespace RevitHP
             //    MessageBox.Show(tex);
             //}
 
+
+            //item.Background = System.Windows.Media.Brushes.CornflowerBlue;
+
         }
 
         //添加节点事件
         private void InputNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
-
+            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             if (item != null)
             {
-                TreeIndex index = new TreeIndex(item);
+                TreeIndex index = new TreeIndex(item, vm);
                 index.ShowDialog();
 
             }
@@ -140,11 +143,11 @@ namespace RevitHP
         //修改节点事件
         private void UpdateNode_Click(object sender, RoutedEventArgs e)
         {
-            CataItem item = Treeview1.SelectedItem as CataItem;      
-            
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             if (item != null)
             {
-                TreeUpdate update = new TreeUpdate(item);
+                TreeUpdate update = new TreeUpdate(item, vm);
                 update.ShowDialog();
             }
         }
@@ -155,7 +158,7 @@ namespace RevitHP
             this.welcome.Content = e.RoleName;
             this.login_state.Text = "注销";
         }
-       
+
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
         {
@@ -165,7 +168,7 @@ namespace RevitHP
                 login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
                 login.ShowDialog();
             }
-            else 
+            else
             {
                 logoutAsync();
             }
@@ -176,7 +179,7 @@ namespace RevitHP
         public void logoutAsync()
         {
             var vm = this.DataContext as FamilyBrowserVM;
-            var islogout = Task.Run(vm.islogout);         
+            var islogout = Task.Run(vm.islogout);
             islogout.Wait();
             if (islogout.Result)
             {
@@ -185,13 +188,12 @@ namespace RevitHP
                 this.login_state.Text = "登录";
             }
         }
-        
-        static List<string> SqllitePathList = new List<string>();
-        //上传事件 
-     
+
+
+        //上传事件      
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-          
+
             var vM = this.DataContext as FamilyBrowserVM;
             //调用上传
             vM.FileUplod();
@@ -203,26 +205,27 @@ namespace RevitHP
             var vM = this.DataContext as FamilyBrowserVM;
             vM.IsDownload();
 
-
-
         }
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
-            //复制文件
-            //string targetPath = @"C:\Users\wangxu\AppData\Local\RevitHP\RevHP.1";
-            //System.IO.File.Copy(LiteDB.sqlDBpath.ToString(), targetPath, true);
+            Random ra = new Random();
+            ra.Next();
+            MessageBox.Show(ra.Next().ToString());
+            //var vM = this.DataContext as FamilyBrowserVM;
+            //vM.OpenDB();          
+            //this.Treeview1_Copy.DataContext =vM.TreeViewBinding ;
 
-            //var vM = this.DataContext as FamilyBrowserVM;         
-            //vM.OpenDB();
+
+
             //UnfoldTreeview();
 
             //var b = server.GetMD5HashFromFile(LiteDB.sqlDBpath.ToString()); 
             //System.IO.Path.GetExtension("路径");
 
-            var vM = this.DataContext as FamilyBrowserVM;
-            //vM.IsDownload();
-            vM.FileUplod();
+            //var vM = this.DataContext as FamilyBrowserVM;
+            ////vM.IsDownload();
+            //vM.FileUplod();
         }
 
         //实例化Timer类，设置间隔时间为10000毫秒；   
@@ -233,39 +236,45 @@ namespace RevitHP
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var vM = this.DataContext as FamilyBrowserVM;
-            vM.DeleteFile();
-            
+            //vM.DeleteFile();
+
+
             //时间
-            System.Timers.Timer t = new System.Timers.Timer(Time*1000);
+            System.Timers.Timer t = new System.Timers.Timer(Time * 1000);
             t.Elapsed += new System.Timers.ElapsedEventHandler(theout);
             //设置是执行一次（false）还是一直执行(true)；
             t.AutoReset = true;
             //启动计时器
-            t.Enabled = true;       
+            t.Enabled = true;
             UnfoldTreeview();
-           
-            
+
+
         }
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
-            var vM = this.DataContext as FamilyBrowserVM;
-            vM.IsDownload();
+            if (IsLoaded)
+            {
+                var vM = this.DataContext as FamilyBrowserVM;
+                vM.IsDownload();
+            }
+
         }
         //展开树形节点
         private void UnfoldTreeview()
-        {       
+        {
             foreach (var item in Treeview1.Items)
-            {          
+            {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
+                ((TreeViewItem)dObject).Background = Brushes.Aqua;
             }
         }
 
 
         private void copy_Click(object sender, RoutedEventArgs e)
         {
-           
+
         }
     }
 }

@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RevitHP"
+        
         mc:Ignorable="d"
         Title="登录" Height="314.655" Width="348.276" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+    <local:LoginVM/>
+    </Window.DataContext>
     <Grid Margin="-1,0,2,3">
         <Label Content="用户名：" HorizontalAlignment="Left" Margin="68,69,0,0" VerticalAlignment="Top" Height="25" Width="56"/>
         <TextBox Name="tb_username" TabIndex="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="23" Margin="144,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Tag=""/>
@@ -13,7 +17,7 @@
         <PasswordBox HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tb_password" Margin="144,119,0,0" VerticalAlignment="Top" Height="23" Width="120" Tag=""/>
         <Button Content="登录" HorizontalAlignment="Left" Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="取消" HorizontalAlignment="Left" Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-
+        <TextBlock HorizontalAlignment="Left" Margin="0,261,0,0" TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Top" Width="339" Height="20" Foreground="#FFDC0202"/>
 
     </Grid>
 </Window>

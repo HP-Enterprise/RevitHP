@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace RevitHP
 {
@@ -44,21 +45,41 @@ namespace RevitHP
                 MessageBox.Show("请输入用户名和密码!");
             }
             else
-            {          
-                  HttpClientDoPostLogin(tb_username.Text, tb_password.Password);          
+            {
+                var actionLogin = new Action(() =>
+                {
+                    try
+                    {
+                        Thread.Sleep(5000);
+                        HttpClientDoPostLogin(tb_username.Text, tb_password.Password);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            var vm = this.DataContext as LoginVM;
+                            vm.ErrorMsg = ex.Message;
+                        }));
+                    }
+                });
+                //异步
+                //actionLogin.BeginInvoke(null, null);
+                //同步
+                actionLogin.Invoke();
             }
 
         }
 
-        public async void HttpClientDoPostLogin(string Name, string Password)
+        public  void HttpClientDoPostLogin(string Name, string Password)
         {
-            bool obj = await vM.isloginAsync(Name,Password);
+            bool obj = vM.isloginAsync(Name, Password);
             if (obj)
-            {              
+            {
                 LoginState args = new LoginState(ServerManagement.roleName);
                 PassDataBetweenForm(this, args);
-                vM.IsDownload();
-                this.Close();               
+                //vM.IsDownload();
+                this.Close();
             }
             else
             {

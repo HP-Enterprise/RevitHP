@@ -34,9 +34,9 @@ namespace RevitHP
         }
 
         //登录
-        public async Task<bool> isloginAsync(string Name, string Password)
+        public bool isloginAsync(string Name, string Password)
         {
-            bool islogin = await m_biz.IsloginAsync(Name, Password);        
+            bool islogin = m_biz.IsloginAsync(Name, Password);        
             return islogin;
         }
 
@@ -46,38 +46,55 @@ namespace RevitHP
             bool islogout = await m_biz.IslogoutAsync();
             return islogout;
         }
-
-        public string md5()
+       
+        public string OpenDB()
         {
-            return m_biz.md5();
-
-        }
-        public void OpenDB()
-        {
-            m_biz.openDB();
+           
+            //RevitBiz biz = new RevitBiz();
+           return  m_biz.openDB1();
+         
             //调用接口事件
-            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+            //PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
 
-      
+        //文件下载
         public void IsDownload()
         {
             m_biz.pull();
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
 
         public void copy()
         {
             m_biz.copy();
         }
+        //文件上传
         public void FileUplod()
         {
             m_biz.ispush();
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
-
+        //删除文件
         public void DeleteFile()
         {
             m_biz.DeleteFile();
         }
+        //添加结点
+        public void SetCatalogAdd(string name, int id, int parentid)
+        {
+            m_biz.SetCatalogAdd(name, id, parentid);
+        }
+        public void SetCatalogUpdate(int id, string newname)
+        {
+            m_biz.SetCatalogUpdate(id,newname);
+        }
+        //文件测试
+        public string ceshi()
+        {
+          return  m_biz.selete();
+
+        }
+
 
     }
 }

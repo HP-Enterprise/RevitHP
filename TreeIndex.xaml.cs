@@ -20,23 +20,25 @@ namespace RevitHP
     public partial class TreeIndex : Window
     {
        
-        private CataItem _parentItem;      
-        public TreeIndex(RevitHP.CataItem item)
+        private CataItem _parentItem;
+        private FamilyBrowserVM Vm;
+        public TreeIndex(CataItem item,FamilyBrowserVM familyBrowserVM)
         {
             
             InitializeComponent();
             _parentItem = item;          
             this.ParentName.Content = item.Name;
+            Vm = familyBrowserVM;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             CataItem list = new CataItem();
-            //list.Id = (_parentItem.Id * 10) + _parentItem.Children.Count + 1;
-            //list.ParentID = 0;
+            Random ra = new Random();          
+            Vm.SetCatalogAdd(this.NodeInput.Text,ra.Next(),_parentItem.Id);
             list.Identifying = Convert.ToInt32(CataItem.Stater.Input);
             list.Name = this.NodeInput.Text;
-            _parentItem.Children.Add(list);        
-            
+            _parentItem.Children.Add(list);
+            this.Close();
 
         }
     }

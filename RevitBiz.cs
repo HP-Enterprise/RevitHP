@@ -104,17 +104,17 @@ namespace RevitHP
              *     404: 如果客户端从来没有上传过数据，返回404错误
              * HTTP Content 可选.内容的二进制字节流
              */
-          
-            string MD5= GetMD5HashFromFile(m_folder + "\\RevHP.0");
-            int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", MD5);
-            
+
+            string MD5 = GetMD5HashFromFile(m_folder + "\\RevHP.0");
+            //int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", MD5);
+            int statuscode = server.DownloadStatusCode(@"E:\wangkai\新建 Microsoft Word 文档.docx", MD5);
             switch (statuscode)
             {
                 //200代表服务器有新的数据库
                 case 200:
                     //下载最新的数据文件                  
-                   server.DownloadNew(m_folder + "\\RevHP.0");
-                   copy();                                       
+                    server.DownloadNew(m_folder + "\\RevHP.0");
+                    copy();
                     break;
                 //304代表版本一致
                 case 304:
@@ -158,7 +158,7 @@ namespace RevitHP
         {
             //上传时，将文件.1复制.2,并将.2上传.
             copy2();
-            if (server.Push(m_folder + "\\RevHP.2", m_folder + "\\RevHP.0")) 
+            if (server.Push(m_folder + "\\RevHP.2", m_folder + "\\RevHP.0"))
             {
 
                 //如果上传成功
@@ -167,23 +167,22 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.0");
                 File.Delete(m_folder + "\\RevHP.1");
                 string fileName = m_folder + "\\RevHP.2";
-                string dfileName = System.IO.Path.ChangeExtension(fileName, ".0");
-                File.Move(fileName, dfileName);
+                string dfileName = Path.ChangeExtension(fileName,".0");
+                File.Move(fileName,dfileName);
                 copy();
             }
             else
             {
                 //如果上传失败执行下载
                 isDownloadNew();
+                File.Delete(m_folder + "\\RevHP.2");
             }
         }
 
         private void isDownloadNew()
         {
             server.DownloadNew(m_folder + "\\RevHP.0");
-            
-           m_liteDB.Open(0);
-           
+            m_liteDB.Open(0);
         }
 
 
@@ -260,7 +259,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("insert into catalog(id,name,parent) values('{0}','{1}','{2}')", id, name, parentid);
+                cmd.CommandText = string.Format("insert into catalog(id,name,parent,identifying,audit) values('{0}','{1}','{2}','{3}','{4}')", id, name, parentid,0,0);
                 cmd.ExecuteScalar();
             }
         }
@@ -270,12 +269,12 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("upadate catalog set NewName='{0}',identifying='{1}' where id='{2}'", newname, "修改", id);
+                cmd.CommandText = string.Format("UPDATE catalog set newname='{0}',identifying='{1}',audit='{2}' where id={3}", newname,2,0,id);
                 cmd.ExecuteScalar();
             }
 
         }
-        //删除
+        //删除(未完成)
         public void SetCatalogDelete(int id)
         {
             using (var cmd = m_liteDB.CreateCommand())
@@ -288,12 +287,12 @@ namespace RevitHP
 
 
         //登录
-        public async Task<bool> IsloginAsync(string Name, string Password)
+        public bool IsloginAsync(string Name, string Password)
         {
 
             //server.DownloadNew(m_folder+ "\\RevHP.0");           
-            return await server.HttpClientDoPostLogin(Name, Password);  
-           
+            return  server.HttpClientDoPostLogin(Name, Password);
+
         }
         //注销 
         public async Task<bool> IslogoutAsync()
@@ -326,6 +325,62 @@ namespace RevitHP
         {
             m_liteDB.Open(1);
             m_liteDB.Upgrade();
+        }
+        public string openDB1()
+        {
+            List<CataItem> list = new List<CataItem>();
+            List<int> parentid = new List<int>();
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id,name,parent FROM catalog where identifying not null";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //组装字典
+                        int a = reader.GetInt32(0);
+                        CataItem item = new CataItem();
+                        item.Id = reader.GetInt32(0);
+                        item.Name = reader.GetString(1);
+                        parentid.Add(reader.GetInt32(2));
+                        list.Add(item);
+                    }
+
+                }
+
+                //打开下载的文件
+                LiteDB NewliteDB = new LiteDB(m_folder);
+                NewliteDB.Open(0);
+                using (var newcmd = NewliteDB.CreateCommand())
+                {
+                    for (int j = 0; j < parentid.Count; j++)
+                    {
+                        newcmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
+                        
+                        using (var reader = newcmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                using (var addcom = m_liteDB.CreateCommand())
+                                {
+                                    addcom.CommandText = string.Format("insert into catalog(id,name,parent,identifying) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].name, parentid[j], 0);
+                                    addcom.ExecuteScalar();
+                                }
+                            }
+
+
+
+
+                        }
+                    }
+
+
+
+
+                    return "a";
+
+                }
+            }
         }
         //将文件.0复制为.1并打开它
         public void copy()
@@ -368,7 +423,29 @@ namespace RevitHP
             }
         }
 
+        public string selete()
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                string a = "";
+                cmd.CommandText = "SELECT id,name,parent FROM catalog where id=17";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //组装字典
+                        CataItem item = new CataItem();
+                        item.Id = reader.GetInt32(0);
+                        item.Name = reader.GetString(1);
+                        a = reader.GetString(1);
+                    }
 
+                }
+
+                return a;
+            }
+
+        }
 
     }
 }

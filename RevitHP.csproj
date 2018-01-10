@@ -115,6 +115,7 @@
     <Compile Include="LoginForm.xaml.cs">
       <DependentUpon>LoginForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoginVM.cs" />
     <Compile Include="RevitBiz.cs" />
     <Compile Include="RibbonPanel.cs" />
     <Compile Include="ServerManagement.cs" />
