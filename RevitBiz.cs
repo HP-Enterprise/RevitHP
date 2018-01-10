@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,14 @@ namespace RevitHP
         //实例
         ServerManagement server = new ServerManagement();
 
-        public RevitBiz()
+        // 单实例
+        private static RevitBiz s_biz = new RevitBiz();
+        public static RevitBiz Instance
+        {
+            get { return s_biz; }
+        }
+
+        protected RevitBiz()
         {
             // 建立缓存文件夹
             //在当前电脑用户下建立缓存文件夹
@@ -227,7 +235,6 @@ namespace RevitHP
                         dictCatalog.Add(reader.GetInt32(0), item);
                         //0位当前id, 2位父节点id
                         dictPID.Add(item.Id, reader.GetInt32(2));
-                        Debug.WriteLine(dictCatalog.Keys.ToString());
                     }
 
                 }
@@ -287,11 +294,9 @@ namespace RevitHP
 
 
         //登录
-        public bool IsloginAsync(string Name, string Password)
-        {
-
-            //server.DownloadNew(m_folder+ "\\RevHP.0");           
-            return  server.HttpClientDoPostLogin(Name, Password);
+        public bool Login(string name, SecureString pwd)
+        { 
+            return server.HttpClientDoPostLogin(name, pwd);
 
         }
         //注销 

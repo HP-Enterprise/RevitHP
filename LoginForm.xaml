@@ -11,16 +11,15 @@
         <local:LoginVM/>
     </Window.DataContext>
     <Grid Height="150" VerticalAlignment="Center" Margin="4,0">
-        <TextBox Name="tb_username" TabIndex="0" VerticalContentAlignment="Center" Height="23" Margin="73,12.24,22.19,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Tag=""/>
-        <PasswordBox VerticalContentAlignment="Center" Name="tb_password" Margin="73,40.24,22.19,0" VerticalAlignment="Top" Height="23" Tag="" d:LayoutOverrides="VerticalAlignment"/>
-
-        <TextBlock TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Bottom" Foreground="#FFDC0202" Margin="4,0,4,4"/>
-        <TextBlock HorizontalAlignment="Left" Margin="16.856,16.12,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="用户名"/><Run Text=":"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="16.856,16.12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="用户名:"/>
+        <TextBox TabIndex="0" VerticalContentAlignment="Center" Height="23" Margin="73,12.24,22.19,0" TextWrapping="Wrap" Text="{Binding UserName}" VerticalAlignment="Top" Tag=""/>
         <TextBlock HorizontalAlignment="Left" Margin="28.856,44.12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="密码:"/>
+        <PasswordBox VerticalContentAlignment="Center" Margin="73,40.24,22.19,0" VerticalAlignment="Top" Height="23" Tag="" d:LayoutOverrides="VerticalAlignment" PasswordChanged="OnPwdChanged"/>
         <StackPanel  Margin="0,90.084,0,0" Orientation="Horizontal" VerticalAlignment="Top" d:LayoutOverrides="Width" HorizontalAlignment="Center">
-            <Button Content="登录" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="取消" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Margin="8,0,0,0" />
+            <Button Content="登录" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="OnLogin"/>
+            <Button Content="取消" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="CloseWindow" Margin="8,0,0,0" />
         </StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Bottom" Foreground="#FFDC0202" Margin="4,0,4,4"/>
 
     </Grid>
 </Window>

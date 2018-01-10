@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security;
+using System.Windows.Threading;
 
 namespace RevitHP
 {
@@ -20,6 +18,39 @@ namespace RevitHP
                 m_strErrorMsg = value;
                 PropertyChanged(this, new PropertyChangedEventArgs("ErrorMsg"));
             }
+        }
+
+        public string UserName { get; set; }
+
+        public SecureString Pwd { private get; set; }
+
+        public void Login()
+        {
+            if (String.IsNullOrWhiteSpace(UserName)) {
+                this.ErrorMsg = "请填写用户名";
+                return;
+            }
+
+            if (Pwd == null || Pwd.Length == 0) {
+                this.ErrorMsg = "请填写密码";
+                return;
+            }
+
+            var dispatcher = Dispatcher.CurrentDispatcher;
+
+            var actLogin = new Action(()=> {
+                try
+                {
+                    RevitBiz.Instance.Login(this.UserName, this.Pwd);
+                }
+                catch (Exception ex) {
+                    dispatcher.Invoke(new Action(() =>
+                    {
+                        ErrorMsg = ex.Message;
+                    }));
+                }
+            });
+            actLogin.BeginInvoke(null, null);
         }
     }
 }
