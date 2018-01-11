@@ -24,7 +24,7 @@ namespace RevitHP
 
         public SecureString Pwd { private get; set; }
 
-        public void Login()
+        public void Login(Action action)
         {
             if (String.IsNullOrWhiteSpace(UserName)) {
                 this.ErrorMsg = "请填写用户名";
@@ -42,6 +42,9 @@ namespace RevitHP
                 try
                 {
                     RevitBiz.Instance.Login(this.UserName, this.Pwd);
+                    if (action != null) {
+                        action.Invoke();
+                    }
                 }
                 catch (Exception ex) {
                     dispatcher.Invoke(new Action(() =>

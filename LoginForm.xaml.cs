@@ -30,8 +30,16 @@ namespace RevitHP
 
         private void OnLogin(object sender, RoutedEventArgs e)
         {
+            
             var vm = this.DataContext as LoginVM;
-            vm.Login();
+            vm.Login(()=> {
+                // TODO:
+
+                Dispatcher.Invoke(()=> {
+                    DialogResult = true;
+                    Close();
+                });
+            });
         }
     }
 }

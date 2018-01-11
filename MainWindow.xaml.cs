@@ -166,7 +166,11 @@ namespace RevitHP
             {
                 LoginForm form = new LoginForm();
                 form.Owner = this;
-                form.ShowDialog();
+                if (form.ShowDialog() == true) {
+                    var vm = form.DataContext as LoginVM;
+                    // TODO: check the value in vm
+                }
+                
             }
             else
             {
