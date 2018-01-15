@@ -10,10 +10,10 @@ CREATE TABLE catalog(
 	id     int not null primary key,
 	name   varchar not null,
 	parent smallint not NULL, -- parent id, 0 means top level
-	newname varchar null,--修改name
+	newname nvarchar(10) default(''),--修改name
 	NameID INT null,--操作人ID
 	identifying INT null,--状态标识
-	audit int null --是否审核
+	audit int default(0) --是否审核
 );
 
 INSERT INTO catalog(id,name,parent) VALUES

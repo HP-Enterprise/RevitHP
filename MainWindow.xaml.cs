@@ -86,12 +86,12 @@ namespace RevitHP
 
         private void Treeview1_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //CataItem item = Treeview1.SelectedItem as CataItem;          
+            //CataItem item = Treeview1.SelectedItem as CataItem;
             //if (item != null)
             //{
-            //    TreeIndex index = new TreeIndex(item);
-            //    index.ShowDialog();
-            //    string tex = item.ParentID.ToString();
+            //    //    TreeIndex index = new TreeIndex(item);
+            //    //    index.ShowDialog();
+            //    string tex = item.Audit.ToString();
             //    MessageBox.Show(tex);
             //}
 
@@ -120,7 +120,7 @@ namespace RevitHP
         private void DeleteNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
-
+            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             //((RevitHP.FamilyBrowserVM)Treeview1.DataContext).TreeViewBinding[0].Children[0].children.Add(list);
             if (item == null)
             {
@@ -131,9 +131,9 @@ namespace RevitHP
             if (parent != null)
             {
                 //在父节点中删除选中的子节点
+                vm.SetCatalogdelete(item.Id);
                 parent.Children.Remove(item);
                 item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
-
             }
             else
             {
@@ -147,7 +147,7 @@ namespace RevitHP
             FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             if (item != null)
             {
-                TreeUpdate update = new TreeUpdate(item, vm);
+                TreeUpdate update = new TreeUpdate(item,vm);
                 update.ShowDialog();
             }
         }
@@ -157,6 +157,10 @@ namespace RevitHP
         {
             this.welcome.Content = e.RoleName;
             this.login_state.Text = "注销";
+            if (ServerManagement.id==1)
+            {
+                this.audit.Visibility = Visibility.Visible;
+            }
         }
 
         //登陆注销事件
@@ -174,8 +178,6 @@ namespace RevitHP
             }
 
         }
-
-
         public void logoutAsync()
         {
             var vm = this.DataContext as FamilyBrowserVM;
@@ -193,52 +195,41 @@ namespace RevitHP
         //上传事件      
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!LoginState)
+            {
             var vM = this.DataContext as FamilyBrowserVM;
             //调用上传
             vM.FileUplod();
-
+            }
+            else
+            {
+                MessageBox.Show("未登录，请您先登录");
+            }
+           
         }
-
-        private void download_Click_1(object sender, RoutedEventArgs e)
-        {
-            var vM = this.DataContext as FamilyBrowserVM;
-            vM.IsDownload();
-
-        }
+     
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
-            Random ra = new Random();
-            ra.Next();
-            MessageBox.Show(ra.Next().ToString());
-            //var vM = this.DataContext as FamilyBrowserVM;
-            //vM.OpenDB();          
-            //this.Treeview1_Copy.DataContext =vM.TreeViewBinding ;
 
-
-
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.OpenDB();
+            //this.Treeview1_Copy.DataContext = vM.TreeViewBinding;
             //UnfoldTreeview();
-
-            //var b = server.GetMD5HashFromFile(LiteDB.sqlDBpath.ToString()); 
-            //System.IO.Path.GetExtension("路径");
 
             //var vM = this.DataContext as FamilyBrowserVM;
             ////vM.IsDownload();
             //vM.FileUplod();
         }
 
-        //实例化Timer类，设置间隔时间为10000毫秒；   
-
-
+     
         //设置计时器多少秒实现一次
         const int Time = 300;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var vM = this.DataContext as FamilyBrowserVM;
-            //vM.DeleteFile();
-
-
+            vM.DeleteFile();
+            vM.copy();
             //时间
             System.Timers.Timer t = new System.Timers.Timer(Time * 1000);
             t.Elapsed += new System.Timers.ElapsedEventHandler(theout);
@@ -248,16 +239,21 @@ namespace RevitHP
             t.Enabled = true;
             UnfoldTreeview();
 
+            //if (ServerManagement.id!=1)
+            //{
+            // audit.Visibility = Visibility.Collapsed;
+            //}
+           
 
         }
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                var vM = this.DataContext as FamilyBrowserVM;
-                vM.IsDownload();
-            }
+            //if (IsLoaded)
+            //{
+            //    var vM = this.DataContext as FamilyBrowserVM;
+            //    vM.IsDownload();
+            //}
 
         }
         //展开树形节点
@@ -267,13 +263,24 @@ namespace RevitHP
             {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
-                ((TreeViewItem)dObject).Background = Brushes.Aqua;
+                //((TreeViewItem)dObject).Background = Brushes.Aqua;
             }
         }
-
-
-        private void copy_Click(object sender, RoutedEventArgs e)
+        //通过审核
+        private void audit_Click(object sender, RoutedEventArgs e)
         {
+            var vM = this.DataContext as FamilyBrowserVM;        
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            if (item.newname.Length > 2)
+            {
+                //修改
+                vM.PassAuditUpdate(item.Id, item.newname);
+            }
+            else
+            {
+                vM.PassAuditAdd(item.Id);
+            }
+
 
         }
     }

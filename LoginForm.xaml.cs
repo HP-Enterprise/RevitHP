@@ -49,8 +49,7 @@ namespace RevitHP
                 var actionLogin = new Action(() =>
                 {
                     try
-                    {
-                        Thread.Sleep(5000);
+                    {                    
                         HttpClientDoPostLogin(tb_username.Text, tb_password.Password);
 
                     }
@@ -68,7 +67,6 @@ namespace RevitHP
                 //同步
                 actionLogin.Invoke();
             }
-
         }
 
         public  void HttpClientDoPostLogin(string Name, string Password)
@@ -78,7 +76,7 @@ namespace RevitHP
             {
                 LoginState args = new LoginState(ServerManagement.roleName);
                 PassDataBetweenForm(this, args);
-                //vM.IsDownload();
+                vM.IsDownload();
                 this.Close();
             }
             else

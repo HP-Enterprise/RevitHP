@@ -17,7 +17,7 @@
         <PasswordBox HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tb_password" Margin="144,119,0,0" VerticalAlignment="Top" Height="23" Width="120" Tag=""/>
         <Button Content="登录" HorizontalAlignment="Left" Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="取消" HorizontalAlignment="Left" Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,261,0,0" TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Top" Width="339" Height="20" Foreground="#FFDC0202"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,256,0,0" TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Top" Width="339" Height="20" Foreground="#FFDC0202"/>
 
     </Grid>
 </Window>

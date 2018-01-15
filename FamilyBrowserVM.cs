@@ -23,20 +23,20 @@ namespace RevitHP
 
         //绑定树形结点
         public Collection<CataItem> TreeViewBinding
-        {          
+        {
             get
             {
                 Debug.WriteLine(m_biz.Top.Name);
                 var league = new Collection<CataItem>() { m_biz.Top };
                 return league;
             }
-           
+
         }
 
         //登录
         public bool isloginAsync(string Name, string Password)
         {
-            bool islogin = m_biz.IsloginAsync(Name, Password);        
+            bool islogin = m_biz.IsloginAsync(Name, Password);
             return islogin;
         }
 
@@ -46,13 +46,13 @@ namespace RevitHP
             bool islogout = await m_biz.IslogoutAsync();
             return islogout;
         }
-       
+
         public string OpenDB()
         {
-           
+
             //RevitBiz biz = new RevitBiz();
-           return  m_biz.openDB1();
-         
+            return m_biz.openDB1();
+
             //调用接口事件
             //PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
@@ -60,8 +60,15 @@ namespace RevitHP
         //文件下载
         public void IsDownload()
         {
-            m_biz.pull();
-            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+            switch (m_biz.pull())
+            {
+                case 200:
+                    PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         public void copy()
@@ -84,17 +91,30 @@ namespace RevitHP
         {
             m_biz.SetCatalogAdd(name, id, parentid);
         }
+        //修改结点
         public void SetCatalogUpdate(int id, string newname)
         {
-            m_biz.SetCatalogUpdate(id,newname);
+            m_biz.SetCatalogUpdate(id, newname);
+        }
+        //删除节点
+        public void SetCatalogdelete(int id)
+        {
+            m_biz.SetCatalogDelete(id);
         }
         //文件测试
         public string ceshi()
         {
-          return  m_biz.selete();
+            return m_biz.selete();
+        }
+        //审核
+        public void PassAuditAdd(int id)
+        {
+            m_biz.PassAuditAdd(id);
+        }
+        public void PassAuditUpdate(int id,string newname)
+        {
+            m_biz.PassAuditUpdate(id, newname);
 
         }
-
-
     }
 }

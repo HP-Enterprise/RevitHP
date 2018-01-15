@@ -85,49 +85,42 @@ namespace RevitHP
 
 
 
-        public void pull()
+        public int pull()
         {
-            // TODO: 从远程拉一个数据库的新版本下来
+            m_liteDB.Close();
+            int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", md5());
 
-            /* REQUEST 请求
-             * HTTP GET /{prefix}/catalog
-             * HTTP HEAD
-             *     If-None-Match: 可选.内容的MD5值(32个字符的大写16进制字符串形式，如 52291B5CECA35EEFABB4532CC462E1EC)
-             * 
-             * RESPONSE 响应
-             * HTTP HEAD
-             *     ETag: 内容的MD5值(32个字符的大写16进制字符串形式)
-             *     Content-Type: application/octet-stream 字节流
-             * HTTP Status Code
-             *     200: 请求的If-None-Match的值不匹配(或没有发送If-None-Match)时,返回内容的二进制字节流
-             *     304: 请求的If-None-Match值匹配时,不需要返回内容
-             *     404: 如果客户端从来没有上传过数据，返回404错误
-             * HTTP Content 可选.内容的二进制字节流
-             */
-
-            string MD5 = GetMD5HashFromFile(m_folder + "\\RevHP.0");
-            //int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", MD5);
-            int statuscode = server.DownloadStatusCode(@"E:\wangkai\新建 Microsoft Word 文档.docx", MD5);
             switch (statuscode)
             {
                 //200代表服务器有新的数据库
                 case 200:
-                    //下载最新的数据文件                  
-                    server.DownloadNew(m_folder + "\\RevHP.0");
-                    copy();
-                    break;
+                    //下载最新的数据文件     
+                    m_liteDB.Close();
+                    if (server.DownloadNew(m_folder + "\\RevHP.2"))
+                    {
+                        File.Delete(m_folder + "\\RevHP.0");//删除该文件
+                        string fileName = m_folder + "\\RevHP.2";
+                        string dfileName = Path.ChangeExtension(fileName, ".0");
+                        File.Move(fileName, dfileName);
+                        copy();
+                    }
+                    return 200;
+                //break;
                 //304代表版本一致
                 case 304:
-                    break;
+                    openDB();
+                    return 304;
                 //404代表服务器是全新的
                 case 404:
                     //服务器没有数据库，本地初始化一个            
                     init();
+                    m_liteDB.Close();
+                    copy();
                     //第一次上传
                     server.FistPush(m_folder + "\\RevHP.0");
-                    break;
-
-
+                    return 404;
+                default:
+                    return statuscode;
             }
 
         }
@@ -156,6 +149,7 @@ namespace RevitHP
         //判断上传
         public void ispush()
         {
+
             //上传时，将文件.1复制.2,并将.2上传.
             copy2();
             if (server.Push(m_folder + "\\RevHP.2", m_folder + "\\RevHP.0"))
@@ -167,70 +161,78 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.0");
                 File.Delete(m_folder + "\\RevHP.1");
                 string fileName = m_folder + "\\RevHP.2";
-                string dfileName = Path.ChangeExtension(fileName,".0");
-                File.Move(fileName,dfileName);
+                string dfileName = Path.ChangeExtension(fileName, ".0");
+                File.Move(fileName, dfileName);
                 copy();
             }
             else
             {
                 //如果上传失败执行下载
-                isDownloadNew();
+                IsDownloadNew();
                 File.Delete(m_folder + "\\RevHP.2");
             }
         }
 
-        private void isDownloadNew()
+
+
+
+        private void IsDownloadNew()
         {
             server.DownloadNew(m_folder + "\\RevHP.0");
-            m_liteDB.Open(0);
+            copy();
         }
 
-
-        private void push()
-        {
-            // TODO: 把本地数据库推送到远端
-            // 为了安全，强制要求远程服务器执行检查逻辑
-            // PUSH时带上修订前数据库的MD5值，如果和服务器端的不匹配，表明已经有其它修订发生
-            // 服务器端直接返回失败,要求客户端重新PULL新的修订版后再重试PUSH
-
-            /* REQUEST 请求
-             * HTTP POST /{prefix}/catalog
-             * HTTP HEAD
-             *     If-Match: 期望服务器上的旧数据匹配此值(MD5的大写16进制字符串形式32个字符)
-             *     Content-Type: application/octet-stream 字节流
-             * HTTP Content 内容的二进制字节流
-             * 
-             * RESPONSE 响应
-             * HTTP Status Code
-             *     204: 请求中If-Match的内容和服务器上旧数据的值匹配，服务器用请求里的内容更新服务器上的数据
-             *     412: 请求中If-Match的内容和服务器上旧数据的值不匹配，服务器拒绝请求，不更新数据，且服务器也不需要读取请求的内容
-             */
-        }
         //读数据库树形节点
         private void LoadCatalog()
         {
-
             var dictPID = new Dictionary<int, int>();
             dictCatalog = new Dictionary<int, CataItem>();
             using (var cmd = m_liteDB.CreateCommand())
             {
 
-                cmd.CommandText = "SELECT id,name,parent FROM catalog";
-                using (var reader = cmd.ExecuteReader())
+                //cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog where audit=0 ";
+                if (ServerManagement.id==1)
                 {
-                    while (reader.Read())
+                    cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog ";
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        //组装字典
-                        CataItem item = new CataItem();
-                        item.Id = reader.GetInt32(0);
-                        item.Name = reader.GetString(1);
-                        dictCatalog.Add(reader.GetInt32(0), item);
-                        //0位当前id, 2位父节点id
-                        dictPID.Add(item.Id, reader.GetInt32(2));
-                        Debug.WriteLine(dictCatalog.Keys.ToString());
+                        while (reader.Read())
+                        {
+                            //组装字典
+                            CataItem item = new CataItem();
+                            item.Id = reader.GetInt32(0);
+                            item.Name = reader.GetString(1);
+                            item.NewName = reader.GetString(3);
+                            item.Audit = reader.GetInt32(4);
+                            dictCatalog.Add(reader.GetInt32(0), item);
+                            //0位当前id, 2位父节点id
+                            dictPID.Add(item.Id, reader.GetInt32(2));
+                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                        }
                     }
-
                 }
+                else
+                {
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}'", ServerManagement.id);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //组装字典
+                            CataItem item = new CataItem();
+                            item.Id = reader.GetInt32(0);
+                            item.Name = reader.GetString(1);
+                            //item.NewName = reader.GetString(3);
+                            item.Audit = reader.GetInt32(4);
+                            dictCatalog.Add(reader.GetInt32(0), item);
+                            //0位当前id, 2位父节点id
+                            dictPID.Add(item.Id, reader.GetInt32(2));
+                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                        }
+                    }
+                }
+
+                
 
                 //对 父子节点进行组装
                 foreach (var key in dictCatalog.Keys)
@@ -259,7 +261,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("insert into catalog(id,name,parent,identifying,audit) values('{0}','{1}','{2}','{3}','{4}')", id, name, parentid,0,0);
+                cmd.CommandText = string.Format("insert into catalog(id,name,parent,identifying,audit,NameID) values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, parentid, 0, 1,ServerManagement.id);
                 cmd.ExecuteScalar();
             }
         }
@@ -269,12 +271,12 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set newname='{0}',identifying='{1}',audit='{2}' where id={3}", newname,2,0,id);
+                cmd.CommandText = string.Format("UPDATE catalog set newname='{0}',identifying='{1}',audit='{2}',NameID='{4}' where id={3}", newname, 2, 0, id,ServerManagement.id);
                 cmd.ExecuteScalar();
             }
 
         }
-        //删除(未完成)
+        //删除
         public void SetCatalogDelete(int id)
         {
             using (var cmd = m_liteDB.CreateCommand())
@@ -284,22 +286,17 @@ namespace RevitHP
             }
 
         }
-
-
         //登录
         public bool IsloginAsync(string Name, string Password)
-        {
-
-            //server.DownloadNew(m_folder+ "\\RevHP.0");           
-            return  server.HttpClientDoPostLogin(Name, Password);
-
+        {        
+            return server.HttpClientDoPostLogin(Name, Password);
         }
         //注销 
         public async Task<bool> IslogoutAsync()
         {
             return await server.HttpClientDoPostLogout();
         }
-
+        //判断MD5码
         public string md5()
         {
             //关闭sqlliteDB
@@ -314,74 +311,169 @@ namespace RevitHP
             }
             else
             {
-                //如果文件不存在,返回指定MD5码，下载最新的版本文件
-                //return "00000000000000000000000000000000";
+                //如果文件不存在,返回指定MD5码，下载最新的版本文件               
                 //返回一个故意错误的MD5
                 return "2222222222222222222222222222222";
             }
         }
-
+        //打开数据库
         public void openDB()
         {
             m_liteDB.Open(1);
             m_liteDB.Upgrade();
         }
+
+        //合并（测试）
+        public void updatetreeview()
+        {
+            List<int> parentid = new List<int>();
+            List<CataItem> list = new List<CataItem>();
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                //查询所有修改过后的结点
+                cmd.CommandText = "SELECT id,newname,parent FROM catalog where identifying =2";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //组装字典                     
+                        CataItem item = new CataItem();
+                        int a = reader.GetInt32(0);
+                        string ab = reader.GetString(1);
+                        item.Id = reader.GetInt32(0);
+                        item.Name = reader.GetString(1);
+                        parentid.Add(reader.GetInt32(2));
+                        list.Add(item);
+                    }
+                }
+            }
+
+            LiteDB NewliteDB = new LiteDB(m_folder);
+            NewliteDB.Open(0);
+
+            using (var newcmd = NewliteDB.CreateCommand())
+            {
+                for (int j = 0; j < list.Count; j++)
+                {
+                    newcmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
+                    using (var updatereader = newcmd.ExecuteReader())
+                    {
+                        if (updatereader.Read())
+                        {
+                            using (var updatecom = NewliteDB.CreateCommand())
+                            {
+                                updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name,1,list[j].Id);
+                                updatecom.ExecuteScalar();
+                            }
+                        }
+                        else
+                        {
+                            using (var cmd = m_liteDB.CreateCommand())
+                            {
+
+                                cmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
+                                using (var readerparent = cmd.ExecuteReader())
+                                {
+                                    while (readerparent.Read())
+                                    {
+                                        using (var addcom = NewliteDB.CreateCommand())
+                                        {
+                                            addcom.CommandText = string.Format("insert into catalog(id,name,parent) values('{0}','{1}','{2}')", readerparent.GetInt32(0), readerparent.GetString(1), readerparent.GetInt32(2));
+                                            addcom.ExecuteScalar();
+                                        }
+                                    }
+                                }
+
+                                using (var updatecom = NewliteDB.CreateCommand())
+                                {
+                                    updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name,1, list[j].Id);
+                                    updatecom.ExecuteScalar();
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            NewliteDB.Close();
+        }
+        //合并（测试）
         public string openDB1()
         {
             List<CataItem> list = new List<CataItem>();
             List<int> parentid = new List<int>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = "SELECT id,name,parent FROM catalog where identifying not null";
+                cmd.CommandText = "SELECT id,name,parent FROM catalog where identifying =0";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        //组装字典
-                        int a = reader.GetInt32(0);
+                        //组装字典                     
                         CataItem item = new CataItem();
                         item.Id = reader.GetInt32(0);
                         item.Name = reader.GetString(1);
                         parentid.Add(reader.GetInt32(2));
                         list.Add(item);
                     }
-
                 }
+            }
 
-                //打开下载的文件
-                LiteDB NewliteDB = new LiteDB(m_folder);
-                NewliteDB.Open(0);
-                using (var newcmd = NewliteDB.CreateCommand())
+            //打开下载的文件
+            LiteDB NewliteDB = new LiteDB(m_folder);
+            NewliteDB.Open(0);
+            using (var newcmd = NewliteDB.CreateCommand())
+            {
+
+                for (int j = 0; j < parentid.Count; j++)
                 {
-                    for (int j = 0; j < parentid.Count; j++)
+                    newcmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
+                    using (var reader = newcmd.ExecuteReader())
                     {
-                        newcmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
-                        
-                        using (var reader = newcmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            using (var addcom = NewliteDB.CreateCommand())
                             {
-                                using (var addcom = m_liteDB.CreateCommand())
+                                addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j],1);
+                                addcom.ExecuteScalar();
+                            }
+                        }
+                        else
+                        {
+                            using (var cmd = m_liteDB.CreateCommand())
+                            {
+                                cmd.CommandText = string.Format("SELECT id,name,parent FROM catalog where id='{0}'", parentid[j]);
+                                using (var readerparent = cmd.ExecuteReader())
                                 {
-                                    addcom.CommandText = string.Format("insert into catalog(id,name,parent,identifying) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].name, parentid[j], 0);
+                                    while (readerparent.Read())
+                                    {
+                                        using (var addcom = NewliteDB.CreateCommand())
+                                        {
+                                            addcom.CommandText = string.Format("insert into catalog(id,name,parent) values('{0}','{1}','{2}')", readerparent.GetInt32(0), readerparent.GetString(1), readerparent.GetInt32(2));
+                                            addcom.ExecuteScalar();
+                                        }
+                                    }
+                                }
+
+                                using (var addcom = NewliteDB.CreateCommand())
+                                {
+                                    addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j],1);
                                     addcom.ExecuteScalar();
                                 }
                             }
 
-
-
-
                         }
                     }
-
-
-
-
-                    return "a";
-
                 }
+
             }
+            NewliteDB.Close();
+            updatetreeview();
+            return "a";
         }
+
+
+
         //将文件.0复制为.1并打开它
         public void copy()
         {
@@ -395,7 +487,7 @@ namespace RevitHP
             }
             openDB();
         }
-
+        //将文件.1复制为.2，并去掉所有标识。
         public void copy2()
         {
             m_liteDB.Close();
@@ -405,6 +497,14 @@ namespace RevitHP
             if (file.Exists)
             {
                 file.CopyTo(destinationFile, true);
+                //打开数据库 
+                m_liteDB.Open(2);
+                using (var cmd = m_liteDB.CreateCommand())
+                {
+                    cmd.CommandText = string.Format("UPDATE catalog set identifying=null");
+                    cmd.ExecuteScalar();
+                }
+                m_liteDB.Close();
             }
         }
 
@@ -439,14 +539,29 @@ namespace RevitHP
                         item.Name = reader.GetString(1);
                         a = reader.GetString(1);
                     }
-
                 }
-
                 return a;
             }
-
         }
 
+        //添加的节点通过审核
+        public void PassAuditAdd(int id)
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}' where id={1}",0,id);
+                cmd.ExecuteScalar();
+            }
+        }
+
+        public void PassAuditUpdate(int id, string newname)
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',name='{2}',nameID=null,newname='' where id={1}", 0, id,newname);
+                cmd.ExecuteScalar();
+            }
+        }
     }
 }
 

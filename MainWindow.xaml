@@ -37,24 +37,12 @@
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="download" Click="download_Click_1">
+                <!--<Button Height="53" Margin="0,0,0,-5" Width="55"  Name="audit" Click="audit_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="下载测试" HorizontalAlignment="Center"/>
+                        <TextBlock Text="通过审核" HorizontalAlignment="Center"/>
                     </StackPanel>
-                </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="MD5" Click="MD5_Click">
-                    <StackPanel>
-                        <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="改变数据库" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="copy" Click="copy_Click">
-                    <StackPanel>
-                        <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="拷贝" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                </Button>-->
             </ToolBar>
 
         </StackPanel>
@@ -63,43 +51,31 @@
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}" Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
                     <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
                     <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
                     <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
+                    <MenuItem Header="审核" Name="audit" Click="audit_Click"  Visibility="Collapsed" />
                 </ContextMenu>
             </TreeView.ContextMenu>
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}" >
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <!--<TextBlock  Text="{Binding Name}" />-->
-                    <TextBlock>  
-                <Run Text="{Binding  Name}" />  
-                <Run Text="{Binding  Id}" />
+                    <TextBlock >  
+                <Run Text="{Binding  Name}"/>  
+                <Run Text="{Binding  NewName }"/>
+                <!--<Run Text="{Binding  Audit}"/>-->
+                     
                     </TextBlock>
-
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
             
         </TreeView>
         
         
-        <TreeView  ItemsSource="{Binding}" Margin="10,60,0,45"  x:Name="Treeview1_Copy" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.Column="1"  >
-            <!--菜单-->
-            <TreeView.ContextMenu>
-                <ContextMenu >
-                    <MenuItem Header="添加" x:Name="InputNode1" Click="InputNode_Click"/>
-                    <MenuItem Header="删除" x:Name="DeleteNode1" Click="DeleteNode_Click"/>
-                    <MenuItem Header="修改" x:Name="UpdateNode1" Click="UpdateNode_Click"/>
-                </ContextMenu>
-            </TreeView.ContextMenu>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}" >
-                    <TextBlock  Text="{Binding Name}" />
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+        
     </Grid>
 </Window>

@@ -10,10 +10,12 @@ namespace RevitHP
 {
     public class CataItem : INotifyPropertyChanged
     {
-        public CataItem(string name, int id)
+        public CataItem(string name, int id,string newname,int audit)
         {
             Name = name;
             Id = id;
+            NewName = newname;
+
             Children = new ObservableCollection<CataItem>();
         }
         public CataItem()
@@ -37,6 +39,20 @@ namespace RevitHP
                 }
                 }
         }
+        public int Audit { get; set; }
+        public int audit
+        {
+            get { return audit; }
+            set
+            {
+                if (this.Audit != value)
+                {
+                    this.audit = value;
+                }
+            }
+        }
+
+
         public int Id { get; set; }
         public int id
         {
@@ -49,6 +65,7 @@ namespace RevitHP
                 }
             }
         }
+
         public string Name { get; set; }
 
         public string name
@@ -63,6 +80,23 @@ namespace RevitHP
                 }
             }
         }
+
+        public string NewName { get; set; }
+
+        public string newname
+        {
+            get { return NewName; }
+            set
+            {
+                if (this.NewName != value)
+                {
+                    this.NewName = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("NewName"));
+                }
+            }
+        }
+
+
         public CataItem Parent { get; set; }
         public ObservableCollection<CataItem> Children { get; set; }
         public ObservableCollection<CataItem> children
