@@ -10,14 +10,29 @@
     <Window.DataContext>
     <local:LoginVM/>
     </Window.DataContext>
-    <Grid Margin="-1,0,2,3">
+    <!--<Grid Margin="-1,0,2,3">
         <Label Content="用户名：" HorizontalAlignment="Left" Margin="68,69,0,0" VerticalAlignment="Top" Height="25" Width="56"/>
         <TextBox Name="tb_username" TabIndex="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="23" Margin="144,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Tag=""/>
         <Label Content="密码："  HorizontalAlignment="Left" Margin="71,119,0,0" VerticalAlignment="Top" Height="28" Width="47"/>
         <PasswordBox HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tb_password" Margin="144,119,0,0" VerticalAlignment="Top" Height="23" Width="120" Tag=""/>
-        <Button Content="登录" HorizontalAlignment="Left" Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="取消" HorizontalAlignment="Left" Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        --><!--<Button Content="登录" HorizontalAlignment="Left" Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="取消" HorizontalAlignment="Left" Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>--><!--
+
+        <Button Content="登录" HorizontalAlignment="Left"  Margin="72,203,0,0" VerticalAlignment="Top" Width="75" Click="OnLogin"/>
+        <Button Content="取消" HorizontalAlignment="Left"  Margin="188,203,0,0" VerticalAlignment="Top" Width="75" Click="CloseWindow" />
         <TextBlock HorizontalAlignment="Left" Margin="0,256,0,0" TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Top" Width="339" Height="20" Foreground="#FFDC0202"/>
+
+    </Grid>-->
+    <Grid Height="150" VerticalAlignment="Center" Margin="4,0">
+        <TextBlock HorizontalAlignment="Left" Margin="16.856,16.12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="用户名:"/>
+        <TextBox TabIndex="0" VerticalContentAlignment="Center" Height="23" Margin="73,12.24,22.19,0" TextWrapping="Wrap" Text="{Binding UserName}" VerticalAlignment="Top" Tag=""/>
+        <TextBlock HorizontalAlignment="Left" Margin="28.856,44.12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="密码:"/>
+        <PasswordBox VerticalContentAlignment="Center" Margin="73,40.24,22.19,0" VerticalAlignment="Top" Height="23" Tag="" d:LayoutOverrides="VerticalAlignment" PasswordChanged="OnPwdChanged"/>
+        <StackPanel  Margin="0,90.084,0,0" Orientation="Horizontal" VerticalAlignment="Top" d:LayoutOverrides="Width" HorizontalAlignment="Center">
+            <Button Content="登录" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="OnLogin"/>
+            <Button Content="取消" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="CloseWindow" Margin="8,0,0,0" />
+        </StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="{Binding ErrorMsg}" VerticalAlignment="Bottom" Foreground="#FFDC0202" Margin="4,0,4,4"/>
 
     </Grid>
 </Window>

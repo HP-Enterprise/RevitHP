@@ -40,54 +40,80 @@ namespace RevitHP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (this.tb_username.Text == "" || this.tb_password.Password == "")
-            {
-                MessageBox.Show("请输入用户名和密码!");
-            }
-            else
-            {
-                var actionLogin = new Action(() =>
-                {
-                    try
-                    {                    
-                        HttpClientDoPostLogin(tb_username.Text, tb_password.Password);
+            //if (this.tb_username.Text == "" || this.tb_password.Password == "")
+            //{
+            //    MessageBox.Show("请输入用户名和密码!");
+            //}
+            //else
+            //{
+            //    var actionLogin = new Action(() =>
+            //    {
+            //        try
+            //        {                    
+            //            HttpClientDoPostLogin(tb_username.Text, tb_password.Password);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        Dispatcher.Invoke(new Action(() =>
-                        {
-                            var vm = this.DataContext as LoginVM;
-                            vm.ErrorMsg = ex.Message;
-                        }));
-                    }
-                });
-                //异步
-                //actionLogin.BeginInvoke(null, null);
-                //同步
-                actionLogin.Invoke();
-            }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Dispatcher.Invoke(new Action(() =>
+            //            {
+            //                var vm = this.DataContext as LoginVM;
+            //                vm.ErrorMsg = ex.Message;
+            //            }));
+            //        }
+            //    });
+            //    //异步
+            //    //actionLogin.BeginInvoke(null, null);
+            //    //同步
+            //    actionLogin.Invoke();
+            //}
         }
 
-        public  void HttpClientDoPostLogin(string Name, string Password)
+        //public  void HttpClientDoPostLogin(string Name, SecureString Password)
+        //{
+        //    bool obj = vM.isloginAsync(Name, Password);
+        //    if (obj)
+        //    {
+        //        LoginState args = new LoginState(ServerManagement.roleName);
+        //        PassDataBetweenForm(this, args);
+        //        vM.IsDownload();
+        //        this.Close();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("登录失败：用户名或者密码不正确");
+        //    }
+        //}
+        private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            bool obj = vM.isloginAsync(Name, Password);
-            if (obj)
-            {
-                LoginState args = new LoginState(ServerManagement.roleName);
-                PassDataBetweenForm(this, args);
-                vM.IsDownload();
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("登录失败：用户名或者密码不正确");
-            }
+            Close();
         }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+        private void OnPwdChanged(object sender, RoutedEventArgs e)
+        {
+            var box = sender as PasswordBox;
+            var vm = this.DataContext as LoginVM;
+            if (box != null && vm != null)
+            {
+
+                vm.Pwd = box.SecurePassword;
+            }
+        }
+
+        private void OnLogin(object sender, RoutedEventArgs e)
+        {
+
+            var vm = this.DataContext as LoginVM;
+            vm.Login(() => {
+                // TODO:
+                Dispatcher.Invoke(() => {
+                    DialogResult = true;
+                    Close();
+                });
+            });
         }
     }
 }

@@ -10,6 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +54,7 @@ namespace RevitHP
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
-        public bool HttpClientDoPostLogin(string Name, string Password)
+        public bool HttpClientDoPostLogin(string userName, SecureString pwd)
         {
             //using (var client = new HttpClient())
             //{
@@ -78,8 +80,12 @@ namespace RevitHP
             //var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/login");
             var client = new RestClient(REMOTE_URL + "/login");
             var request = new RestRequest(Method.POST);
-            request.AddParameter("username", Name);
-            request.AddParameter("password", Password);
+            request.AddParameter("username", userName);
+
+            var ptr = Marshal.SecureStringToGlobalAllocUnicode(pwd);
+            request.AddParameter("password", Marshal.PtrToStringUni(ptr));
+            Marshal.ZeroFreeGlobalAllocUnicode(ptr);
+
             IRestResponse response = client.Execute(request);
 
 

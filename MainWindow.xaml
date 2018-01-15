@@ -58,7 +58,7 @@
                     <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
                     <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
                     <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
-                    <MenuItem Header="审核" Name="audit" Click="audit_Click"  Visibility="Collapsed" />
+                    <MenuItem Header="审核通过" Name="audit" Click="audit_Click"  Visibility="Collapsed" />
                 </ContextMenu>
             </TreeView.ContextMenu>
             <TreeView.ItemTemplate>
@@ -67,7 +67,7 @@
                     <TextBlock >  
                 <Run Text="{Binding  Name}"/>  
                 <Run Text="{Binding  NewName }"/>
-                <!--<Run Text="{Binding  Audit}"/>-->
+                <Run Text="{Binding  Audit}"/>
                      
                     </TextBlock>
                 </HierarchicalDataTemplate>

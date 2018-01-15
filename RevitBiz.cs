@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,12 @@ namespace RevitHP
 
         //实例
         ServerManagement server = new ServerManagement();
-
+        // 单实例
+        private static RevitBiz s_biz = new RevitBiz();
+        public static RevitBiz Instance
+        {
+            get { return s_biz; }
+        }
         public RevitBiz()
         {
             // 建立缓存文件夹
@@ -190,7 +196,7 @@ namespace RevitHP
             using (var cmd = m_liteDB.CreateCommand())
             {
 
-                //cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog where audit=0 ";
+          
                 if (ServerManagement.id==1)
                 {
                     cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog ";
@@ -213,7 +219,7 @@ namespace RevitHP
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}'", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}' ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -286,8 +292,16 @@ namespace RevitHP
             }
 
         }
+
         //登录
-        public bool IsloginAsync(string Name, string Password)
+        public bool Login(string name, SecureString pwd)
+        {
+            return server.HttpClientDoPostLogin(name, pwd);
+
+        }
+
+        //登录
+        public bool IsloginAsync(string Name, SecureString Password)
         {        
             return server.HttpClientDoPostLogin(Name, Password);
         }

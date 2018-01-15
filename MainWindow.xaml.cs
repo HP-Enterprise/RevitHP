@@ -147,7 +147,7 @@ namespace RevitHP
             FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             if (item != null)
             {
-                TreeUpdate update = new TreeUpdate(item,vm);
+                TreeUpdate update = new TreeUpdate(item, vm);
                 update.ShowDialog();
             }
         }
@@ -157,7 +157,7 @@ namespace RevitHP
         {
             this.welcome.Content = e.RoleName;
             this.login_state.Text = "注销";
-            if (ServerManagement.id==1)
+            if (ServerManagement.id == 1)
             {
                 this.audit.Visibility = Visibility.Visible;
             }
@@ -197,17 +197,17 @@ namespace RevitHP
         {
             if (!LoginState)
             {
-            var vM = this.DataContext as FamilyBrowserVM;
-            //调用上传
-            vM.FileUplod();
+                var vM = this.DataContext as FamilyBrowserVM;
+                //调用上传
+                vM.FileUplod();
             }
             else
             {
                 MessageBox.Show("未登录，请您先登录");
             }
-           
+
         }
-     
+
 
         private void MD5_Click(object sender, RoutedEventArgs e)
         {
@@ -222,7 +222,7 @@ namespace RevitHP
             //vM.FileUplod();
         }
 
-     
+
         //设置计时器多少秒实现一次
         const int Time = 300;
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -243,7 +243,7 @@ namespace RevitHP
             //{
             // audit.Visibility = Visibility.Collapsed;
             //}
-           
+
 
         }
         //计时器事件
@@ -269,19 +269,18 @@ namespace RevitHP
         //通过审核
         private void audit_Click(object sender, RoutedEventArgs e)
         {
-            var vM = this.DataContext as FamilyBrowserVM;        
+            var vM = this.DataContext as FamilyBrowserVM;
             CataItem item = Treeview1.SelectedItem as CataItem;
-            if (item.newname.Length > 2)
+            if (item.Audit == 1 && item.newname.Length > 2)
             {
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
             }
-            else
+            else if (item.Audit == 1)
             {
                 vM.PassAuditAdd(item.Id);
             }
-
-
         }
     }
+
 }

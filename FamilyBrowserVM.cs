@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace RevitHP
         }
 
         //登录
-        public bool isloginAsync(string Name, string Password)
+        public bool isloginAsync(string Name, SecureString Password)
         {
             bool islogin = m_biz.IsloginAsync(Name, Password);
             return islogin;
