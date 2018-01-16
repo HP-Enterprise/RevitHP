@@ -1,23 +1,6 @@
-
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Net.Http;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Threading;
 
 namespace RevitHP
 {
@@ -30,9 +13,7 @@ namespace RevitHP
         public LoginForm()
         {
             InitializeComponent();
-         
-        } 
-
+        }
      
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
@@ -51,10 +32,8 @@ namespace RevitHP
 
         private void OnLogin(object sender, RoutedEventArgs e)
         {
-
             var vm = this.DataContext as LoginVM;
             vm.Login(() => {
-                // TODO:
                 Dispatcher.Invoke(() => {
                     DialogResult = true;
                     Close();
