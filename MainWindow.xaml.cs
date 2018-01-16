@@ -150,17 +150,7 @@ namespace RevitHP
                 update.ShowDialog();
             }
         }
-
-        ////委托监控
-        //private void FrmChild_PassDataBetweenForm(object sender, LoginState e)
-        //{
-        //    this.welcome.Content = e.RoleName;
-        //    this.login_state.Text = "注销";
-        //    //if (ServerManagement.id == 1)
-        //    //{
-        //    //    this.audit.Visibility = Visibility.Visible;
-        //    //}
-        //}
+    
 
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
@@ -171,6 +161,8 @@ namespace RevitHP
                 FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
                 if (login.ShowDialog()==true)
                 {
+                    this.welcome.Content =ServerManagement.roleName;
+                    this.login_state.Text = "注销";
                     vm.Downloadnew();
                     
                 }

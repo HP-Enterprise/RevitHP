@@ -39,7 +39,7 @@ namespace RevitHP
         public void InitSQLite()
         {
             // 重置版本
-            this.Rev = 0;
+            this.Rev = 1;
 
             // Create SQLite file
             SQLiteConnection.CreateFile(ResolveSQLiteFile());
