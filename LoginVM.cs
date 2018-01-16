@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace RevitHP
 {
-    class LoginVM : INotifyPropertyChanged
+   public class LoginVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -46,8 +46,7 @@ namespace RevitHP
                 {
                     RevitBiz.Instance.Login(this.UserName, this.Pwd);                   
                     if (action != null)
-                    {
-                       
+                    {                      
                         action.Invoke();
                     
                     }
@@ -62,6 +61,8 @@ namespace RevitHP
             });
             actLogin.BeginInvoke(null, null);
         }
+
+
 
         private string _rolename;
         public string RoleName

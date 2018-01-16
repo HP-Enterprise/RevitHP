@@ -50,7 +50,7 @@ namespace RevitHP
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
-        public LoginVM HttpClientDoPostLogin(string userName, SecureString pwd)
+        public bool HttpClientDoPostLogin(string userName, SecureString pwd)
         {
             //using (var client = new HttpClient())
             //{
@@ -112,9 +112,13 @@ namespace RevitHP
                 id = Convert.ToInt32(obj.GetValue("obj")["roles"].Last["id"]);
                 
                 loginVM.RoleName= obj.GetValue("obj")["roles"].Last["roleName"].ToString();
-               
+                return true;
             }
-            return loginVM;
+            else
+            {
+                return false;
+            }
+           
         }
 
 
