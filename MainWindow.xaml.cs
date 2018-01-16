@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -109,7 +110,6 @@ namespace RevitHP
             {
                 TreeIndex index = new TreeIndex(item, vm);
                 index.ShowDialog();
-
             }
             else
             {
@@ -120,8 +120,7 @@ namespace RevitHP
         private void DeleteNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
-            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
-            //((RevitHP.FamilyBrowserVM)Treeview1.DataContext).TreeViewBinding[0].Children[0].children.Add(list);
+            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;        
             if (item == null)
             {
                 MessageBox.Show("请选择要删除的节点");
@@ -152,25 +151,29 @@ namespace RevitHP
             }
         }
 
-        //委托监控
-        private void FrmChild_PassDataBetweenForm(object sender, LoginState e)
-        {
-            this.welcome.Content = e.RoleName;
-            this.login_state.Text = "注销";
-            if (ServerManagement.id == 1)
-            {
-                this.audit.Visibility = Visibility.Visible;
-            }
-        }
+        ////委托监控
+        //private void FrmChild_PassDataBetweenForm(object sender, LoginState e)
+        //{
+        //    this.welcome.Content = e.RoleName;
+        //    this.login_state.Text = "注销";
+        //    //if (ServerManagement.id == 1)
+        //    //{
+        //    //    this.audit.Visibility = Visibility.Visible;
+        //    //}
+        //}
 
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
         {
             if (isLoginState)
             {
-                LoginForm login = new LoginForm(this.DataContext as FamilyBrowserVM);
-          
-                login.ShowDialog();
+                LoginForm login = new LoginForm();
+                FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
+                if (login.ShowDialog()==true)
+                {
+                    vm.Downloadnew();
+                    
+                }
             }
             else
             {
@@ -205,8 +208,7 @@ namespace RevitHP
             {
                 MessageBox.Show("未登录，请您先登录");
             }
-
-            //MessageBox.Show(LoginState.rolename);
+    
         }
 
 
@@ -215,12 +217,10 @@ namespace RevitHP
 
             var vM = this.DataContext as FamilyBrowserVM;
             vM.OpenDB();
-            //this.Treeview1_Copy.DataContext = vM.TreeViewBinding;
+       
             //UnfoldTreeview();
 
-            //var vM = this.DataContext as FamilyBrowserVM;
-            ////vM.IsDownload();
-            //vM.FileUplod();
+        
         }
 
 
@@ -250,15 +250,11 @@ namespace RevitHP
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                // 把此方法包装在Dispatcher中，以避免跨线程调用
-                if (IsLoaded)
-                {
-                    var vM = this.DataContext as FamilyBrowserVM;
-                    vM.IsDownload();
-                }
-
-            });
+            //if (IsLoaded)
+            //{
+            //    var vM = this.DataContext as FamilyBrowserVM;
+            //    vM.IsDownload();
+            //}
         }
         //展开树形节点
         private void UnfoldTreeview()
@@ -299,6 +295,12 @@ namespace RevitHP
                
             }
 
+        }
+
+        private void ceshixiazai_Click(object sender, RoutedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.Downloadnew();
         }
     }
 

@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,62 +26,14 @@ namespace RevitHP
     /// </summary>
     public partial class LoginForm : Window
     {
-        private FamilyBrowserVM vM;
-        public LoginForm(FamilyBrowserVM browserVM)
+       
+        public LoginForm()
         {
             InitializeComponent();
-            vM = browserVM;
+         
         } 
 
      
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //if (this.tb_username.Text == "" || this.tb_password.Password == "")
-            //{
-            //    MessageBox.Show("请输入用户名和密码!");
-            //}
-            //else
-            //{
-            //    var actionLogin = new Action(() =>
-            //    {
-            //        try
-            //        {                    
-            //            HttpClientDoPostLogin(tb_username.Text, tb_password.Password);
-
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Dispatcher.Invoke(new Action(() =>
-            //            {
-            //                var vm = this.DataContext as LoginVM;
-            //                vm.ErrorMsg = ex.Message;
-            //            }));
-            //        }
-            //    });
-            //    //异步
-            //    //actionLogin.BeginInvoke(null, null);
-            //    //同步
-            //    actionLogin.Invoke();
-            //}
-        }
-
-        //public  void HttpClientDoPostLogin(string Name, SecureString Password)
-        //{
-        //    bool obj = vM.isloginAsync(Name, Password);
-        //    if (obj)
-        //    {
-        //        LoginState args = new LoginState(ServerManagement.roleName);
-        //        PassDataBetweenForm(this, args);
-        //        vM.IsDownload();
-        //        this.Close();
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("登录失败：用户名或者密码不正确");
-        //    }
-        //}
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
             Close();
@@ -104,7 +57,6 @@ namespace RevitHP
                 // TODO:
                 Dispatcher.Invoke(() => {
                     DialogResult = true;
-                    
                     Close();
                 });
             });

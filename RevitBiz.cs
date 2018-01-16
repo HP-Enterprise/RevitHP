@@ -167,7 +167,6 @@ namespace RevitHP
             copy2();
             if (server.Push(m_folder + "\\RevHP.2", m_folder + "\\RevHP.0"))
             {
-
                 //如果上传成功
                 //删除文件.0和文件.1
                 //修改文件后缀，将.2修改为.0             
@@ -194,6 +193,7 @@ namespace RevitHP
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
+       
 
         //读数据库树形节点
         private void LoadCatalog()
@@ -201,11 +201,7 @@ namespace RevitHP
             var dictPID = new Dictionary<int, int>();
             dictCatalog = new Dictionary<int, CataItem>();
             using (var cmd = m_liteDB.CreateCommand())
-            {
-
-          
-                if (ServerManagement.id==1)
-                {
+            {          
                     cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog ";
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -223,28 +219,9 @@ namespace RevitHP
                             // Debug.WriteLine(dictCatalog.Keys.ToString());
                         }
                     }
-                }
-                else
-                {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}' ", ServerManagement.id);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            //组装字典
-                            CataItem item = new CataItem();
-                            item.Id = reader.GetInt32(0);
-                            item.Name = reader.GetString(1);
-                            //item.NewName = reader.GetString(3);
-                            item.Audit = reader.GetInt32(4);
-                            dictCatalog.Add(reader.GetInt32(0), item);
-                            //0位当前id, 2位父节点id
-                            dictPID.Add(item.Id, reader.GetInt32(2));
-                            // Debug.WriteLine(dictCatalog.Keys.ToString());
-                        }
-                    }
-                }
-
+              
+              
+                
                 
 
                 //对 父子节点进行组装

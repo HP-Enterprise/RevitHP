@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Security;
 using System.Windows.Threading;
@@ -44,15 +45,10 @@ namespace RevitHP
             var actLogin = new Action(() => {
                 try
                 {
-                    RevitBiz.Instance.Login(this.UserName, this.Pwd);                   
+                    RevitBiz.Instance.Login(this.UserName, this.Pwd);
                     if (action != null)
-                    {
-                        
-                        RevitBiz.Instance.coloes();
-                        action.Invoke();
-
-                        var t = new ServerManagement();
-                        t = new ServerManagement();
+                    {                      
+                        action.Invoke();                 
                     }
                 }
                 catch (Exception ex)
@@ -65,22 +61,5 @@ namespace RevitHP
             });
             actLogin.BeginInvoke(null, null);
         }
-
-
-
-        //private string _rolename;
-        //public string RoleName
-        //{
-        //    get { return _rolename; }
-        //    set
-        //    {
-        //        if (this.RoleName != value)
-        //        {
-        //            this.RoleName = value;
-        //            PropertyChanged(this, new PropertyChangedEventArgs("RoleName"));
-        //        }
-        //    }
-        //}
-
     }
 }

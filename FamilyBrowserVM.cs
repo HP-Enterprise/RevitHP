@@ -72,6 +72,12 @@ namespace RevitHP
 
         }
 
+        public void Downloadnew()
+        {
+            m_biz.IsDownloadNew();
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+        }
+
         public void copy()
         {
             m_biz.copy();
@@ -81,6 +87,7 @@ namespace RevitHP
         {
             m_biz.ispush();
             PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+          
         }
         //删除文件
         public void DeleteFile()

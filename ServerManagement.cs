@@ -73,11 +73,10 @@ namespace RevitHP
             //    {
             //        return false;
             //    }
-            //var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/login");
+          
             var client = new RestClient(REMOTE_URL + "/login");
             var request = new RestRequest(Method.POST);
             request.AddParameter("username", userName);
-
             var ptr = Marshal.SecureStringToGlobalAllocUnicode(pwd);
             request.AddParameter("password", Marshal.PtrToStringUni(ptr));
             Marshal.ZeroFreeGlobalAllocUnicode(ptr);
@@ -91,18 +90,22 @@ namespace RevitHP
             }
 
             JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
+            Dictionary<string,string> dictionary = new Dictionary<string,string>();
             var dicheaders = new List<KeyValuePair<string, string>>();
             for (int i = 0; i < response.Headers.Count; i++)
             {
                 string name = response.Headers[i].Name;
                 string values = response.Headers[i].Value.ToString();
                 dicheaders.Add(new KeyValuePair<string, string>(name, values));
-            }
+            }        
+
+             
 
             if (dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value.Length > 2)
             {
                 family_ACCESS_TOKEN = dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value;
             }
+
              //LoginVM loginVM = new LoginVM();
             if (obj.GetValue("success").ToString() == "True")
             {
