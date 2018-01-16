@@ -250,11 +250,15 @@ namespace RevitHP
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                var vM = this.DataContext as FamilyBrowserVM;
-                vM.IsDownload();
-            }
+            Dispatcher.Invoke(() => {
+                // 把此方法包装在Dispatcher中，以避免跨线程调用
+                if (IsLoaded)
+                {
+                    var vM = this.DataContext as FamilyBrowserVM;
+                    vM.IsDownload();
+                }
+
+            });
         }
         //展开树形节点
         private void UnfoldTreeview()
