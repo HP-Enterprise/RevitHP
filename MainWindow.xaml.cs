@@ -38,7 +38,7 @@ namespace RevitHP
             InitializeComponent();
 
         }
-        public static bool LoginState = true;
+        public static bool isLoginState = true;
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -166,7 +166,7 @@ namespace RevitHP
         //登陆注销事件
         private void login_Click(object sender, RoutedEventArgs e)
         {
-            if (LoginState)
+            if (isLoginState)
             {
                 LoginForm login = new LoginForm(this.DataContext as FamilyBrowserVM);
                 login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
@@ -185,7 +185,7 @@ namespace RevitHP
             islogout.Wait();
             if (islogout.Result)
             {
-                LoginState = true;
+                isLoginState = true;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
             }
@@ -195,7 +195,7 @@ namespace RevitHP
         //上传事件      
         private void uploading_Click(object sender, RoutedEventArgs e)
         {
-            if (!LoginState)
+            if (!isLoginState)
             {
                 var vM = this.DataContext as FamilyBrowserVM;
                 //调用上传
@@ -206,6 +206,7 @@ namespace RevitHP
                 MessageBox.Show("未登录，请您先登录");
             }
 
+            //MessageBox.Show(LoginState.rolename);
         }
 
 
@@ -249,12 +250,11 @@ namespace RevitHP
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
-            //if (IsLoaded)
-            //{
-            //    var vM = this.DataContext as FamilyBrowserVM;
-            //    vM.IsDownload();
-            //}
-
+            if (IsLoaded)
+            {
+                var vM = this.DataContext as FamilyBrowserVM;
+                vM.IsDownload();
+            }
         }
         //展开树形节点
         private void UnfoldTreeview()
@@ -271,7 +271,7 @@ namespace RevitHP
         {
             var vM = this.DataContext as FamilyBrowserVM;
             CataItem item = Treeview1.SelectedItem as CataItem;
-            if (item.Audit == 1 && item.newname.Length > 2)
+            if (item.newname.Length > 2)
             {
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
@@ -280,6 +280,21 @@ namespace RevitHP
             {
                 vM.PassAuditAdd(item.Id);
             }
+        }
+
+        private void AuditRefuse_Click(object sender, RoutedEventArgs e)
+        {
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            var vM = this.DataContext as FamilyBrowserVM;
+            if (item.newname.Length > 2)
+            {
+                vM.AuditRefuse(item.Id);
+            }
+            else if (item.Audit == 1)
+            {
+               
+            }
+
         }
     }
 

@@ -37,17 +37,12 @@
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <!--<Button Height="53" Margin="0,0,0,-5" Width="55"  Name="audit" Click="audit_Click">
-                    <StackPanel>
-                        <Image Width="33"  Source="Img/download.png"/>
-                        <TextBlock Text="通过审核" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button>-->
+               
             </ToolBar>
 
         </StackPanel>
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
-            <Label Content="未登录" x:Name="welcome" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="122" Margin="1,7,0,0"/>
+            <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="122" Margin="1,7,0,0"/>
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
@@ -58,7 +53,8 @@
                     <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
                     <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
                     <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
-                    <MenuItem Header="审核通过" Name="audit" Click="audit_Click"  Visibility="Collapsed" />
+                    <MenuItem Header="审核通过" Name="audit" Click="audit_Click"   />
+                    <MenuItem Header="拒绝" Name="AuditRefuse" Click="AuditRefuse_Click"   />
                 </ContextMenu>
             </TreeView.ContextMenu>
             <TreeView.ItemTemplate>

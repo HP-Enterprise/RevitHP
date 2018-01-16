@@ -34,10 +34,6 @@ namespace RevitHP
                 return $"{s_strBimBase}/bim/revit/revit";
             }
         }
-
-
-
-
         public ServerManagement()
         {
 
@@ -54,7 +50,7 @@ namespace RevitHP
         //登录方法
         //参数1.Name 用户名
         //参数2.Password 密码
-        public bool HttpClientDoPostLogin(string userName, SecureString pwd)
+        public LoginVM HttpClientDoPostLogin(string userName, SecureString pwd)
         {
             //using (var client = new HttpClient())
             //{
@@ -90,7 +86,7 @@ namespace RevitHP
 
 
             if (!response.IsSuccessful)
-            {
+            {            
                 throw response.ErrorException;
             }
 
@@ -107,18 +103,18 @@ namespace RevitHP
             {
                 family_ACCESS_TOKEN = dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value;
             }
-
+             LoginVM loginVM = new LoginVM();
             if (obj.GetValue("success").ToString() == "True")
             {
-                MainWindow.LoginState = false;
+                MainWindow.isLoginState = false;
+                LoginState.rolename = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 roleName = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 id = Convert.ToInt32(obj.GetValue("obj")["roles"].Last["id"]);
-                return true;
+                
+                loginVM.RoleName= obj.GetValue("obj")["roles"].Last["roleName"].ToString();
+               
             }
-            else
-            {
-                return false;
-            }
+            return loginVM;
         }
 
 
@@ -148,8 +144,7 @@ namespace RevitHP
         //第一次上传文件
         public bool FistPush(string filepath)
         {
-            var client = new RestClient(REMOTE_URL + "/file/push");
-            //var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/file/push");
+            var client = new RestClient(REMOTE_URL + "/file/push");        
             var request = new RestRequest(Method.POST);
             request.AddFile("file", filepath);
             request.AddHeader("ACCESS-TOKEN", family_ACCESS_TOKEN);
@@ -166,9 +161,7 @@ namespace RevitHP
         }
         //带旧文件MD5码上传文件
         public bool Push(string Newfilepath, string oldfilepath)
-        {
-
-            //var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/file/push");
+        {       
             var client = new RestClient(REMOTE_URL + "/file/push");
             var request = new RestRequest(Method.POST);
             request.AddFile("file", Newfilepath);
@@ -194,8 +187,7 @@ namespace RevitHP
         {
             try
             {
-                string urlstr = REMOTE_URL + "/file/pull";
-                //string urlstr = "http://1411018008.tunnel.echomod.cn/revit/file/pull";
+                string urlstr = REMOTE_URL + "/file/pull";          
                 FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
                 Uri url = new Uri(urlstr);
                 HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -231,12 +223,10 @@ namespace RevitHP
         //发送下载请求，返回Status Code
         public int DownloadStatusCode(string filepath, string MD5)
         {
-            string urlstr = REMOTE_URL + "/file/pull";
-            //string urlstr = "http://1411018008.tunnel.echomod.cn/revit/file/pull";
+            string urlstr = REMOTE_URL + "/file/pull";         
             FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
             Uri url = new Uri(urlstr);
-            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            //"b7bd67bced224bebf7715d696dfaa7e4"
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);        
             myHttpWebRequest.Headers.Add("md5", MD5);
             myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
             myHttpWebRequest.Method = "GET";
@@ -258,18 +248,10 @@ namespace RevitHP
                 else
                 {
                     return 404;
-                }
-                //resp.StatusCode
-                //throw;
-            }
-            //获取StatusCode 的返回值
+                }          
+            }       
 
         }
-
-
-
-
-
 
         /// <summary>  
         /// 获取文件的MD5码  

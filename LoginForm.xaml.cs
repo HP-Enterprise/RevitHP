@@ -88,17 +88,13 @@ namespace RevitHP
         {
             Close();
         }
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+       
         private void OnPwdChanged(object sender, RoutedEventArgs e)
         {
             var box = sender as PasswordBox;
             var vm = this.DataContext as LoginVM;
             if (box != null && vm != null)
             {
-
                 vm.Pwd = box.SecurePassword;
             }
         }
@@ -111,6 +107,7 @@ namespace RevitHP
                 // TODO:
                 Dispatcher.Invoke(() => {
                     DialogResult = true;
+                    
                     Close();
                 });
             });

@@ -44,10 +44,12 @@ namespace RevitHP
             var actLogin = new Action(() => {
                 try
                 {
-                    RevitBiz.Instance.Login(this.UserName, this.Pwd);
+                    RevitBiz.Instance.Login(this.UserName, this.Pwd);                   
                     if (action != null)
                     {
+                       
                         action.Invoke();
+                    
                     }
                 }
                 catch (Exception ex)
@@ -60,5 +62,20 @@ namespace RevitHP
             });
             actLogin.BeginInvoke(null, null);
         }
+
+        private string _rolename;
+        public string RoleName
+        {
+            get { return _rolename; }
+            set
+            {
+                if (this.RoleName != value)
+                {
+                    this.RoleName = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("RoleName"));
+                }
+            }
+        }
+
     }
 }

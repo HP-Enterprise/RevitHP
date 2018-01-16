@@ -117,5 +117,10 @@ namespace RevitHP
             m_biz.PassAuditUpdate(id, newname);
 
         }
+
+        public void AuditRefuse(int id)
+        {
+            m_biz.AuditRefuse(id);
+        }
     }
 }

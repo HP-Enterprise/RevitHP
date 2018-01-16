@@ -130,6 +130,7 @@ namespace RevitHP
             }
 
         }
+
         //文件转换为MD5码
         public string GetMD5HashFromFile(string fileName)
         {
@@ -180,10 +181,10 @@ namespace RevitHP
         }
 
 
+        
 
-
-        private void IsDownloadNew()
-        {
+        public void IsDownloadNew()
+        {      
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
@@ -300,9 +301,11 @@ namespace RevitHP
 
         }
 
+
+
         //登录
         public bool IsloginAsync(string Name, SecureString Password)
-        {        
+        {
             return server.HttpClientDoPostLogin(Name, Password);
         }
         //注销 
@@ -558,7 +561,7 @@ namespace RevitHP
             }
         }
 
-        //添加的节点通过审核
+        //通过审核（添加）
         public void PassAuditAdd(int id)
         {
             using (var cmd = m_liteDB.CreateCommand())
@@ -567,7 +570,7 @@ namespace RevitHP
                 cmd.ExecuteScalar();
             }
         }
-
+        //通过审核（修改）
         public void PassAuditUpdate(int id, string newname)
         {
             using (var cmd = m_liteDB.CreateCommand())
@@ -576,6 +579,17 @@ namespace RevitHP
                 cmd.ExecuteScalar();
             }
         }
+        //审核拒绝（修改）
+        public void AuditRefuse(int id)
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',newname='' where id={1}", 0, id);
+                cmd.ExecuteScalar();
+            }
+
+        }
+
     }
 }
 
