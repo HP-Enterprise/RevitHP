@@ -109,5 +109,12 @@ namespace RevitHP
                 });
             });
         }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) {
+                OnLogin(sender, e);
+            }
+        }
     }
 }
