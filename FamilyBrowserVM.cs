@@ -109,11 +109,7 @@ namespace RevitHP
         {
             m_biz.SetCatalogDelete(id);
         }
-        //文件测试
-        public string ceshi()
-        {
-            return m_biz.selete();
-        }
+       
         //审核
         public void PassAuditAdd(int id)
         {

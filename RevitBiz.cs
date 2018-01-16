@@ -108,12 +108,8 @@ namespace RevitHP
                 case 200:
                     //下载最新的数据文件     
                     m_liteDB.Close();
-                    if (server.DownloadNew(m_folder + "\\RevHP.2"))
-                    {
-                        File.Delete(m_folder + "\\RevHP.0");//删除该文件
-                        string fileName = m_folder + "\\RevHP.2";
-                        string dfileName = Path.ChangeExtension(fileName, ".0");
-                        File.Move(fileName, dfileName);
+                    if (server.DownloadNew(m_folder + "\\RevHP.0"))
+                    {                  
                         copy();
                     }
                     return 200;
@@ -127,9 +123,13 @@ namespace RevitHP
                     //服务器没有数据库，本地初始化一个            
                     init();
                     m_liteDB.Close();
-                    copy();
+                    copy2();
                     //第一次上传
-                    server.FistPush(m_folder + "\\RevHP.0");
+                    if (server.FistPush(m_folder + "\\RevHP.2"))
+                    {
+                        File.Delete(m_folder + "\\RevHP.2");
+                        m_liteDB.Open(1);
+                    }
                     return 404;
                 default:
                     return statuscode;
@@ -173,15 +173,16 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.0");
                 File.Delete(m_folder + "\\RevHP.1");
                 string fileName = m_folder + "\\RevHP.2";
-                string dfileName = Path.ChangeExtension(fileName, ".0");
+                string dfileName = Path.ChangeExtension(fileName, ".1");
                 File.Move(fileName, dfileName);
-                copy();
+                m_liteDB.Open(1);
             }
             else
             {
                 //如果上传失败执行下载
-                IsDownloadNew();
+                server.DownloadNew(m_folder + "\\RevHP.0");
                 File.Delete(m_folder + "\\RevHP.2");
+                //执行合并方法
             }
         }
 
@@ -201,7 +202,9 @@ namespace RevitHP
             var dictPID = new Dictionary<int, int>();
             dictCatalog = new Dictionary<int, CataItem>();
             using (var cmd = m_liteDB.CreateCommand())
-            {          
+            {
+                if (ServerManagement.id==1)
+                {
                     cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog ";
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -219,6 +222,28 @@ namespace RevitHP
                             // Debug.WriteLine(dictCatalog.Keys.ToString());
                         }
                     }
+                }
+                else
+                {
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}'", ServerManagement.id);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {                         
+                            //组装字典
+                            CataItem item = new CataItem();
+                            item.Id = reader.GetInt32(0);
+                            item.Name = reader.GetString(1);
+                            //item.NewName = reader.GetString(3);
+                            item.Audit = reader.GetInt32(4);
+                            dictCatalog.Add(reader.GetInt32(0), item);
+                            //0位当前id, 2位父节点id
+                            dictPID.Add(item.Id, reader.GetInt32(2));
+                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                        }
+                    }
+                }
+                    
               
               
                 
@@ -283,9 +308,6 @@ namespace RevitHP
             return server.HttpClientDoPostLogin(name, pwd);
 
         }
-
-
-
         //登录
         public bool IsloginAsync(string Name, SecureString Password)
         {
@@ -508,41 +530,20 @@ namespace RevitHP
             }
         }
 
-
         //初始化时候，判断是否有.1和.2文件，如果有，删除它们
         public void DeleteFile()
         {
             m_liteDB.Close();
-            if (File.Exists(m_folder + "\\RevHP.1"))
+            if (File.Exists(m_folder + "\\RevHP.0"))
             {
-                File.Delete(m_folder + "\\RevHP.1");//删除该文件
+                File.Delete(m_folder + "\\RevHP.0");//删除该文件
             }
             if (File.Exists(m_folder + "\\RevHP.2"))
             {
                 File.Delete(m_folder + "\\RevHP.2");//删除该文件
             }
         }
-
-        public string selete()
-        {
-            using (var cmd = m_liteDB.CreateCommand())
-            {
-                string a = "";
-                cmd.CommandText = "SELECT id,name,parent FROM catalog where id=17";
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        //组装字典
-                        CataItem item = new CataItem();
-                        item.Id = reader.GetInt32(0);
-                        item.Name = reader.GetString(1);
-                        a = reader.GetString(1);
-                    }
-                }
-                return a;
-            }
-        }
+     
 
         //通过审核（添加）
         public void PassAuditAdd(int id)

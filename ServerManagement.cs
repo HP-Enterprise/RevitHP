@@ -90,26 +90,13 @@ namespace RevitHP
             }
 
             JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
-            Dictionary<string,string> dictionary = new Dictionary<string,string>();
-            var dicheaders = new List<KeyValuePair<string, string>>();
+            Dictionary<string,string> dictionary = new Dictionary<string,string>();      
             for (int i = 0; i < response.Headers.Count; i++)
             {
                 string name = response.Headers[i].Name;
-                string values = response.Headers[i].Value.ToString();
-                //dicheaders.Add(new KeyValuePair<string, string>(name, values));
+                string values = response.Headers[i].Value.ToString();          
                 dictionary.Add(name, values);
-            }
-            //if (dictionary.ContainsKey("ACCESS-TOKEN"))
-            //{
-            //    family_ACCESS_TOKEN = dictionary["ACCESS-TOKEN"];
-                
-            //}
-            //else
-            //{
-
-            //}
-
-
+            }     
              //LoginVM loginVM = new LoginVM();
             if (obj.GetValue("success").ToString() == "True")
             {
