@@ -46,9 +46,13 @@ namespace RevitHP
                 {
                     RevitBiz.Instance.Login(this.UserName, this.Pwd);                   
                     if (action != null)
-                    {                      
+                    {
+                        
+                        RevitBiz.Instance.coloes();
                         action.Invoke();
-                    
+
+                        var t = new ServerManagement();
+                        t = new ServerManagement();
                     }
                 }
                 catch (Exception ex)
@@ -64,19 +68,19 @@ namespace RevitHP
 
 
 
-        private string _rolename;
-        public string RoleName
-        {
-            get { return _rolename; }
-            set
-            {
-                if (this.RoleName != value)
-                {
-                    this.RoleName = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("RoleName"));
-                }
-            }
-        }
+        //private string _rolename;
+        //public string RoleName
+        //{
+        //    get { return _rolename; }
+        //    set
+        //    {
+        //        if (this.RoleName != value)
+        //        {
+        //            this.RoleName = value;
+        //            PropertyChanged(this, new PropertyChangedEventArgs("RoleName"));
+        //        }
+        //    }
+        //}
 
     }
 }

@@ -32,10 +32,7 @@ namespace RevitHP
             vM = browserVM;
         } 
 
-        //添加一个委托
-        public delegate void PassDataBetweenFormHandler(object sender, LoginState e);
-        //添加一个PassDataBetweenFormHandler类型的事件
-        public event PassDataBetweenFormHandler PassDataBetweenForm;
+     
 
 
         private void Button_Click(object sender, RoutedEventArgs e)

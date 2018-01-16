@@ -33,11 +33,13 @@ namespace RevitHP
         ServerManagement server = new ServerManagement();
         // 单实例
         private static RevitBiz s_biz = new RevitBiz();
+
+
         public static RevitBiz Instance
         {
             get { return s_biz; }
         }
-        public RevitBiz()
+        protected RevitBiz()
         {
             // 建立缓存文件夹
             //在当前电脑用户下建立缓存文件夹
@@ -50,6 +52,10 @@ namespace RevitHP
             m_liteDB = new LiteDB(m_folder);
         }
 
+        public void coloes()
+        {
+            m_liteDB.Close();
+        }
 
         // 初始化
         public void init()

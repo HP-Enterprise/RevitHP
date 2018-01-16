@@ -103,7 +103,7 @@ namespace RevitHP
             {
                 family_ACCESS_TOKEN = dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value;
             }
-             LoginVM loginVM = new LoginVM();
+             //LoginVM loginVM = new LoginVM();
             if (obj.GetValue("success").ToString() == "True")
             {
                 MainWindow.isLoginState = false;
@@ -111,7 +111,7 @@ namespace RevitHP
                 roleName = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 id = Convert.ToInt32(obj.GetValue("obj")["roles"].Last["id"]);
                 
-                loginVM.RoleName= obj.GetValue("obj")["roles"].Last["roleName"].ToString();
+                //loginVM.RoleName= obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 return true;
             }
             else
@@ -277,7 +277,7 @@ namespace RevitHP
                 }
                 return sb.ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //如果发生异常，返回一个错误的MD5码
                 return "1111111111111111111111111111111";

@@ -13,7 +13,7 @@ namespace RevitHP
     public class FamilyBrowserVM : INotifyPropertyChanged
     {
         // Revit业务层逻辑
-        private RevitBiz m_biz = new RevitBiz();
+        private RevitBiz m_biz =RevitBiz.Instance;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

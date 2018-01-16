@@ -169,7 +169,7 @@ namespace RevitHP
             if (isLoginState)
             {
                 LoginForm login = new LoginForm(this.DataContext as FamilyBrowserVM);
-                login.PassDataBetweenForm += new LoginForm.PassDataBetweenFormHandler(FrmChild_PassDataBetweenForm);
+          
                 login.ShowDialog();
             }
             else
