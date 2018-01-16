@@ -59,16 +59,7 @@ namespace RevitHP
 
         // 初始化
         public void init()
-        {
-            // 1. 比较本地缓存和远程的MD5哈希值
-            //    + 如果本地存在缓存，打开缓存数据库；如果本地不存在缓存，初始化一个空白的数据库Rev=0
-            //    + 从远程查询查询数据库的最新MD5哈希值
-            // 2. 比较结果有2种可能
-            //    + 相等。表明本地的缓存已经是最新的
-            //    + 不相等。多数情况表明远程服务器上有新版本，少数情况表明远程本地同时有修订，放弃本地缓存，使用远程版本
-            // 3. 检查是否需要升级数据库的schema
-
-            // TODO: 远程相关的逻辑还没有准备好，先使用本地的          
+        {            
             uint? rev = LiteDB.checkCachedRev(m_folder);
             if (rev == null)
             {
@@ -83,12 +74,7 @@ namespace RevitHP
         public CataItem Top
         {
             get
-            {
-                //if (dictCatalog == null)
-                //{
-                //    LoadCatalog();
-                //}
-                // return dictCatalog[1];
+            {              
                 LoadCatalog();
                 return dictCatalog[1];
             }
@@ -101,7 +87,6 @@ namespace RevitHP
         {
             m_liteDB.Close();
             int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", md5());
-
             switch (statuscode)
             {
                 //200代表服务器有新的数据库
@@ -225,18 +210,22 @@ namespace RevitHP
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where audit=0 or NameID='{0}'", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where NameID='{0}'or audit=0 ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
-                        {                         
-                            //组装字典
+                        {
                             CataItem item = new CataItem();
                             item.Id = reader.GetInt32(0);
                             item.Name = reader.GetString(1);
                             //item.NewName = reader.GetString(3);
                             item.Audit = reader.GetInt32(4);
-                            dictCatalog.Add(reader.GetInt32(0), item);
+                            dictCatalog.Add(reader.GetInt32(0), item);                          
+                            if (reader.GetString(3)!="")
+                            {
+                                item.Name = reader.GetString(3);
+                            }
+                            //组装字典                          
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
                             Debug.WriteLine(dictCatalog.Keys.ToString());
@@ -244,11 +233,6 @@ namespace RevitHP
                     }
                 }
                     
-              
-              
-                
-                
-
                 //对 父子节点进行组装
                 foreach (var key in dictCatalog.Keys)
                 {
@@ -327,8 +311,7 @@ namespace RevitHP
             {
                 string filepath = m_folder + "\\RevHP.0";
                 string md5 = server.GetMD5HashFromFile(filepath);
-                //m_liteDB.Close();
-                //string md5a = server.GetMD5HashFromFile(@"C:\Users\wangxu\AppData\Local\RevitHP\RevHP.1");
+              
                 return md5;
             }
             else
