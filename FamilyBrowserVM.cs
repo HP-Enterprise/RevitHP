@@ -27,7 +27,7 @@ namespace RevitHP
         {
             get
             {
-                Debug.WriteLine(m_biz.Top.Name);
+                // Debug.WriteLine(m_biz.Top.Name);
                 var league = new Collection<CataItem>() { m_biz.Top };
                 return league;
             }
