@@ -45,10 +45,16 @@ namespace RevitHP
             var actLogin = new Action(() => {
                 try
                 {
-                    RevitBiz.Instance.Login(this.UserName, this.Pwd);
-                    if (action != null)
-                    {                      
-                        action.Invoke();                 
+                    if (RevitBiz.Instance.Login(this.UserName, this.Pwd))
+                    {
+                        if (action != null)
+                        {
+                            action.Invoke();
+                        }
+                    }
+                    else
+                    {
+                        ErrorMsg = "登录名或密码错误！";
                     }
                 }
                 catch (Exception ex)

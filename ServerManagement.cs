@@ -96,19 +96,27 @@ namespace RevitHP
             {
                 string name = response.Headers[i].Name;
                 string values = response.Headers[i].Value.ToString();
-                dicheaders.Add(new KeyValuePair<string, string>(name, values));
-            }        
-
-             
-
-            if (dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value.Length > 2)
-            {
-                family_ACCESS_TOKEN = dicheaders.Where(x => x.Key == "ACCESS-TOKEN").FirstOrDefault().Value;
+                //dicheaders.Add(new KeyValuePair<string, string>(name, values));
+                dictionary.Add(name, values);
             }
+            //if (dictionary.ContainsKey("ACCESS-TOKEN"))
+            //{
+            //    family_ACCESS_TOKEN = dictionary["ACCESS-TOKEN"];
+                
+            //}
+            //else
+            //{
+
+            //}
+
 
              //LoginVM loginVM = new LoginVM();
             if (obj.GetValue("success").ToString() == "True")
             {
+                if (dictionary.ContainsKey("ACCESS-TOKEN"))
+                {
+                    family_ACCESS_TOKEN = dictionary["ACCESS-TOKEN"];
+                }
                 MainWindow.isLoginState = false;
                 LoginState.rolename = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 roleName = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
