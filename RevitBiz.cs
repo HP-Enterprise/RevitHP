@@ -220,7 +220,7 @@ namespace RevitHP
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                            // Debug.WriteLine(dictCatalog.Keys.ToString());
                         }
                     }
                 }
@@ -240,7 +240,7 @@ namespace RevitHP
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                            // Debug.WriteLine(dictCatalog.Keys.ToString());
                         }
                     }
                 }
