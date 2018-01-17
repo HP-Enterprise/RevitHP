@@ -37,7 +37,6 @@ namespace RevitHP
         public MainWindow()
         {
             InitializeComponent();
-
         }
         public static bool isLoginState = true;
         
@@ -293,6 +292,60 @@ namespace RevitHP
         {
             var vM = this.DataContext as FamilyBrowserVM;
             vM.Downloadnew();
+        }
+        //模型上传
+        private void modelupload_Click(object sender, RoutedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.modelupload();
+        }
+        //模型删除
+        private void modeldelete_Click(object sender, RoutedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.modeldelete();
+        }
+        //转换为实际应用中的大小（KB/M）
+        public static string CountSize(long Size)
+        {
+            string m_strSize = "";
+            long FactSize = 0;
+            FactSize = Size;
+            if (FactSize < 1024.00)
+                m_strSize = FactSize.ToString("F2") + " Byte";
+            else if (FactSize >= 1024.00 && FactSize < 1048576)
+                m_strSize = (FactSize / 1024.00).ToString("F2") + " K";
+            else if (FactSize >= 1048576 && FactSize < 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00).ToString("F2") + " M";
+            else if (FactSize >= 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00 / 1024.00).ToString("F2") + " G";
+            return m_strSize;
+        }
+        //文件大小（字节）
+        public static long GetFileSize(string sFullName)
+        {
+            long lSize = 0;
+            if (File.Exists(sFullName))
+                lSize = new FileInfo(sFullName).Length;
+            return lSize;
+        }
+        //模型下载
+        private void modeldownload_Click(object sender, RoutedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.ModelDownload();
+        }
+
+        private void modellist_Click(object sender, RoutedEventArgs e)
+        {
+            //var vM = this.DataContext as FamilyBrowserVM;
+            ////vM.Modellist();
+            //this.ceshi.ItemsSource = vM.Modellist();
+            List<MD5List> list = new List<MD5List>();
+            MD5List mD5List = new MD5List();
+            mD5List.md5= "awdf";
+            list.Add(mD5List);
+            this.dataGrid.ItemsSource = list;
         }
     }
 

@@ -25,10 +25,10 @@ namespace RevitHP
         private LiteDB m_liteDB;
 
 
-        // 层级结构
+        //层级结构
         Dictionary<int, CataItem> dictCatalog = null;
 
-
+        ModelManagement model = new ModelManagement();
         //实例
         ServerManagement server = new ServerManagement();
         // 单实例
@@ -147,7 +147,6 @@ namespace RevitHP
         //判断上传
         public void ispush()
         {
-
             //上传时，将文件.1复制.2,并将.2上传.
             copy2();
             if (server.Push(m_folder + "\\RevHP.2", m_folder + "\\RevHP.0"))
@@ -557,6 +556,22 @@ namespace RevitHP
 
         }
 
+        public void Modelupload()
+        {
+            model.Modelupload(@"E:\ceshi.txt");
+        }
+        public void modeldelete()
+        {
+            model.ModelDelete("");
+        }
+        public void ModelDownload()
+        {
+            model.ModelDownload(@"E:\aaaa.txt","");
+        }
+        public List<string> ModelList()
+        {
+            return model.ModelFileList();
+        }
     }
 }
 

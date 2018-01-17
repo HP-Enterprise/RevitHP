@@ -47,7 +47,7 @@ namespace RevitHP
             bool islogout = await m_biz.IslogoutAsync();
             return islogout;
         }
-
+        //测试合并
         public string OpenDB()
         {
 
@@ -120,10 +120,28 @@ namespace RevitHP
             m_biz.PassAuditUpdate(id, newname);
 
         }
-
+        //审核失败
         public void AuditRefuse(int id)
         {
             m_biz.AuditRefuse(id);
+        }
+
+        //模型上传
+        public void modelupload()
+        {
+            m_biz.Modelupload();
+        }
+        public void modeldelete()
+        {
+            m_biz.modeldelete();
+        }
+        public void ModelDownload()
+        {
+            m_biz.ModelDownload();
+        }
+        public List<string> Modellist()
+        {
+            return m_biz.ModelList();
         }
     }
 }

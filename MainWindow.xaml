@@ -18,9 +18,13 @@
         <local:FamilyBrowserVM/>
     </Window.DataContext>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="226*"/>
+            <RowDefinition Height="203*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="93*"/>
-            <ColumnDefinition Width="146*"/>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="154*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
@@ -46,12 +50,12 @@
             </ToolBar>
 
         </StackPanel>
-        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
+        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="1">
             <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="122" Margin="1,7,0,0"/>
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="2" Width="182"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
@@ -68,14 +72,27 @@
                 <Run Text="{Binding  Name}"/>  
                 <Run Text="{Binding  NewName }"/>
                 <Run Text="{Binding  Audit}"/>
-                     
+
                     </TextBlock>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-            
+
         </TreeView>
-        
-        
-        
+
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="189,62,148,45" Grid.RowSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Width="80" Binding="{Binding MD5}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+
+        <Button Content="上传" Grid.Column="1" Name="modelupload" HorizontalAlignment="Right" Margin="0,60,36,0" VerticalAlignment="Top" Width="75" Click="modelupload_Click" Height="19"/>
+        <Button Content="删除" Grid.Column="1" Name="modeldelete" HorizontalAlignment="Right" Margin="0,132,36,0" VerticalAlignment="Top" Width="75" Click="modeldelete_Click" Height="19"/>
+        <Button Content="下载" Grid.Column="1" Name="modeldownload" HorizontalAlignment="Right" Margin="0,94,36,0" VerticalAlignment="Top" Width="75" Click="modeldownload_Click" Height="19"/>
+        <Button Content="list" Grid.Column="1" Name="modellist" HorizontalAlignment="Right" Margin="0,172,36,0" VerticalAlignment="Top" Width="75" Click="modellist_Click"  Height="19"/>
+
+
     </Grid>
 </Window>
