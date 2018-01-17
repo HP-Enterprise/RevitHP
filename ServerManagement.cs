@@ -41,7 +41,7 @@ namespace RevitHP
 
 
         //声明私有静态ACCESS_TOKEN参数
-        private static string family_ACCESS_TOKEN;
+        public static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
         public static int id;
@@ -52,28 +52,6 @@ namespace RevitHP
         //参数2.Password 密码
         public bool HttpClientDoPostLogin(string userName, SecureString pwd)
         {
-            //using (var client = new HttpClient())
-            //{
-            //    var values = new List<KeyValuePair<string, string>>();
-            //    values.Add(new KeyValuePair<string, string>("username", Name));
-            //    values.Add(new KeyValuePair<string, string>("password", Password));
-            //    var content = new FormUrlEncodedContent(values);
-            //    var response = await client.PostAsync(REMOTE_URL + "/login", content);
-            //    //var response = await client.PostAsync("http://1411018008.tunnel.echomod.cn/revit/login", content);
-            //    var responseString = await response.Content.ReadAsStringAsync();
-            //    JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
-            //    if (obj.GetValue("success").ToString() == "True")
-            //    {
-            //        family_ACCESS_TOKEN = ((System.String[])response.Headers.GetValues("ACCESS-TOKEN"))[0].ToString();
-            //        roleName = obj.GetValue("obj")["roles"][0]["roleName"].ToString();
-            //        MainWindow.LoginState = false;
-            //        return true;
-            //    }
-            //    else
-            //    {
-            //        return false;
-            //    }
-          
             var client = new RestClient(REMOTE_URL + "/login");
             var request = new RestRequest(Method.POST);
             request.AddParameter("username", userName);
@@ -85,19 +63,19 @@ namespace RevitHP
 
 
             if (!response.IsSuccessful)
-            {            
+            {
                 throw response.ErrorException;
             }
 
             JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
-            Dictionary<string,string> dictionary = new Dictionary<string,string>();      
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
             for (int i = 0; i < response.Headers.Count; i++)
             {
                 string name = response.Headers[i].Name;
-                string values = response.Headers[i].Value.ToString();          
+                string values = response.Headers[i].Value.ToString();
                 dictionary.Add(name, values);
-            }     
-             //LoginVM loginVM = new LoginVM();
+            }
+         
             if (obj.GetValue("success").ToString() == "True")
             {
                 if (dictionary.ContainsKey("ACCESS-TOKEN"))
@@ -107,16 +85,14 @@ namespace RevitHP
                 MainWindow.isLoginState = false;
                 LoginState.rolename = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
                 roleName = obj.GetValue("obj")["roles"].Last["roleName"].ToString();
-                id = Convert.ToInt32(obj.GetValue("obj")["roles"].Last["id"]);
-                
-                //loginVM.RoleName= obj.GetValue("obj")["roles"].Last["roleName"].ToString();
+                id = Convert.ToInt32(obj.GetValue("obj")["roles"].Last["id"]);             
                 return true;
             }
             else
             {
                 return false;
             }
-           
+
         }
 
 
@@ -146,30 +122,20 @@ namespace RevitHP
         //第一次上传文件
         public bool FistPush(string filepath)
         {
-            var client = new RestClient(REMOTE_URL + "/file/push");        
-            var request = new RestRequest(Method.POST);
-            request.AddFile("file", filepath);
-            request.AddHeader("ACCESS-TOKEN", family_ACCESS_TOKEN);
-            IRestResponse response = client.Execute(request);
-            int status = (int)response.StatusCode;
-            if ((int)response.StatusCode == 204)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Push(filepath, null);
         }
         //带旧文件MD5码上传文件
         public bool Push(string Newfilepath, string oldfilepath)
-        {       
+        {
             var client = new RestClient(REMOTE_URL + "/file/push");
             var request = new RestRequest(Method.POST);
             request.AddFile("file", Newfilepath);
             request.AddHeader("ACCESS-TOKEN", family_ACCESS_TOKEN);
-            string MD5 = GetMD5HashFromFile(oldfilepath);
-            request.AddHeader("MD5", MD5);
+            if (oldfilepath != null)
+            {
+                string MD5 = GetMD5HashFromFile(oldfilepath);
+                request.AddHeader("MD5", MD5);
+            }
             IRestResponse response = client.Execute(request);
             int ceshistatucode = (int)response.StatusCode;
             if ((int)response.StatusCode == 204)
@@ -189,25 +155,26 @@ namespace RevitHP
         {
             try
             {
-                string urlstr = REMOTE_URL + "/file/pull";          
-                FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
-                Uri url = new Uri(urlstr);
-                HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                myHttpWebRequest.Headers.Add("MD5", "00000000000000000000000000000000");
-                myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
-                myHttpWebRequest.Method = "GET";
-                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-                Stream receiveStream = myHttpWebResponse.GetResponseStream();
-                Byte[] bytes = new Byte[100];
-                int count = receiveStream.Read(bytes, 0, 100);
-                while (count != 0)
+                string urlstr = REMOTE_URL + "/file/pull";
+                using (FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write))
                 {
-                    fs.Write(bytes, 0, count);
-                    count = receiveStream.Read(bytes, 0, 100);
+                    Uri url = new Uri(urlstr);
+                    HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                    myHttpWebRequest.Headers.Add("MD5", "00000000000000000000000000000000");
+                    myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
+                    myHttpWebRequest.Method = "GET";
+                    using (HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse())
+                    using (Stream receiveStream = myHttpWebResponse.GetResponseStream())
+                    {
+                        Byte[] bytes = new Byte[100];
+                        int count = receiveStream.Read(bytes, 0, 100);
+                        while (count != 0)
+                        {
+                            fs.Write(bytes, 0, count);
+                            count = receiveStream.Read(bytes, 0, 100);
+                        }
+                    }
                 }
-                fs.Close();
-                receiveStream.Close();
-                myHttpWebResponse.Close();
                 return true;
 
             }
@@ -225,10 +192,10 @@ namespace RevitHP
         //发送下载请求，返回Status Code
         public int DownloadStatusCode(string filepath, string MD5)
         {
-            string urlstr = REMOTE_URL + "/file/pull";         
+            string urlstr = REMOTE_URL + "/file/pull";
             FileStream fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
             Uri url = new Uri(urlstr);
-            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);        
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             myHttpWebRequest.Headers.Add("md5", MD5);
             myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
             myHttpWebRequest.Method = "GET";
@@ -250,8 +217,8 @@ namespace RevitHP
                 else
                 {
                     return 404;
-                }          
-            }       
+                }
+            }
 
         }
 
@@ -264,16 +231,18 @@ namespace RevitHP
         {
             try
             {
-                FileStream file = new FileStream(fileName, System.IO.FileMode.Open);
-                MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] retVal = md5.ComputeHash(file);
-                file.Close();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < retVal.Length; i++)
+                using (FileStream file = new FileStream(fileName, System.IO.FileMode.Open))
                 {
-                    sb.Append(retVal[i].ToString("x2"));
+                    MD5 md5 = new MD5CryptoServiceProvider();
+                    byte[] retVal = md5.ComputeHash(file);
+                    file.Close();
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < retVal.Length; i++)
+                    {
+                        sb.Append(retVal[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
             }
             catch (Exception)
             {

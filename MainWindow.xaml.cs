@@ -40,7 +40,7 @@ namespace RevitHP
 
         }
         public static bool isLoginState = true;
-
+        
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿

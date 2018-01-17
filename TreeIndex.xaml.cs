@@ -22,9 +22,9 @@ namespace RevitHP
        
         private CataItem _parentItem;
         private FamilyBrowserVM Vm;
+        private static Random ra = new Random();
         public TreeIndex(CataItem item,FamilyBrowserVM familyBrowserVM)
-        {
-            
+        {        
             InitializeComponent();
             _parentItem = item;          
             this.ParentName.Content = item.Name;
@@ -32,8 +32,7 @@ namespace RevitHP
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            CataItem list = new CataItem();
-            Random ra = new Random();          
+            CataItem list = new CataItem();        
             Vm.SetCatalogAdd(this.NodeInput.Text,ra.Next(),_parentItem.Id);
             list.Identifying = Convert.ToInt32(CataItem.Stater.Input);
             list.Name = this.NodeInput.Text;
