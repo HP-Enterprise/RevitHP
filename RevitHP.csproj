@@ -110,12 +110,14 @@
     </ApplicationDefinition>
     <Compile Include="CataItem.cs" />
     <Compile Include="FamilyBrowserVM.cs" />
+    <Compile Include="GetMD5HashFromFile.cs" />
     <Compile Include="LoginState.cs" />
     <Compile Include="LiteDB.cs" />
     <Compile Include="LoginForm.xaml.cs">
       <DependentUpon>LoginForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginVM.cs" />
+    <Compile Include="ModelManagement.cs" />
     <Compile Include="RevitBiz.cs" />
     <Compile Include="RibbonPanel.cs" />
     <Compile Include="ServerManagement.cs" />

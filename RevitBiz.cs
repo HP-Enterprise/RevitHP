@@ -210,7 +210,7 @@ namespace RevitHP
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where NameID='{0}'or audit=0 ", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where NameID={0} or audit=0 ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

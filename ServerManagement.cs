@@ -41,7 +41,7 @@ namespace RevitHP
 
 
         //声明私有静态ACCESS_TOKEN参数
-        private static string family_ACCESS_TOKEN;
+        public static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
         public static int id;
