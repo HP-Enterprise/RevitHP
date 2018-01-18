@@ -524,6 +524,7 @@ namespace RevitHP
             {
                 File.Delete(m_folder + "\\RevHP.2");//删除该文件
             }
+            m_liteDB.Open(1);
         }
 
 
@@ -579,6 +580,7 @@ namespace RevitHP
         //测试
         public List<Model> GetList()
         {
+            
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {

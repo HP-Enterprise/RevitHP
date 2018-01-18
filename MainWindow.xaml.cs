@@ -229,18 +229,9 @@ namespace RevitHP
             t.AutoReset = true;
             //启动计时器
             t.Enabled = true;
-            ExpandLastNode(Treeview1);
+            UnfoldTreeview();
         }
-        public static void ExpandLastNode(TreeView treeView)
-        {
-            if (treeView.Items.Count > 0)
-            {
-                var lastModel = treeView.Items[treeView.Items.Count - 1];
-                TreeViewItem currentContainer = treeView.ItemContainerGenerator.ContainerFromItem(lastModel) as TreeViewItem;
-                currentContainer.Background =Brushes.IndianRed;
-                currentContainer.IsExpanded = true;
-            }
-        }
+        
 
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)

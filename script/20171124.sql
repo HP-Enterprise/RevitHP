@@ -56,7 +56,9 @@ mod_name varchar not null,
 mod_size varchar not null,
 catalogid int not null
 );
-INSERT INTO Model(id,mod_name,mod_size,catalogid) values(1,'ff64011aec56c57954b751c7044a1abc','250165K',21)
+INSERT INTO Model(id,mod_name,mod_size,catalogid) VALUES
+(1,'ff64011aec56c57954b751c7044a1abc','250165K',21),
+(2,'ff64011aec56c57954b751c7044a1abc','250165K',22)
 
 --INSERT INTO familymessage values('25','UPS-施耐德','Upsa系统','产品族','2017-1-1','11')
 --Delete  familymessage
