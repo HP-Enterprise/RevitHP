@@ -52,8 +52,8 @@ namespace RevitHP
         //参数2.Password 密码
         public bool HttpClientDoPostLogin(string userName, SecureString pwd)
         {
-            var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/login");
-            //var client = new RestClient(REMOTE_URL + "/login");
+            //var client = new RestClient("http://1411018008.tunnel.echomod.cn/revit/login");
+            var client = new RestClient(REMOTE_URL + "/login");
             var request = new RestRequest(Method.POST);
             request.AddParameter("username", userName);
             var ptr = Marshal.SecureStringToGlobalAllocUnicode(pwd);

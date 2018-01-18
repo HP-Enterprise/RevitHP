@@ -59,7 +59,7 @@ namespace RevitHP
 
         // 初始化
         public void init()
-        {            
+        {
             uint? rev = LiteDB.checkCachedRev(m_folder);
             if (rev == null)
             {
@@ -74,7 +74,7 @@ namespace RevitHP
         public CataItem Top
         {
             get
-            {              
+            {
                 LoadCatalog();
                 return dictCatalog[1];
             }
@@ -94,7 +94,7 @@ namespace RevitHP
                     //下载最新的数据文件     
                     m_liteDB.Close();
                     if (server.DownloadNew(m_folder + "\\RevHP.0"))
-                    {                  
+                    {
                         copy();
                     }
                     return 200;
@@ -171,14 +171,14 @@ namespace RevitHP
         }
 
 
-        
+
 
         public void IsDownloadNew()
-        {      
+        {
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
-       
+
 
         //读数据库树形节点
         private void LoadCatalog()
@@ -187,7 +187,7 @@ namespace RevitHP
             dictCatalog = new Dictionary<int, CataItem>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                if (ServerManagement.id==1)
+                if (ServerManagement.id == 1)
                 {
                     cmd.CommandText = "SELECT id,name,parent,newname,audit FROM catalog ";
                     using (var reader = cmd.ExecuteReader())
@@ -219,8 +219,8 @@ namespace RevitHP
                             item.Name = reader.GetString(1);
                             //item.NewName = reader.GetString(3);
                             item.Audit = reader.GetInt32(4);
-                            dictCatalog.Add(reader.GetInt32(0), item);                          
-                            if (reader.GetString(3)!="")
+                            dictCatalog.Add(reader.GetInt32(0), item);
+                            if (reader.GetString(3) != "")
                             {
                                 item.Name = reader.GetString(3);
                             }
@@ -231,7 +231,7 @@ namespace RevitHP
                         }
                     }
                 }
-                    
+
                 //对 父子节点进行组装
                 foreach (var key in dictCatalog.Keys)
                 {
@@ -259,7 +259,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("insert into catalog(id,name,parent,identifying,audit,NameID) values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, parentid, 0, 1,ServerManagement.id);
+                cmd.CommandText = string.Format("insert into catalog(id,name,parent,identifying,audit,NameID) values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, parentid, 0, 1, ServerManagement.id);
                 cmd.ExecuteScalar();
             }
         }
@@ -269,7 +269,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set newname='{0}',identifying='{1}',audit='{2}',NameID='{4}' where id={3}", newname, 2, 0, id,ServerManagement.id);
+                cmd.CommandText = string.Format("UPDATE catalog set newname='{0}',identifying='{1}',audit='{2}',NameID='{4}' where id={3}", newname, 2, 0, id, ServerManagement.id);
                 cmd.ExecuteScalar();
             }
 
@@ -310,7 +310,7 @@ namespace RevitHP
             {
                 string filepath = m_folder + "\\RevHP.0";
                 string md5 = server.GetMD5HashFromFile(filepath);
-              
+
                 return md5;
             }
             else
@@ -366,7 +366,7 @@ namespace RevitHP
                         {
                             using (var updatecom = NewliteDB.CreateCommand())
                             {
-                                updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name,1,list[j].Id);
+                                updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name, 1, list[j].Id);
                                 updatecom.ExecuteScalar();
                             }
                         }
@@ -390,7 +390,7 @@ namespace RevitHP
 
                                 using (var updatecom = NewliteDB.CreateCommand())
                                 {
-                                    updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name,1, list[j].Id);
+                                    updatecom.CommandText = string.Format("UPDATE catalog set name='{0}',audit='{1}' where id={2}", list[j].Name, 1, list[j].Id);
                                     updatecom.ExecuteScalar();
                                 }
                             }
@@ -438,7 +438,7 @@ namespace RevitHP
                         {
                             using (var addcom = NewliteDB.CreateCommand())
                             {
-                                addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j],1);
+                                addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j], 1);
                                 addcom.ExecuteScalar();
                             }
                         }
@@ -461,7 +461,7 @@ namespace RevitHP
 
                                 using (var addcom = NewliteDB.CreateCommand())
                                 {
-                                    addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j],1);
+                                    addcom.CommandText = string.Format("insert into catalog(id,name,parent,audit) values('{0}','{1}','{2}','{3}')", list[j].Id, list[j].Name, parentid[j], 1);
                                     addcom.ExecuteScalar();
                                 }
                             }
@@ -525,14 +525,14 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.2");//删除该文件
             }
         }
-     
+
 
         //通过审核（添加）
         public void PassAuditAdd(int id)
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}' where id={1}",0,id);
+                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}' where id={1}", 0, id);
                 cmd.ExecuteScalar();
             }
         }
@@ -541,7 +541,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',name='{2}',nameID=null,newname='' where id={1}", 0, id,newname);
+                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',name='{2}',nameID=null,newname='' where id={1}", 0, id, newname);
                 cmd.ExecuteScalar();
             }
         }
@@ -555,22 +555,49 @@ namespace RevitHP
             }
 
         }
-
+        //模型上传
         public void Modelupload()
         {
             model.Modelupload(@"E:\ceshi.txt");
         }
+        //模型删除
         public void modeldelete()
         {
             model.ModelDelete("");
         }
+        //模型下载
         public void ModelDownload()
         {
-            model.ModelDownload(@"E:\aaaa.txt","");
+            model.ModelDownload(@"E:\aaaa.txt", "");
         }
+        //模型列表
         public List<string> ModelList()
         {
             return model.ModelFileList();
+        }
+
+        //测试
+        public List<Model> GetList()
+        {
+            List<Model> list = new List<Model>();
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid FROM Model ";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //组装字典
+                        Model mod = new Model();
+                        mod.Id = reader.GetInt32(0);
+                        mod.Mod_Name = reader.GetString(1);
+                        mod.Mod_Size = reader.GetString(2);
+                        mod.CatalogId = reader.GetInt32(3);
+                        list.Add(mod);
+                    }
+                }
+            }
+            return list;
         }
     }
 }

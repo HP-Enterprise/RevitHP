@@ -1,3 +1,3 @@
 ﻿DROP TABLE IF EXISTS version;
 DROP TABLE IF EXISTS catalog;
-DROP TABLE IF EXISTS familymessage;
+DROP TABLE IF EXISTS Model;

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Security;
 using System.Windows.Threading;
 
 namespace RevitHP
 {
-   public class LoginVM : INotifyPropertyChanged
+    public class LoginVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

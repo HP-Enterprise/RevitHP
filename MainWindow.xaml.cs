@@ -221,7 +221,7 @@ namespace RevitHP
         {
             var vM = this.DataContext as FamilyBrowserVM;
             vM.DeleteFile();
-            vM.copy();
+            //vM.copy();
             //时间
             System.Timers.Timer t = new System.Timers.Timer(Time * 1000);
             t.Elapsed += new System.Timers.ElapsedEventHandler(theout);
@@ -229,15 +229,19 @@ namespace RevitHP
             t.AutoReset = true;
             //启动计时器
             t.Enabled = true;
-            UnfoldTreeview();
-
-            //if (ServerManagement.id!=1)
-            //{
-            // audit.Visibility = Visibility.Collapsed;
-            //}
-
-
+            ExpandLastNode(Treeview1);
         }
+        public static void ExpandLastNode(TreeView treeView)
+        {
+            if (treeView.Items.Count > 0)
+            {
+                var lastModel = treeView.Items[treeView.Items.Count - 1];
+                TreeViewItem currentContainer = treeView.ItemContainerGenerator.ContainerFromItem(lastModel) as TreeViewItem;
+                currentContainer.Background =Brushes.IndianRed;
+                currentContainer.IsExpanded = true;
+            }
+        }
+
         //计时器事件
         public void theout(object source, System.Timers.ElapsedEventArgs e)
         {
@@ -254,8 +258,8 @@ namespace RevitHP
             {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
-                //((TreeViewItem)dObject).Background = Brushes.Aqua;
-            }
+                ((TreeViewItem)dObject).Background = Brushes.Aqua;            
+             }
         }
         //通过审核
         private void audit_Click(object sender, RoutedEventArgs e)
@@ -341,11 +345,22 @@ namespace RevitHP
             //var vM = this.DataContext as FamilyBrowserVM;
             ////vM.Modellist();
             //this.ceshi.ItemsSource = vM.Modellist();
-            List<MD5List> list = new List<MD5List>();
-            MD5List mD5List = new MD5List();
-            mD5List.md5= "awdf";
-            list.Add(mD5List);
-            this.dataGrid.ItemsSource = list;
+
+            //测试
+            //List<MD5List> list = new List<MD5List>();
+            //MD5List mD5List = new MD5List();
+            //mD5List.md5= "awdf";
+            //list.Add(mD5List);
+            //this.dataGrid.ItemsSource = list;
+
+            var vM = this.DataContext as FamilyBrowserVM;
+            this.dataGrid.ItemsSource = vM.list();
+        }
+
+        private void Treeview1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            this.dataGrid.ItemsSource = vM.list();
         }
     }
 

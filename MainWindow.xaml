@@ -19,12 +19,13 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="226*"/>
+            <RowDefinition Height="220*"/>
+            <RowDefinition Height="6*"/>
             <RowDefinition Height="203*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="85*"/>
-            <ColumnDefinition Width="154*"/>
+            <ColumnDefinition Width="110*"/>
+            <ColumnDefinition Width="129*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
@@ -50,12 +51,12 @@
             </ToolBar>
 
         </StackPanel>
-        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="1">
+        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="2">
             <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="122" Margin="1,7,0,0"/>
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="2" Width="182"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" MouseDoubleClick="Treeview1_MouseDoubleClick"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
@@ -79,14 +80,65 @@
 
         </TreeView>
 
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="189,62,148,45" Grid.RowSpan="2">
+        <!--<DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="189,62,148,45" Grid.RowSpan="2" IsReadOnly="True" >
+            <DataGrid.Columns >
+                <DataGridTextColumn Width="Auto"   Header="编号"  Binding="{Binding Id}"/>
+                <DataGridTextColumn Width="Auto"   Header="文件名称"  Binding="{Binding Mod_Name}"/>
+                <DataGridTextColumn Width="Auto"  Header="文件大小" Binding="{Binding Mod_Size}"/>
+                -->
+        <!--<DataGridTextColumn Header="Name" Width="80" Binding="{Binding CatalogId}"/>-->
+        <!--
+               
+            </DataGrid.Columns>
+        </DataGrid>-->
+
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="189,57,122,45" Grid.RowSpan="3" IsReadOnly="True" Grid.ColumnSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Width="80" Binding="{Binding MD5}"/>
+                <!--<DataGridTextColumn Header="文件编号" Width="50" Binding="{Binding Id}"></DataGridTextColumn>
+                <DataGridTextColumn Header="张数" Width="50" Binding="{Binding Mod_Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="金额" Width="50" Binding="{Binding Mod_Size}"></DataGridTextColumn>-->
+                <DataGridTemplateColumn  Header="文件编号" Width="Auto">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding Id}"></TextBlock>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn  Header="MD5" Width="Auto">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding Mod_Name}"></TextBlock>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn  Header="文件大小" Width="Auto">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding Mod_Size}"></TextBlock>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
             </DataGrid.Columns>
         </DataGrid>
-
-
 
         <Button Content="上传" Grid.Column="1" Name="modelupload" HorizontalAlignment="Right" Margin="0,60,36,0" VerticalAlignment="Top" Width="75" Click="modelupload_Click" Height="19"/>
         <Button Content="删除" Grid.Column="1" Name="modeldelete" HorizontalAlignment="Right" Margin="0,132,36,0" VerticalAlignment="Top" Width="75" Click="modeldelete_Click" Height="19"/>

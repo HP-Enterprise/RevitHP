@@ -143,5 +143,10 @@ namespace RevitHP
         {
             return m_biz.ModelList();
         }
+        public List<Model> list()
+        {
+            return m_biz.GetList();
+        }
+
     }
 }

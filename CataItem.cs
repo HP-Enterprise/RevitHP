@@ -15,7 +15,6 @@ namespace RevitHP
             Name = name;
             Id = id;
             NewName = newname;
-
             Children = new ObservableCollection<CataItem>();
         }
         public CataItem()
@@ -67,7 +66,6 @@ namespace RevitHP
         }
 
         public string Name { get; set; }
-
         public string name
         {
             get { return Name; }

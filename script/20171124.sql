@@ -49,15 +49,15 @@ INSERT INTO catalog(id,name,parent) VALUES
 		(58, '其他', 5),
 	(6, '建筑结构及装修专业', 1);
 
---CREATE TABLE familymessage
---(
---id varchar primary key,
---fm_name varchar not null,
---fm_classify varchar not null,
---fm_fineness varchar not null,
---fm_uploadtime varchar not null,
---fm_versionnumber varchar not null
---)
+CREATE TABLE Model
+(
+id int not null primary key,
+mod_name varchar not null,
+mod_size varchar not null,
+catalogid int not null
+);
+INSERT INTO Model(id,mod_name,mod_size,catalogid) values(1,'ff64011aec56c57954b751c7044a1abc','250165K',21)
+
 --INSERT INTO familymessage values('25','UPS-施耐德','Upsa系统','产品族','2017-1-1','11')
 --Delete  familymessage
 --INSERT INTO familymessage(id,fm_name,fm_classify,fm_fineness,fm_uploadtime,fm_versionnumber) VALUES
