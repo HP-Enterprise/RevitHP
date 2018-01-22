@@ -198,8 +198,7 @@ namespace RevitHP
             else
             {
                 MessageBox.Show("未登录，请您先登录");
-            }
-    
+            }  
         }
 
 
@@ -320,8 +319,9 @@ namespace RevitHP
         public static long GetFileSize(string sFullName)
         {
             long lSize = 0;
-            if (File.Exists(sFullName))
+            if (File.Exists(sFullName)) {
                 lSize = new FileInfo(sFullName).Length;
+            }  
             return lSize;
         }
         //模型下载
@@ -333,9 +333,9 @@ namespace RevitHP
 
         private void modellist_Click(object sender, RoutedEventArgs e)
         {
-            //var vM = this.DataContext as FamilyBrowserVM;
+            var vM = this.DataContext as FamilyBrowserVM;
             ////vM.Modellist();
-            //this.ceshi.ItemsSource = vM.Modellist();
+            this.dataGrid.ItemsSource = vM.Modellist();
 
             //测试
             //List<MD5List> list = new List<MD5List>();
@@ -344,12 +344,13 @@ namespace RevitHP
             //list.Add(mD5List);
             //this.dataGrid.ItemsSource = list;
 
-            var vM = this.DataContext as FamilyBrowserVM;
-            this.dataGrid.ItemsSource = vM.list();
+
         }
 
         private void Treeview1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            // item.Id;
             var vM = this.DataContext as FamilyBrowserVM;
             this.dataGrid.ItemsSource = vM.list();
         }

@@ -80,23 +80,8 @@
 
         </TreeView>
 
-        <!--<DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2" Margin="189,62,148,45" Grid.RowSpan="2" IsReadOnly="True" >
-            <DataGrid.Columns >
-                <DataGridTextColumn Width="Auto"   Header="编号"  Binding="{Binding Id}"/>
-                <DataGridTextColumn Width="Auto"   Header="文件名称"  Binding="{Binding Mod_Name}"/>
-                <DataGridTextColumn Width="Auto"  Header="文件大小" Binding="{Binding Mod_Size}"/>
-                -->
-        <!--<DataGridTextColumn Header="Name" Width="80" Binding="{Binding CatalogId}"/>-->
-        <!--
-               
-            </DataGrid.Columns>
-        </DataGrid>-->
-
         <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="189,57,122,45" Grid.RowSpan="3" IsReadOnly="True" Grid.ColumnSpan="2">
             <DataGrid.Columns>
-                <!--<DataGridTextColumn Header="文件编号" Width="50" Binding="{Binding Id}"></DataGridTextColumn>
-                <DataGridTextColumn Header="张数" Width="50" Binding="{Binding Mod_Name}"></DataGridTextColumn>
-                <DataGridTextColumn Header="金额" Width="50" Binding="{Binding Mod_Size}"></DataGridTextColumn>-->
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">

@@ -32,6 +32,7 @@ namespace RevitHP
         //实例
         ServerManagement server = new ServerManagement();
         // 单实例
+        GetMD5HashFromFile getMD5 = new GetMD5HashFromFile();
         private static RevitBiz s_biz = new RevitBiz();
 
 
@@ -122,27 +123,6 @@ namespace RevitHP
 
         }
 
-        //文件转换为MD5码
-        public string GetMD5HashFromFile(string fileName)
-        {
-            try
-            {
-                FileStream file = new FileStream(fileName, System.IO.FileMode.Open);
-                MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] retVal = md5.ComputeHash(file);
-                file.Close();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < retVal.Length; i++)
-                {
-                    sb.Append(retVal[i].ToString("x2"));
-                }
-                return sb.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
-            }
-        }
 
         //判断上传
         public void ispush()
@@ -309,8 +289,7 @@ namespace RevitHP
             if (File.Exists(LiteDB.sqlDBpath))
             {
                 string filepath = m_folder + "\\RevHP.0";
-                string md5 = server.GetMD5HashFromFile(filepath);
-
+                string md5 = getMD5.GetMD5Hash(filepath);
                 return md5;
             }
             else
@@ -526,8 +505,6 @@ namespace RevitHP
             }
             m_liteDB.Open(1);
         }
-
-
         //通过审核（添加）
         public void PassAuditAdd(int id)
         {
@@ -579,8 +556,7 @@ namespace RevitHP
 
         //测试
         public List<Model> GetList()
-        {
-            
+        {        
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
