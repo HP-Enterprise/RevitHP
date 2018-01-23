@@ -255,7 +255,7 @@ namespace RevitHP
             {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
-                //((TreeViewItem)dObject).Background = Brushes.Aqua;
+                
             }
         }
         //通过审核
@@ -431,7 +431,7 @@ namespace RevitHP
         }
         private void select_Click(object sender, RoutedEventArgs e)
         {
-            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            var openFileDialog = new OpenFileDialog()
             {
                 Filter = ""
             };

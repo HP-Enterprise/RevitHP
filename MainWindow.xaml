@@ -67,8 +67,8 @@
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <TextBlock >  
-                <Run Text="{Binding  Name}" />  
-                <Run Text="{Binding  NewName }"/>
+                <Run Text="{Binding  Name}"  />  
+                <Run Text="{Binding  NewName }"  Foreground="Blue"/>
                 <Run Text="{Binding  Audit}"  />
                     </TextBlock>
                     
