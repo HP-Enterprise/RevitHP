@@ -36,23 +36,18 @@
                         <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="uploading_Click">
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="Uploading_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/upload.png"/>
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="ceshixiazai" Click="ceshixiazai_Click">
-                    <StackPanel>
-                        <Image Width="33"  Source="Img/upload.png"/>
-                        <TextBlock Text="测试下载" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+
             </ToolBar>
 
         </StackPanel>
         <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="2">
-            <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="122" Margin="1,7,0,0"/>
+            <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" Margin="1,7,0,0" HorizontalAlignment="Left" Width="161"/>
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
@@ -61,10 +56,10 @@
             <TreeView.ContextMenu>
                 <ContextMenu >
                     <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
-                    <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
+                    <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click" Visibility="Collapsed"/>
                     <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
-                    <!--<MenuItem Header="审核通过" Name="audit" Click="audit_Click"   />
-                    <MenuItem Header="拒绝" Name="AuditRefuse" Click="AuditRefuse_Click"   />-->
+                    <MenuItem Header="审核通过" Name="audit" Click="audit_Click" Visibility="Collapsed" />
+                    <MenuItem Header="拒绝" Name="AuditRefuse" Click="AuditRefuse_Click"  Visibility="Collapsed" />
                 </ContextMenu>
             </TreeView.ContextMenu>
             <TreeView.ItemTemplate>
@@ -72,15 +67,16 @@
                     <TextBlock >  
                 <Run Text="{Binding  Name}"/>  
                 <Run Text="{Binding  NewName }"/>
-                <Run Text="{Binding  Audit}"/>
-
+                <Run Text="{Binding  Audit}" />
                     </TextBlock>
+
+
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
 
         </TreeView>
 
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="189,57,122,45" Grid.RowSpan="3" IsReadOnly="True" Grid.ColumnSpan="2">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="189,57,181,45" Grid.RowSpan="3" IsReadOnly="True" Grid.ColumnSpan="2" MouseDoubleClick="dataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
@@ -95,7 +91,7 @@
 
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn  Header="MD5" Width="Auto">
+                <DataGridTemplateColumn  Header="文件名称" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -125,11 +121,29 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Content="上传" Grid.Column="1" Name="modelupload" HorizontalAlignment="Right" Margin="0,60,36,0" VerticalAlignment="Top" Width="75" Click="modelupload_Click" Height="19"/>
-        <Button Content="删除" Grid.Column="1" Name="modeldelete" HorizontalAlignment="Right" Margin="0,132,36,0" VerticalAlignment="Top" Width="75" Click="modeldelete_Click" Height="19"/>
-        <Button Content="下载" Grid.Column="1" Name="modeldownload" HorizontalAlignment="Right" Margin="0,94,36,0" VerticalAlignment="Top" Width="75" Click="modeldownload_Click" Height="19"/>
-        <Button Content="list" Grid.Column="1" Name="modellist" HorizontalAlignment="Right" Margin="0,172,36,0" VerticalAlignment="Top" Width="75" Click="modellist_Click"  Height="19"/>
 
+        <TextBlock Grid.Column="1" x:Name="filename" Margin="0,31,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166" Height="127" Grid.Row="2"/>
+        <!--<Button Content="上传" Grid.Column="1" HorizontalAlignment="Right" Margin="0,43,24,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.Row="2"/>-->
 
+        <Button  Margin="0,56,114,0" x:Name="select" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="select_Click">
+            <Image Source="Img/select.png" />
+        </Button>
+        <Button  Margin="0,56,24,0" x:Name="modelupload" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modelupload_Click_1">
+            <Image Source="Img/modelupload.png" />
+        </Button>
+        <Button  Margin="0,139,114,0" x:Name="modeldelete" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldelete_Click">
+            <Image Source="Img/delete.png" RenderTransformOrigin="0.514,0.914" />
+        </Button>
+        <Button  Margin="0,139,24,0" x:Name="modeldownload" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldownload_Click">
+            <Image Source="Img/download.png" />
+        </Button>
+        <Grid Grid.Column="1" Height="23" Margin="0,93,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
+            <TextBlock HorizontalAlignment="Left" Margin="15,6,0,0" TextWrapping="Wrap" Text="选择模型" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="101,6,0,0" TextWrapping="Wrap" Text="上传模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
+        </Grid>
+        <Grid Grid.Column="1" Height="23" Margin="0,178,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
+            <TextBlock HorizontalAlignment="Left" Margin="15,6,0,0" TextWrapping="Wrap" Text="删除模型" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="101,6,0,0" TextWrapping="Wrap" Text="下载模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
+        </Grid>
     </Grid>
 </Window>

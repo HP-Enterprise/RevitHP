@@ -68,5 +68,20 @@ namespace RevitHP
                 }
             }
         }
+
+        public string md5 { get; set; }
+
+        public string MD5
+        {
+            get { return md5; }
+            set
+            {
+                if (this.MD5 != value)
+                {
+                    this.md5 = value;
+                }
+            }
+        }
+
     }
 }

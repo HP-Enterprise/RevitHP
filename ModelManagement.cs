@@ -36,7 +36,8 @@ namespace RevitHP
             var client = new RestClient(REMOTE_URL + "/file/upload");
             var request = new RestRequest(Method.POST);
             request.AddFile("file", filepath);
-            request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);
+            request.AddHeader("name", "afawfawf");
+            request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);       
             string MD5 = hashFromFile.GetMD5Hash(filepath);
             request.AddHeader("MD5", MD5);
             IRestResponse response = client.Execute(request);
@@ -60,9 +61,7 @@ namespace RevitHP
                 {
                     Uri url = new Uri(urlstr);
                     HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                    myHttpWebRequest.Headers.Add("MD5", "c2adec8aca6958b15436823f99e2152d");
-                    //c2adec8aca6958b15436823f99e2152d
-                    //ff64011aec56c57954b751c7044a1abc
+                    myHttpWebRequest.Headers.Add("MD5",MD5);                          
                     myHttpWebRequest.Headers.Add("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);
                     myHttpWebRequest.Method = "GET";
                     using (HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse())
@@ -94,7 +93,7 @@ namespace RevitHP
             var client = new RestClient(REMOTE_URL + "/file/delete");
             var request = new RestRequest(Method.GET);
             request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);
-            request.AddHeader("MD5", "c2adec8aca6958b15436823f99e2152d");
+            request.AddHeader("MD5",MD5);
             IRestResponse response = client.Execute(request);
             JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
             if (obj.GetValue("success").ToString() == "True")
@@ -107,17 +106,22 @@ namespace RevitHP
             }
         }
 
-        public List<string> ModelFileList()
+        public List<Model> ModelFileList()
         {
             var client = new RestClient(REMOTE_URL + "/file/fileList");
             var request = new RestRequest(Method.GET);
             request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);
             IRestResponse response = client.Execute(request);
             JObject obj = (JObject)JsonConvert.DeserializeObject(response.Content);
-            List<string> list = new List<string>();
+            List<Model> list = new List<Model>();
             for (int i = 0; i < obj.GetValue("obj").Count(); i++)
             {
-                list.Add(obj.GetValue("obj")[i]["md5"].ToString());
+                Model model = new Model();
+                model.Mod_Name = obj.GetValue("obj")[i]["name"].ToString();
+                model.Mod_Size = obj.GetValue("obj")[i]["size"].ToString();
+                model.Id =Convert.ToInt32(obj.GetValue("obj")[i]["id"]);
+                model.MD5 = obj.GetValue("obj")[i]["md5"].ToString();
+                list.Add(model);
             }
             return list;
         }

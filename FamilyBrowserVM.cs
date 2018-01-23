@@ -52,7 +52,7 @@ namespace RevitHP
         {
 
             //RevitBiz biz = new RevitBiz();
-            return m_biz.openDB1();
+            return m_biz.OpenDB1();
 
             //调用接口事件
             //PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
@@ -61,7 +61,7 @@ namespace RevitHP
         //文件下载
         public void IsDownload()
         {
-            switch (m_biz.pull())
+            switch (m_biz.Pull())
             {
                 case 200:
                     PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
@@ -125,27 +125,32 @@ namespace RevitHP
         {
             m_biz.AuditRefuse(id);
         }
+        public void AuditRefuseadd(int id)
+        {
+            m_biz.AuditRefuseadd(id);
+        }
+
 
         //模型上传
-        public void modelupload()
+        public bool Modelupload(string filepath)
         {
-            m_biz.Modelupload();
+           return m_biz.Modelupload(filepath);
         }
-        public void modeldelete()
+        public bool modeldelete(string md5)
         {
-            m_biz.modeldelete();
+           return m_biz.modeldelete(md5);
         }
-        public void ModelDownload()
+        public bool ModelDownload(string md5)
         {
-            m_biz.ModelDownload();
+          return  m_biz.ModelDownload(md5);
         }
-        public List<string> Modellist()
+        public List<Model> Modellist()
         {
             return m_biz.ModelList();
         }
-        public List<Model> list()
+        public List<Model> list(int id)
         {
-            return m_biz.GetList();
+            return m_biz.GetList(id);
         }
 
     }

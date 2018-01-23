@@ -207,6 +207,15 @@
     <Resource Include="Img\upload.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Img\select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Img\modelupload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Img\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Img\download.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

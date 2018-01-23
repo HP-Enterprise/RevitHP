@@ -164,7 +164,7 @@ namespace RevitHP
                     myHttpWebRequest.Headers.Add("MD5", "00000000000000000000000000000000");
                     myHttpWebRequest.Headers.Add("ACCESS-TOKEN", family_ACCESS_TOKEN);
                     myHttpWebRequest.Method = "GET";
-                    using (HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse())
+                    using (HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse()) { 
                     using (Stream receiveStream = myHttpWebResponse.GetResponseStream())
                     {
                         Byte[] bytes = new Byte[100];
@@ -174,7 +174,7 @@ namespace RevitHP
                             fs.Write(bytes, 0, count);
                             count = receiveStream.Read(bytes, 0, 100);
                         }
-                    }
+                    }}
                 }
                 return true;
 

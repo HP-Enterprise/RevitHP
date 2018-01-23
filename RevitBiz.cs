@@ -84,7 +84,7 @@ namespace RevitHP
 
 
 
-        public int pull()
+        public int Pull()
         {
             m_liteDB.Close();
             int statuscode = server.DownloadStatusCode(m_folder + "\\RevHP.0", md5());
@@ -102,7 +102,7 @@ namespace RevitHP
                 //break;
                 //304代表版本一致
                 case 304:
-                    openDB();
+                    OpenDB();
                     return 304;
                 //404代表服务器是全新的
                 case 404:
@@ -137,9 +137,10 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.0");
                 File.Delete(m_folder + "\\RevHP.1");
                 string fileName = m_folder + "\\RevHP.2";
-                string dfileName = Path.ChangeExtension(fileName, ".1");
+                string dfileName = Path.ChangeExtension(fileName, ".0");
                 File.Move(fileName, dfileName);
-                m_liteDB.Open(1);
+                copy();
+                //m_liteDB.Open(1);
             }
             else
             {
@@ -189,7 +190,7 @@ namespace RevitHP
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,audit FROM catalog where NameID={0} or audit=0 ", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname FROM catalog where NameID={0} or audit=0 ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -198,7 +199,7 @@ namespace RevitHP
                             item.Id = reader.GetInt32(0);
                             item.Name = reader.GetString(1);
                             //item.NewName = reader.GetString(3);
-                            item.Audit = reader.GetInt32(4);
+                            //item.Audit = reader.GetInt32(4);
                             dictCatalog.Add(reader.GetInt32(0), item);
                             if (reader.GetString(3) != "")
                             {
@@ -300,14 +301,14 @@ namespace RevitHP
             }
         }
         //打开数据库
-        public void openDB()
+        public void OpenDB()
         {
             m_liteDB.Open(1);
             m_liteDB.Upgrade();
         }
 
         //合并（测试）
-        public void updatetreeview()
+        public void Updatetreeview()
         {
             List<int> parentid = new List<int>();
             List<CataItem> list = new List<CataItem>();
@@ -381,7 +382,7 @@ namespace RevitHP
             NewliteDB.Close();
         }
         //合并（测试）
-        public string openDB1()
+        public string OpenDB1()
         {
             List<CataItem> list = new List<CataItem>();
             List<int> parentid = new List<int>();
@@ -451,7 +452,7 @@ namespace RevitHP
 
             }
             NewliteDB.Close();
-            updatetreeview();
+            Updatetreeview();
             return "a";
         }
 
@@ -468,7 +469,7 @@ namespace RevitHP
             {
                 file.CopyTo(destinationFile, true);
             }
-            openDB();
+            OpenDB();
         }
         //将文件.1复制为.2，并去掉所有标识。
         public void copy2()
@@ -528,39 +529,50 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',newname='' where id={1}", 0, id);
+                cmd.CommandText = string.Format("UPDATE catalog set audit=0 ,newname='' where id='{0}'", id);
                 cmd.ExecuteScalar();
             }
 
         }
-        //模型上传
-        public void Modelupload()
+        //审核拒绝（添加）
+        public void AuditRefuseadd(int id)
         {
-            model.Modelupload(@"E:\ceshi.txt");
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("Delete from catalog where id='{0}'", id);
+                cmd.ExecuteScalar();
+            }
+
+        }
+
+        //模型上传
+        public bool Modelupload(string filepath)
+        {
+           return  model.Modelupload(filepath);
         }
         //模型删除
-        public void modeldelete()
+        public bool modeldelete(string md5)
         {
-            model.ModelDelete("");
+          return  model.ModelDelete(md5);
         }
         //模型下载
-        public void ModelDownload()
+        public bool ModelDownload(string md5)
         {
-            model.ModelDownload(@"E:\aaaa.txt", "");
+           return  model.ModelDownload(m_folder+"/"+md5+".rfa", md5);
         }
         //模型列表
-        public List<string> ModelList()
+        public List<Model> ModelList()
         {
             return model.ModelFileList();
         }
 
         //测试
-        public List<Model> GetList()
+        public List<Model> GetList(int id)
         {        
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid FROM Model ";
+                cmd.CommandText =string.Format("SELECT id,mod_name,mod_size,catalogid FROM Model where catalogid={0}",id);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
