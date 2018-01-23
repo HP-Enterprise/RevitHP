@@ -180,7 +180,15 @@ namespace RevitHP
                             item.Id = reader.GetInt32(0);
                             item.Name = reader.GetString(1);
                             item.NewName = reader.GetString(3);
-                            item.Audit = reader.GetInt32(4);
+                            //item.Audit = reader.GetInt32(4).ToString();
+                            if (reader.GetInt32(4)==1)
+                            {
+                                item.Audit = "未通过";
+                            }
+                            else
+                            {
+                                item.Audit = "";
+                            }
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
@@ -190,21 +198,23 @@ namespace RevitHP
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname FROM catalog where NameID={0} or audit=0 ", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname FROM catalog where NameID='{0}' or audit=0 ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             CataItem item = new CataItem();
-                            item.Id = reader.GetInt32(0);
-                            item.Name = reader.GetString(1);
-                            //item.NewName = reader.GetString(3);
-                            //item.Audit = reader.GetInt32(4);
-                            dictCatalog.Add(reader.GetInt32(0), item);
-                            if (reader.GetString(3) != "")
+                            item.Id = reader.GetInt32(0);                         
+                            if (reader.GetString(3) != ""&&ServerManagement.id!=0)
                             {
                                 item.Name = reader.GetString(3);
                             }
+                            else
+                            {
+                                item.Name = reader.GetString(1);
+                            }
+                            item.Audit = "";
+                            dictCatalog.Add(reader.GetInt32(0), item);
                             //组装字典                          
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
@@ -506,6 +516,14 @@ namespace RevitHP
             }
             m_liteDB.Open(1);
         }
+        public void DeleteFile2()
+        {       
+            if (File.Exists(m_folder + "\\RevHP.0"))
+            {
+                File.Delete(m_folder + "\\RevHP.0");//删除该文件
+            }                 
+        }
+
         //通过审核（添加）
         public void PassAuditAdd(int id)
         {
@@ -556,9 +574,9 @@ namespace RevitHP
           return  model.ModelDelete(md5);
         }
         //模型下载
-        public bool ModelDownload(string md5)
+        public bool ModelDownload(string md5,string path,string name)
         {
-           return  model.ModelDownload(m_folder+"/"+md5+".rfa", md5);
+           return  model.ModelDownload(path+"\\"+name+".rfa",md5);
         }
         //模型列表
         public List<Model> ModelList()

@@ -44,7 +44,7 @@ namespace RevitHP
         public static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
-        public static int id;
+        public static int id=0;
 
 
         //登录方法

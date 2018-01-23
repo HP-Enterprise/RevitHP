@@ -47,6 +47,12 @@ namespace RevitHP
             bool islogout = await m_biz.IslogoutAsync();
             return islogout;
         }
+
+        public void renovation()
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+        }
+
         //测试合并
         public string OpenDB()
         {
@@ -94,6 +100,10 @@ namespace RevitHP
         {
             m_biz.DeleteFile();
         }
+        public void DeleteFile2()
+        {
+            m_biz.DeleteFile2();
+        }
         //添加结点
         public void SetCatalogAdd(string name, int id, int parentid)
         {
@@ -140,9 +150,9 @@ namespace RevitHP
         {
            return m_biz.modeldelete(md5);
         }
-        public bool ModelDownload(string md5)
+        public bool ModelDownload(string md5,string path,string name)
         {
-          return  m_biz.ModelDownload(md5);
+          return  m_biz.ModelDownload(md5,path,name);
         }
         public List<Model> Modellist()
         {

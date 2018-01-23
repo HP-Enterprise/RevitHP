@@ -23,6 +23,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using Microsoft.Win32;
 
 namespace RevitHP
 {
@@ -191,9 +192,13 @@ namespace RevitHP
                 isLoginState = true;
                 this.audit.Visibility = Visibility.Collapsed;
                 this.AuditRefuse.Visibility = Visibility.Collapsed;
+                this.DeleteNode.Visibility = Visibility.Collapsed;
                 this.dataGrid.ItemsSource = null;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
+                ServerManagement.id = 0;
+                vm.DeleteFile2();
+                vm.renovation();
             }
         }
 
@@ -273,7 +278,7 @@ namespace RevitHP
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
             }
-            else if (item.Audit == 1)
+            else if (item.Audit == "未通过")
             {
                 vM.PassAuditAdd(item.Id);
             }
@@ -287,7 +292,7 @@ namespace RevitHP
             {
                 vM.AuditRefuse(item.Id);
             }
-            else if (item.Audit == 1)
+            else if (item.Audit == "未通过")
             {
                 vM.AuditRefuseadd(item.Id);
                 CataItem parent = item.Parent as CataItem;
@@ -310,7 +315,7 @@ namespace RevitHP
         private void Modelupload_Click(object sender, RoutedEventArgs e)
         {
 
-            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            var openFileDialog = new OpenFileDialog()
             {
                 Filter = ""
             };
@@ -376,39 +381,44 @@ namespace RevitHP
         private void modeldownload_Click(object sender, RoutedEventArgs e)
         {
             if (!isLoginState)
-            {
+            {              
                 if (name != null)
                 {
                     MessageBoxResult confirmToDel = MessageBox.Show("确认要下载" + name + "文件吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (confirmToDel == MessageBoxResult.Yes)
                     {
                         var vM = this.DataContext as FamilyBrowserVM;
-                        if (vM.ModelDownload(md5))
+                        if (vM.ModelDownload(md5,this.filename.Text, name))
                         {
                             MessageBox.Show("下载成功");
+                            this.filename.Text = "";
+                            md5 = null;
+                            name = null;
+                        }
+                        else
+                        {
+                            this.filename.Text = "下载失败";
                         }
                     }
+                }
+                else
+                {
+                    this.filename.Text = "请您先选择要下载的文件";
                 }
 
             }
             else
             {
-                MessageBox.Show("请先登录！");
+                this.filename.Text = "请您先登录";
+              
             }
-        }
-
-        private void modellist_Click(object sender, RoutedEventArgs e)
-        {
-            var vM = this.DataContext as FamilyBrowserVM;
-            ////vM.Modellist();
-            this.dataGrid.ItemsSource = vM.Modellist();
         }
 
         private void Treeview1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            CataItem item = Treeview1.SelectedItem as CataItem;
-            var vM = this.DataContext as FamilyBrowserVM;
-            this.dataGrid.ItemsSource = vM.list(item.Id);
+            //CataItem item = Treeview1.SelectedItem as CataItem;
+            //var vM = this.DataContext as FamilyBrowserVM;
+            //this.dataGrid.ItemsSource = vM.list(item.Id);
         }
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -424,35 +434,6 @@ namespace RevitHP
                 }
             }
         }
-
-
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isLoginState)
-            {
-
-                if (this.filename.Text != "")
-                {
-                    var vM = this.DataContext as FamilyBrowserVM;
-                    if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
-                    {
-                        this.dataGrid.ItemsSource = vM.Modellist();
-                        this.filename.Text = "";
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("请选择需要上传的文件");
-                }
-
-            }
-            else
-            {
-                MessageBox.Show("请您先登录");
-            }
-        }
-
         private void select_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog()
@@ -475,10 +456,15 @@ namespace RevitHP
                 if (this.filename.Text != "")
                 {
                     var vM = this.DataContext as FamilyBrowserVM;
+                    string a = this.filename.Text;
                     if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
                     {
                         this.dataGrid.ItemsSource = vM.Modellist();
                         this.filename.Text = "";
+                    }
+                    else
+                    {
+                        this.filename.Text = "上传失败。";
                     }
                 }
                 else
@@ -492,6 +478,21 @@ namespace RevitHP
                 MessageBox.Show("请您先登录");
             }
         }
+
+        private void downloadpath_Click(object sender, RoutedEventArgs e)
+        {
+            string path=null;
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+             if (fbd.ShowDialog()==System.Windows.Forms.DialogResult.OK)
+             {
+                  path = fbd.SelectedPath;
+                this.filename.Text=path;
+             }
+             
+        }
+
+
+
     }
 
 }

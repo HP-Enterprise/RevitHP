@@ -31,13 +31,11 @@ namespace RevitHP
         }
 
         public bool Modelupload(string filepath)
-        {
-
+        {         
             var client = new RestClient(REMOTE_URL + "/file/upload");
             var request = new RestRequest(Method.POST);
             request.AddFile("file", filepath);
-            request.AddHeader("name", "afawfawf");
-            request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);       
+            request.AddHeader("ACCESS-TOKEN", ServerManagement.family_ACCESS_TOKEN);
             string MD5 = hashFromFile.GetMD5Hash(filepath);
             request.AddHeader("MD5", MD5);
             IRestResponse response = client.Execute(request);
@@ -50,6 +48,7 @@ namespace RevitHP
             {
                 return false;
             }
+
         }
 
         public bool ModelDownload(string filepath, string MD5)

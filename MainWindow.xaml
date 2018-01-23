@@ -19,13 +19,15 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="220*"/>
-            <RowDefinition Height="6*"/>
-            <RowDefinition Height="203*"/>
+            <RowDefinition Height="261*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="160*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110*"/>
-            <ColumnDefinition Width="129*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Height="55" VerticalAlignment="Top" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2">
@@ -51,7 +53,7 @@
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="2,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" MouseDoubleClick="Treeview1_MouseDoubleClick"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="0,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" MouseDoubleClick="Treeview1_MouseDoubleClick" Grid.Column="1"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
@@ -65,18 +67,17 @@
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <TextBlock >  
-                <Run Text="{Binding  Name}"/>  
+                <Run Text="{Binding  Name}" />  
                 <Run Text="{Binding  NewName }"/>
-                <Run Text="{Binding  Audit}" />
+                <Run Text="{Binding  Audit}"  />
                     </TextBlock>
-
-
+                    
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
 
         </TreeView>
 
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="189,57,181,45" Grid.RowSpan="3" IsReadOnly="True" Grid.ColumnSpan="2" MouseDoubleClick="dataGrid_MouseDoubleClick">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" MouseDoubleClick="dataGrid_MouseDoubleClick" Grid.Column="1">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
@@ -114,36 +115,34 @@
                         <DataTemplate>
                             <TextBlock HorizontalAlignment="Center" Text="{Binding Mod_Size}"></TextBlock>
                         </DataTemplate>
-
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
             </DataGrid.Columns>
         </DataGrid>
-
-
-        <TextBlock Grid.Column="1" x:Name="filename" Margin="0,31,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166" Height="127" Grid.Row="2"/>
-        <!--<Button Content="上传" Grid.Column="1" HorizontalAlignment="Right" Margin="0,43,24,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.Row="2"/>-->
-
-        <Button  Margin="0,56,114,0" x:Name="select" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="select_Click">
-            <Image Source="Img/select.png" />
-        </Button>
-        <Button  Margin="0,56,24,0" x:Name="modelupload" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modelupload_Click_1">
-            <Image Source="Img/modelupload.png" />
-        </Button>
-        <Button  Margin="0,139,114,0" x:Name="modeldelete" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldelete_Click">
-            <Image Source="Img/delete.png" RenderTransformOrigin="0.514,0.914" />
-        </Button>
-        <Button  Margin="0,139,24,0" x:Name="modeldownload" Grid.Column="1" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldownload_Click">
-            <Image Source="Img/download.png" />
-        </Button>
-        <Grid Grid.Column="1" Height="23" Margin="0,93,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
-            <TextBlock HorizontalAlignment="Left" Margin="15,6,0,0" TextWrapping="Wrap" Text="选择模型" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="101,6,0,0" TextWrapping="Wrap" Text="上传模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
-        </Grid>
-        <Grid Grid.Column="1" Height="23" Margin="0,178,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="166">
-            <TextBlock HorizontalAlignment="Left" Margin="15,6,0,0" TextWrapping="Wrap" Text="删除模型" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="101,6,0,0" TextWrapping="Wrap" Text="下载模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
+        <Grid Margin="0,60,10,40" Grid.RowSpan="3" Grid.Column="1" HorizontalAlignment="Right" Width="180">
+            <Button  Margin="24,10,0,0" x:Name="select" Background="Transparent" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="select_Click" HorizontalAlignment="Left" Width="35">
+                <Image Source="Img/select.png" />
+            </Button>
+            <Button  Margin="0,10,19,0" x:Name="modelupload" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modelupload_Click_1">
+                <Image Source="Img/modelupload.png" />
+            </Button>
+            <Button  Margin="17,82,0,0" x:Name="modeldelete" Background="Transparent" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldelete_Click" HorizontalAlignment="Left" Width="49">
+                <Image Source="Img/delete.png" RenderTransformOrigin="0.514,0.914" />
+            </Button>
+            <Button  Margin="0,153,16,0" x:Name="downloadpath" Background="Transparent" BorderBrush="Transparent" Click="downloadpath_Click" HorizontalAlignment="Right" Width="55" Height="39" VerticalAlignment="Top">
+                <Image Source="Img/path.png" Width="29" Height="35" />
+            </Button>
+            <Button  Margin="0,82,19,0" x:Name="modeldownload" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldownload_Click">
+                <Image Source="Img/download.png" />
+            </Button>
+            <TextBlock  Margin="9,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Text="文件地址：" RenderTransformOrigin="0.46,0.75" HorizontalAlignment="Left" Width="63" />
+            <TextBlock x:Name="filename" Margin="9,241,3,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="77" Foreground="Red" />
+            <TextBlock HorizontalAlignment="Left" Margin="19,58,0,0" TextWrapping="Wrap" Text="选择模型" VerticalAlignment="Top"/>
+            <TextBlock Margin="0,57,16,0" TextWrapping="Wrap" Text="上传模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="48"/>
+            <TextBlock HorizontalAlignment="Left" Margin="19,131,0,0" TextWrapping="Wrap" Text="删除模型" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Right" Margin="0,132,16,0" TextWrapping="Wrap" Text="下载模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
+            <TextBlock Margin="0,196,5,0" TextWrapping="Wrap" Text="选择下载路径" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="76"/>
         </Grid>
     </Grid>
 </Window>

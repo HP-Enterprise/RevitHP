@@ -38,8 +38,8 @@ namespace RevitHP
                 }
                 }
         }
-        public int Audit { get; set; }
-        public int audit
+        public string Audit { get; set; }
+        public string audit
         {
             get { return audit; }
             set
