@@ -124,20 +124,24 @@ namespace RevitHP
         public void PassAuditAdd(int id)
         {
             m_biz.PassAuditAdd(id);
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
         public void PassAuditUpdate(int id,string newname)
         {
             m_biz.PassAuditUpdate(id, newname);
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
 
         }
         //审核失败
         public void AuditRefuse(int id)
         {
             m_biz.AuditRefuse(id);
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
         public void AuditRefuseadd(int id)
         {
             m_biz.AuditRefuseadd(id);
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
 
 

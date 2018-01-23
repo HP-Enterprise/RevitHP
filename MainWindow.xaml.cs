@@ -219,17 +219,7 @@ namespace RevitHP
         }
 
 
-        private void MD5_Click(object sender, RoutedEventArgs e)
-        {
-
-            var vM = this.DataContext as FamilyBrowserVM;
-            vM.OpenDB();
-
-            //UnfoldTreeview();
-
-
-        }
-
+   
 
         //设置计时器多少秒实现一次
         const int Time = 300;
@@ -265,7 +255,7 @@ namespace RevitHP
             {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
-                ((TreeViewItem)dObject).Background = Brushes.Aqua;
+                //((TreeViewItem)dObject).Background = Brushes.Aqua;
             }
         }
         //通过审核
@@ -277,10 +267,13 @@ namespace RevitHP
             {
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
+                UnfoldTreeview();
+
             }
             else if (item.Audit == "未通过")
             {
                 vM.PassAuditAdd(item.Id);
+                UnfoldTreeview();
             }
         }
         //拒绝审核
@@ -291,6 +284,7 @@ namespace RevitHP
             if (item.newname.Length > 2)
             {
                 vM.AuditRefuse(item.Id);
+                UnfoldTreeview();
             }
             else if (item.Audit == "未通过")
             {
@@ -301,6 +295,7 @@ namespace RevitHP
                     //在父节点中删除选中的子节点                 
                     parent.Children.Remove(item);
                     item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
+                    UnfoldTreeview();
                 }
             }
 
