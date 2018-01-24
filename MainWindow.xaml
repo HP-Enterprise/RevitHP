@@ -71,12 +71,10 @@
                 <Run Text="{Binding  NewName }"  Foreground="Blue"/>
                 <Run Text="{Binding  Audit}" Foreground="Red" />
                     </TextBlock>
-                    
+
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-
         </TreeView>
-
         <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">

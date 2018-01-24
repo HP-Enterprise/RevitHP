@@ -110,6 +110,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CataItem.cs" />
+    <Compile Include="ExternalEventExample.cs" />
     <Compile Include="FamilyBrowserVM.cs" />
     <Compile Include="GetMD5HashFromFile.cs" />
     <Compile Include="LoginState.cs" />

@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Autodesk.Revit.Creation;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -115,13 +118,54 @@ namespace RevitHP
             {
                 Model model = new Model();
                 model.Mod_Name = obj.GetValue("obj")[i]["name"].ToString();
-                model.Mod_Size = obj.GetValue("obj")[i]["size"].ToString();
+                model.Mod_Size = CountSize(long.Parse(obj.GetValue("obj")[i]["size"].ToString()));
+                //model.Mod_Size = obj.GetValue("obj")[i]["size"].ToString();
                 model.Id =Convert.ToInt32(obj.GetValue("obj")[i]["id"]);
                 model.MD5 = obj.GetValue("obj")[i]["md5"].ToString();
                 list.Add(model);
             }
             return list;
         }
+
+        //转换为实际应用中的大小（KB/M）
+        public static string CountSize(long Size)
+        {
+            string m_strSize = "";
+            long FactSize = 0;
+            FactSize = Size;
+            if (FactSize < 1024)
+                m_strSize = FactSize.ToString("F2") + " Byte";
+            else if (FactSize >= 1024 && FactSize < 1048576)
+                m_strSize = (FactSize / 1024).ToString("F2") + " K";
+            else if (FactSize >= 1048576 && FactSize < 1073741824)
+                m_strSize = (FactSize / 1024/ 1024).ToString("F2") + " M";
+            else if (FactSize >= 1073741824)
+                m_strSize = (FactSize / 1024 / 1024 / 1024).ToString("F2") + " G";
+            return m_strSize;
+        }
+
+        //public void CreateTables(Autodesk.Revit.DB.Document document)
+        //{
+
+        //    String fileName = @"E:\电动两通阀.rfa";
+        //    // try to load family
+        //    Family family = null;
+        //    if (!document.LoadFamily(fileName, out family))
+        //    {
+        //        throw new Exception("Unable to load " + fileName);
+        //    }
+        //    var familySymbolIds = family.GetFamilySymbolIds();
+        //    double x = 0.0, y = 0.0;
+        //    foreach (ElementId id in familySymbolIds)
+        //    {
+        //        FamilySymbol symbol = family.Document.GetElement(id) as FamilySymbol;
+        //        XYZ location = new XYZ(x, y, 10.0);
+
+        //        FamilyInstance instance = document.Create.NewFamilyInstance(location, symbol, StructuralType.NonStructural);
+        //        x += 10.0;
+        //    }
+        //}
+
 
     }
 }

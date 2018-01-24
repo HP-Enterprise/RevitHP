@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.Creation;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -612,6 +613,12 @@ namespace RevitHP
             }
             return list;
         }
+
+        public void openrfa(Document document)
+        {
+            //model.CreateTables(document);
+        }
+
     }
 }
 

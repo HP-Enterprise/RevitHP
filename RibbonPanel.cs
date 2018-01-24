@@ -33,6 +33,25 @@ namespace RevitHP
     [Transaction(TransactionMode.Manual)]
     public class BtnFamilyBrowser : IExternalCommand
     {
+        public static ExternalEvent s_event = null;
+       
+        
+    
+
+        private static UIApplication s_app = null;
+
+        public static UIDocument GetDoc()
+        {
+            if (s_app == null) return null;
+
+            return s_app.ActiveUIDocument;
+        }
+        public static ExternalEvent GetEvent()
+        {
+            return s_event;
+        }
+
+
         // 共享一个window
         private static MainWindow m_wnd = null;
 
@@ -51,6 +70,14 @@ namespace RevitHP
             }
             m_wnd.Activate();
 
+            s_app = commandData.Application;
+            if (s_event==null)
+            {
+             ExternalEventExample external = new ExternalEventExample();
+            s_event = ExternalEvent.Create(external);
+            }
+           
+            
             return Result.Succeeded;
         }
     }

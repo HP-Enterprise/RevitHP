@@ -1,29 +1,13 @@
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
 using Microsoft.Win32;
+using Autodesk.Revit.UI;
+//using Autodesk.Revit.DB;
 
 namespace RevitHP
 {
@@ -42,8 +26,8 @@ namespace RevitHP
         public static bool isLoginState = true;
         private static string md5;
         private static string name;
-        private static string classname;
-        private static int catalogid;
+        //private static string classname;
+        //private static int catalogid;
         private static string modelname;
         private static string modelsize;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -170,9 +154,9 @@ namespace RevitHP
                     this.login_state.Text = "注销";
                     if (ServerManagement.id == 1)
                     {
-                        this.audit.Visibility = Visibility.Visible;
-                        this.AuditRefuse.Visibility = Visibility.Visible;
-                        this.DeleteNode.Visibility = Visibility.Visible;
+                        audit.Visibility = Visibility.Visible;
+                        AuditRefuse.Visibility = Visibility.Visible;
+                        DeleteNode.Visibility = Visibility.Visible;
                     }
                     vm.IsDownload();
                     UnfoldTreeview();
@@ -183,6 +167,7 @@ namespace RevitHP
             else
             {
                 logoutAsync();
+                UnfoldTreeview();
             }
 
         }
@@ -193,6 +178,7 @@ namespace RevitHP
             islogout.Wait();
             if (islogout.Result)
             {
+
                 isLoginState = true;
                 this.audit.Visibility = Visibility.Collapsed;
                 this.AuditRefuse.Visibility = Visibility.Collapsed;
@@ -424,19 +410,20 @@ namespace RevitHP
                     //    MessageBoxResult confirmToDel = MessageBox.Show("确认要上传" + modelname + "模型" + "到" + classname + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     //    if (confirmToDel == MessageBoxResult.Yes)
                     //    {
-                            var vM = this.DataContext as FamilyBrowserVM;
-                            string a = this.filename.Text;
-                            if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
-                            {
-                                
-                                this.dataGrid.ItemsSource = vM.Modellist();
-                                this.filename.Text = "";
-                            }
-                            else
-                            {
-                                this.filename.Text = "上传失败。";
-                            }
-                        //}
+                    var vM = this.DataContext as FamilyBrowserVM;
+                    string a = this.filename.Text;
+                    if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
+                    {
+
+                        this.dataGrid.ItemsSource = vM.Modellist();
+                        this.filename.Text = "";
+                        MessageBox.Show("上传成功！");
+                    }
+                    else
+                    {
+                        this.filename.Text = "上传失败。";
+                    }
+                    //}
                     //}
                     //else
                     //{
@@ -483,12 +470,22 @@ namespace RevitHP
 
         private void Treeview1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            CataItem item = Treeview1.SelectedItem as CataItem;
-            classname = item.Name;
-            catalogid = item.Id;
+            //CataItem item = Treeview1.SelectedItem as CataItem;
+            //classname = item.Name;
+            //catalogid = item.Id;
             //var vM = this.DataContext as FamilyBrowserVM;
             //this.dataGrid.ItemsSource = vM.list(item.Id);
+
+            var evgetopen = BtnFamilyBrowser.GetEvent();
+            if (evgetopen!=null)
+            {
+                evgetopen.Raise();
+            }
+
         }
+
+       
+
     }
 
 }
