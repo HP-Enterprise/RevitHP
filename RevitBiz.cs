@@ -184,7 +184,7 @@ namespace RevitHP
                             //item.Audit = reader.GetInt32(4).ToString();
                             if (reader.GetInt32(4)==1)
                             {
-                                item.Audit = "未通过";
+                                item.Audit = "未审核";
                             }
                             else
                             {
@@ -567,16 +567,20 @@ namespace RevitHP
         //模型上传
         public bool Modelupload(string filepath)
         {
-           return  model.Modelupload(filepath);
+           return  model.IsModelupload(filepath);
         }
         //模型删除
         public bool modeldelete(string md5)
         {
-          return  model.ModelDelete(md5);
+          return  model.IsModelDelete(md5);
         }
         //模型下载
         public bool ModelDownload(string md5,string path,string name)
         {
+            if (path=="")
+            {
+                path = m_folder;
+            }
            return  model.ModelDownload(path+"\\"+name+".rfa",md5);
         }
         //模型列表

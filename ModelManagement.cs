@@ -30,7 +30,7 @@ namespace RevitHP
             }
         }
 
-        public bool Modelupload(string filepath)
+        public bool IsModelupload(string filepath)
         {         
             var client = new RestClient(REMOTE_URL + "/file/upload");
             var request = new RestRequest(Method.POST);
@@ -84,10 +84,8 @@ namespace RevitHP
             }
         }
 
-
-
-
-        public bool ModelDelete(string MD5)
+        //模型删除
+        public bool IsModelDelete(string MD5)
         {
             var client = new RestClient(REMOTE_URL + "/file/delete");
             var request = new RestRequest(Method.GET);

@@ -53,7 +53,7 @@
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="0,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" MouseDoubleClick="Treeview1_MouseDoubleClick" Grid.Column="1"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="0,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" Grid.Column="1" SelectedItemChanged="Treeview1_SelectedItemChanged"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
@@ -69,7 +69,7 @@
                     <TextBlock >  
                 <Run Text="{Binding  Name}"  />  
                 <Run Text="{Binding  NewName }"  Foreground="Blue"/>
-                <Run Text="{Binding  Audit}"  />
+                <Run Text="{Binding  Audit}" Foreground="Red" />
                     </TextBlock>
                     
                 </HierarchicalDataTemplate>
@@ -77,7 +77,7 @@
 
         </TreeView>
 
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" MouseDoubleClick="dataGrid_MouseDoubleClick" Grid.Column="1">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>

@@ -42,6 +42,10 @@ namespace RevitHP
         public static bool isLoginState = true;
         private static string md5;
         private static string name;
+        private static string classname;
+        private static int catalogid;
+        private static string modelname;
+        private static string modelsize;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -219,10 +223,11 @@ namespace RevitHP
         }
 
 
-   
+
 
         //设置计时器多少秒实现一次
         const int Time = 300;
+        //初始化
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var vM = this.DataContext as FamilyBrowserVM;
@@ -255,7 +260,6 @@ namespace RevitHP
             {
                 DependencyObject dObject = Treeview1.ItemContainerGenerator.ContainerFromItem(item);
                 ((TreeViewItem)dObject).IsExpanded = true;
-                
             }
         }
         //通过审核
@@ -270,7 +274,7 @@ namespace RevitHP
                 UnfoldTreeview();
 
             }
-            else if (item.Audit == "未通过")
+            else if (item.Audit == "未审核")
             {
                 vM.PassAuditAdd(item.Id);
                 UnfoldTreeview();
@@ -286,7 +290,7 @@ namespace RevitHP
                 vM.AuditRefuse(item.Id);
                 UnfoldTreeview();
             }
-            else if (item.Audit == "未通过")
+            else if (item.Audit == "未审核")
             {
                 vM.AuditRefuseadd(item.Id);
                 CataItem parent = item.Parent as CataItem;
@@ -301,51 +305,6 @@ namespace RevitHP
 
         }
 
-        private void ceshixiazai_Click(object sender, RoutedEventArgs e)
-        {
-            var vM = this.DataContext as FamilyBrowserVM;
-            vM.Downloadnew();
-        }
-        //模型上传
-        private void Modelupload_Click(object sender, RoutedEventArgs e)
-        {
-
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = ""
-            };
-            var result = openFileDialog.ShowDialog();
-            if (result == true)
-            {
-                this.filename.Text = openFileDialog.FileName;
-            }
-
-        }
-        //模型删除
-        private void modeldelete_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isLoginState)
-            {
-                if (name != null)
-                {
-                    MessageBoxResult confirmToDel = MessageBox.Show("确认要删除" + name + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (confirmToDel == MessageBoxResult.Yes)
-                    {
-                        var vM = this.DataContext as FamilyBrowserVM;
-                        if (vM.modeldelete(md5))
-                        {
-                            this.dataGrid.ItemsSource = vM.Modellist();
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                MessageBox.Show("请先登录！");
-            }
-
-        }
         //转换为实际应用中的大小（KB/M）
         public static string CountSize(long Size)
         {
@@ -372,18 +331,44 @@ namespace RevitHP
             }
             return lSize;
         }
+        //模型删除
+        private void modeldelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isLoginState)
+            {
+                if (name != null)
+                {
+                    MessageBoxResult confirmToDel = MessageBox.Show("确认要删除" + name + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (confirmToDel == MessageBoxResult.Yes)
+                    {
+                        var vM = this.DataContext as FamilyBrowserVM;
+                        if (vM.modeldelete(md5))
+                        {
+                            this.dataGrid.ItemsSource = vM.Modellist();
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("请先登录！");
+            }
+
+        }
+
         //模型下载
         private void modeldownload_Click(object sender, RoutedEventArgs e)
         {
             if (!isLoginState)
-            {              
+            {
                 if (name != null)
                 {
                     MessageBoxResult confirmToDel = MessageBox.Show("确认要下载" + name + "文件吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (confirmToDel == MessageBoxResult.Yes)
                     {
                         var vM = this.DataContext as FamilyBrowserVM;
-                        if (vM.ModelDownload(md5,this.filename.Text, name))
+                        if (vM.ModelDownload(md5, this.filename.Text, name))
                         {
                             MessageBox.Show("下载成功");
                             this.filename.Text = "";
@@ -405,30 +390,12 @@ namespace RevitHP
             else
             {
                 this.filename.Text = "请您先登录";
-              
+
             }
         }
 
-        private void Treeview1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            //CataItem item = Treeview1.SelectedItem as CataItem;
-            //var vM = this.DataContext as FamilyBrowserVM;
-            //this.dataGrid.ItemsSource = vM.list(item.Id);
-        }
 
-        private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender != null)
-            {
-                DataGrid grid = sender as DataGrid;
-                if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
-                {
-                    Model item = dataGrid.SelectedItem as Model;
-                    md5 = item.MD5;
-                    name = item.Mod_Name;
-                }
-            }
-        }
+
         private void select_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog()
@@ -438,29 +405,43 @@ namespace RevitHP
             var result = openFileDialog.ShowDialog();
             if (result == true)
             {
+                //获取文件大小
+                modelsize = CountSize(GetFileSize(openFileDialog.FileName)).ToString();
+                //获取文件名字
+                modelname = System.IO.Path.GetFileNameWithoutExtension(openFileDialog.FileName);
                 this.filename.Text = openFileDialog.FileName;
             }
         }
-
+        //模型上传
         private void modelupload_Click_1(object sender, RoutedEventArgs e)
         {
-
             if (!isLoginState)
             {
-
                 if (this.filename.Text != "")
                 {
-                    var vM = this.DataContext as FamilyBrowserVM;
-                    string a = this.filename.Text;
-                    if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
-                    {
-                        this.dataGrid.ItemsSource = vM.Modellist();
-                        this.filename.Text = "";
-                    }
-                    else
-                    {
-                        this.filename.Text = "上传失败。";
-                    }
+                    //if (classname != null)
+                    //{
+                    //    MessageBoxResult confirmToDel = MessageBox.Show("确认要上传" + modelname + "模型" + "到" + classname + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    //    if (confirmToDel == MessageBoxResult.Yes)
+                    //    {
+                            var vM = this.DataContext as FamilyBrowserVM;
+                            string a = this.filename.Text;
+                            if (vM.Modelupload(System.IO.Path.GetFullPath(this.filename.Text)))
+                            {
+                                
+                                this.dataGrid.ItemsSource = vM.Modellist();
+                                this.filename.Text = "";
+                            }
+                            else
+                            {
+                                this.filename.Text = "上传失败。";
+                            }
+                        //}
+                    //}
+                    //else
+                    //{
+                    //   MessageBox.Show("请选择模型要添加到的类型");
+                    //}
                 }
                 else
                 {
@@ -476,18 +457,38 @@ namespace RevitHP
 
         private void downloadpath_Click(object sender, RoutedEventArgs e)
         {
-            string path=null;
+            string path = null;
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-             if (fbd.ShowDialog()==System.Windows.Forms.DialogResult.OK)
-             {
-                  path = fbd.SelectedPath;
-                this.filename.Text=path;
-             }
-             
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                path = fbd.SelectedPath;
+                this.filename.Text = path;
+            }
+
         }
 
+        private void dataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            if (sender != null)
+            {
+                DataGrid grid = sender as DataGrid;
+                if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                {
+                    Model item = dataGrid.SelectedItem as Model;
+                    md5 = item.MD5;
+                    name = item.Mod_Name;
+                }
+            }
+        }
 
-
+        private void Treeview1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            CataItem item = Treeview1.SelectedItem as CataItem;
+            classname = item.Name;
+            catalogid = item.Id;
+            //var vM = this.DataContext as FamilyBrowserVM;
+            //this.dataGrid.ItemsSource = vM.list(item.Id);
+        }
     }
 
 }

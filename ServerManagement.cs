@@ -39,13 +39,11 @@ namespace RevitHP
 
         }
 
-
         //声明私有静态ACCESS_TOKEN参数
         public static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
         public static int id=0;
-
 
         //登录方法
         //参数1.Name 用户名
@@ -96,7 +94,6 @@ namespace RevitHP
 
         }
 
-
         //注销
         public async Task<bool> HttpClientDoPostLogout()
         {
@@ -125,6 +122,7 @@ namespace RevitHP
         {
             return Push(filepath, null);
         }
+
         //带旧文件MD5码上传文件
         public bool Push(string Newfilepath, string oldfilepath)
         {
@@ -149,7 +147,6 @@ namespace RevitHP
             }
 
         }
-
 
         //下载最新版本的文件
         public bool DownloadNew(string filepath)
@@ -188,7 +185,6 @@ namespace RevitHP
 
 
         }
-
 
         //发送下载请求，返回Status Code
         public int DownloadStatusCode(string filepath, string MD5)
