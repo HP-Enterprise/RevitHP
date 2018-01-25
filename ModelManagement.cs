@@ -28,6 +28,10 @@ namespace RevitHP
                 if (s_strBimBase == null)
                 {
                     s_strBimBase = ConfigurationManager.AppSettings["BimSrv"];
+                    if (s_strBimBase==null)
+                    {
+                        s_strBimBase = "http://114.113.234.159:8074";
+                    }
                 }
                 return $"{s_strBimBase}/bim/revit/revit";
             }
@@ -143,29 +147,6 @@ namespace RevitHP
                 m_strSize = (FactSize / 1024 / 1024 / 1024).ToString("F2") + " G";
             return m_strSize;
         }
-
-        //public void CreateTables(Autodesk.Revit.DB.Document document)
-        //{
-
-        //    String fileName = @"E:\电动两通阀.rfa";
-        //    // try to load family
-        //    Family family = null;
-        //    if (!document.LoadFamily(fileName, out family))
-        //    {
-        //        throw new Exception("Unable to load " + fileName);
-        //    }
-        //    var familySymbolIds = family.GetFamilySymbolIds();
-        //    double x = 0.0, y = 0.0;
-        //    foreach (ElementId id in familySymbolIds)
-        //    {
-        //        FamilySymbol symbol = family.Document.GetElement(id) as FamilySymbol;
-        //        XYZ location = new XYZ(x, y, 10.0);
-
-        //        FamilyInstance instance = document.Create.NewFamilyInstance(location, symbol, StructuralType.NonStructural);
-        //        x += 10.0;
-        //    }
-        //}
-
 
     }
 }

@@ -476,16 +476,33 @@ namespace RevitHP
             //var vM = this.DataContext as FamilyBrowserVM;
             //this.dataGrid.ItemsSource = vM.list(item.Id);
 
-            var evgetopen = BtnFamilyBrowser.GetEvent();
-            if (evgetopen!=null)
-            {
-                evgetopen.Raise();
-            }
+            //var evgetopen = BtnFamilyBrowser.GetEvent();
+            //if (evgetopen!=null)
+            //{
+            //    evgetopen.Raise();
+            //}
 
         }
 
-       
+        private void model_Click(object sender, RoutedEventArgs e)
+        {
+            var vM = this.DataContext as FamilyBrowserVM;
+            vM.openfamily();
+        }
 
+        private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender != null)
+            {
+                var vM = this.DataContext as FamilyBrowserVM;
+                DataGrid grid = sender as DataGrid;
+                if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
+                {
+                    Model item = dataGrid.SelectedItem as Model;
+                    vM.ismodelfile(item.MD5);               
+                }
+            }
+        }
     }
 
 }

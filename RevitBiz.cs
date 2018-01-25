@@ -183,7 +183,7 @@ namespace RevitHP
                             item.Name = reader.GetString(1);
                             item.NewName = reader.GetString(3);
                             //item.Audit = reader.GetInt32(4).ToString();
-                            if (reader.GetInt32(4)==1)
+                            if (reader.GetInt32(4) == 1)
                             {
                                 item.Audit = "未审核";
                             }
@@ -206,8 +206,8 @@ namespace RevitHP
                         while (reader.Read())
                         {
                             CataItem item = new CataItem();
-                            item.Id = reader.GetInt32(0);                         
-                            if (reader.GetString(3) != ""&&ServerManagement.id!=0)
+                            item.Id = reader.GetInt32(0);
+                            if (reader.GetString(3) != "" && ServerManagement.id != 0)
                             {
                                 item.Name = reader.GetString(3);
                             }
@@ -519,11 +519,11 @@ namespace RevitHP
             m_liteDB.Open(1);
         }
         public void DeleteFile2()
-        {       
+        {
             if (File.Exists(m_folder + "\\RevHP.0"))
             {
                 File.Delete(m_folder + "\\RevHP.0");//删除该文件
-            }                 
+            }
         }
 
         //通过审核（添加）
@@ -568,21 +568,21 @@ namespace RevitHP
         //模型上传
         public bool Modelupload(string filepath)
         {
-           return  model.IsModelupload(filepath);
+            return model.IsModelupload(filepath);
         }
         //模型删除
         public bool modeldelete(string md5)
         {
-          return  model.IsModelDelete(md5);
+            return model.IsModelDelete(md5);
         }
         //模型下载
-        public bool ModelDownload(string md5,string path,string name)
+        public bool ModelDownload(string md5, string path, string name)
         {
-            if (path=="")
+            if (path == "")
             {
                 path = m_folder;
             }
-           return  model.ModelDownload(path+"\\"+name+".rfa",md5);
+            return model.ModelDownload(path + "\\" + name + ".rfa", md5);
         }
         //模型列表
         public List<Model> ModelList()
@@ -592,11 +592,11 @@ namespace RevitHP
 
         //测试
         public List<Model> GetList(int id)
-        {        
+        {
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText =string.Format("SELECT id,mod_name,mod_size,catalogid FROM Model where catalogid={0}",id);
+                cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid FROM Model where catalogid={0}", id);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -614,9 +614,42 @@ namespace RevitHP
             return list;
         }
 
-        public void openrfa(Document document)
+        public static string openfamilypath;
+
+
+
+        public void openrfa()
         {
-            //model.CreateTables(document);
+            openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
+            var evgetopen = BtnFamilyBrowser.GetEvent();
+            if (evgetopen != null)
+            {
+                evgetopen.Raise();
+            }
+        }
+        public void openrfa(string openmodel)
+        {
+            openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
+            var evgetopen = BtnFamilyBrowser.GetEvent();
+            if (evgetopen != null)
+            {
+                evgetopen.Raise();
+            }
+        }
+        public void ismodelfile(string md5)
+        {
+            string modelpath = m_folder + md5 + ".rfa";
+            if (File.Exists(modelpath))
+            {
+                openrfa(modelpath);
+            }
+            else
+            {
+                if (model.ModelDownload(modelpath, md5))
+                {
+                    openrfa(modelpath);
+                }
+            }
         }
 
     }

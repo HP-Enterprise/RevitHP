@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
@@ -30,6 +31,15 @@ namespace RevitHP
                 if (s_strBimBase == null)
                 {
                     s_strBimBase = ConfigurationManager.AppSettings["BimSrv"];
+                    if (s_strBimBase==null)
+                    {
+                        s_strBimBase = "http://114.113.234.159:8074";
+                    }
+
+                    //string hppath= Assembly.GetExecutingAssembly().Location;
+                    //var cfg = ConfigurationManager.OpenExeConfiguration(hppath);
+                    //cfg.AppSettings[""]
+
                 }
                 return $"{s_strBimBase}/bim/revit/revit";
             }
@@ -49,8 +59,7 @@ namespace RevitHP
         //参数1.Name 用户名
         //参数2.Password 密码
         public bool HttpClientDoPostLogin(string userName, SecureString pwd)
-        {
-          
+        {     
             var client = new RestClient(REMOTE_URL + "/login");
             var request = new RestRequest(Method.POST);
             request.AddParameter("username", userName);

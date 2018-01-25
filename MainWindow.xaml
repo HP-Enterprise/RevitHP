@@ -44,7 +44,12 @@
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="model"  Click="model_Click">
+                    <StackPanel>
+                        <Image Width="33"  Source="Img/upload.png"/>
+                        <TextBlock Text="加载模型" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </ToolBar>
 
         </StackPanel>
@@ -75,7 +80,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>

@@ -167,5 +167,14 @@ namespace RevitHP
             return m_biz.GetList(id);
         }
 
+        public void openfamily()
+        {
+            m_biz.openrfa();
+        }
+        public void ismodelfile(string md5)
+        {
+            m_biz.ismodelfile(md5);
+        }
+
     }
 }

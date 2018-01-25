@@ -11,7 +11,6 @@ namespace RevitHP
 {
     public class ExternalEventExample : IExternalEventHandler
     {
-
         public void Execute(UIApplication app)
         {
             CreateTables();
@@ -24,7 +23,8 @@ namespace RevitHP
 
             if (document == null) return;
 
-            String fileName = @"E:\电动两通阀.0002.rfa";
+            //String fileName = @"E:\电动两通阀.0002.rfa";
+            String fileName = RevitBiz.openfamilypath;
             // try to load family
             Family family = null;
             using (Transaction tx = new Transaction(document))
