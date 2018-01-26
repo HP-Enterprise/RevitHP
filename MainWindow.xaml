@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:RevitHP"
     x:Class="RevitHP.MainWindow"
         mc:Ignorable="d"
-        Title="族库浏览" WindowStartupLocation="CenterOwner" Closing="Window_Closing" d:DesignWidth="725" d:DesignHeight="460" Icon="Pixadex.ico" Loaded="Window_Loaded">
+        Title="族库浏览" WindowStartupLocation="CenterOwner" Closing="Window_Closing" d:DesignWidth="725" d:DesignHeight="460" Icon="Pixadex.ico" Loaded="Window_Loaded" MinWidth="600" MinHeight="500">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,9 +19,9 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="261*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="160*"/>
+            <RowDefinition Height="285*"/>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="184*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
@@ -44,21 +44,22 @@
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="model"  Click="model_Click">
+                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="renovation"  Click="renovation_Click">
                     <StackPanel>
-                        <Image Width="33"  Source="Img/upload.png"/>
-                        <TextBlock Text="加载模型" HorizontalAlignment="Center"/>
+                        <Image Width="33"  Source="Img/renovation.png"/>
+                        <TextBlock Text="刷新" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </ToolBar>
 
         </StackPanel>
-        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="2">
-            <Label Content="未登录"  x:Name="welcome"  VerticalAlignment="Top" Height="25" Margin="1,7,0,0" HorizontalAlignment="Left" Width="161"/>
+        <StackPanel Height="40" VerticalAlignment="Bottom" Background="{StaticResource brTopBar}" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal">
+            <Label Content="未登录"   x:Name="welcome"  VerticalAlignment="Top" Height="30" Margin="0,7,1,0" HorizontalAlignment="Left" Width="207" RenderTransformOrigin="1.832,0.48"/>
+            <Label Content=""   x:Name="abnormalstate"  VerticalAlignment="Top" Height="30" Margin="0,7,1,0" HorizontalAlignment="Right" Width="505"/>
             <!--<TextBlock TextWrapping="Wrap" Text="底部区域，状态栏位置" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,0"/>-->
         </StackPanel>
         <!--树形结点-->
-        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="0,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="182" Grid.Column="1" SelectedItemChanged="Treeview1_SelectedItemChanged"  >
+        <TreeView  ItemsSource="{Binding TreeViewBinding}"  Margin="0,60,0,45"  Name="Treeview1" MouseRightButtonDown="Treeview1_MouseRightButtonDown" HorizontalAlignment="Left" MinWidth="182" Grid.RowSpan="3" Width="191" Grid.Column="1" SelectedItemChanged="Treeview1_SelectedItemChanged"  >
             <!--菜单-->
             <TreeView.ContextMenu>
                 <ContextMenu >
@@ -80,7 +81,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="191,57,195,45" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="193,58,190,44" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
@@ -139,8 +140,8 @@
             <Button  Margin="0,82,19,0" x:Name="modeldownload" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldownload_Click">
                 <Image Source="Img/download.png" />
             </Button>
-            <TextBlock  Margin="9,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Text="文件地址：" RenderTransformOrigin="0.46,0.75" HorizontalAlignment="Left" Width="63" />
-            <TextBlock x:Name="filename" Margin="9,241,3,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="77" Foreground="Red" />
+            <TextBlock  Margin="9,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Text="文件地址：" RenderTransformOrigin="0.46,0.75" HorizontalAlignment="Left" Width="63" />
+            <TextBlock x:Name="filename" Margin="6,262,6,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="77" Foreground="Red" />
             <TextBlock HorizontalAlignment="Left" Margin="19,58,0,0" TextWrapping="Wrap" Text="选择模型" VerticalAlignment="Top"/>
             <TextBlock Margin="0,57,16,0" TextWrapping="Wrap" Text="上传模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="48"/>
             <TextBlock HorizontalAlignment="Left" Margin="19,131,0,0" TextWrapping="Wrap" Text="删除模型" VerticalAlignment="Top"/>

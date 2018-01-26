@@ -32,12 +32,20 @@ namespace RevitHP
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (this.NodeInput.Text!="")
+            {
             CataItem list = new CataItem();        
             Vm.SetCatalogAdd(this.NodeInput.Text,ra.Next(),_parentItem.Id);
             list.Identifying = Convert.ToInt32(CataItem.Stater.Input);
             list.Name = this.NodeInput.Text;
             _parentItem.Children.Add(list);
             this.Close();
+            }
+            else
+            {
+                this.pointout.Text = "添加节点名称不能为空";
+            }
+           
 
         }
     }

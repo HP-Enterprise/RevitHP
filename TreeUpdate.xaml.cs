@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RevitHP
 {
@@ -33,7 +22,7 @@ namespace RevitHP
         {
             if (this.UpdateName.Text=="")
             {
-                MessageBox.Show("修改名不能为空");
+                this.pointout.Text = "修改节点名称不能为空"; 
             }
             else
             {
