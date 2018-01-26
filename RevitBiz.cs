@@ -537,7 +537,7 @@ namespace RevitHP
         }
         //通过审核（修改）
         public void PassAuditUpdate(int id, string newname)
-        {
+        {       
             using (var cmd = m_liteDB.CreateCommand())
             {
                 cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',name='{2}',nameID=null,newname='' where id={1}", 0, id, newname);
@@ -629,7 +629,7 @@ namespace RevitHP
         }
         public void openrfa(string openmodel)
         {
-            openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
+            openfamilypath = openmodel;
             var evgetopen = BtnFamilyBrowser.GetEvent();
             if (evgetopen != null)
             {

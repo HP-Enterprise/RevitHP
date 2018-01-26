@@ -158,7 +158,8 @@ namespace RevitHP
                         AuditRefuse.Visibility = Visibility.Visible;
                         DeleteNode.Visibility = Visibility.Visible;
                     }
-                    vm.IsDownload();
+                    //vm.IsDownload();
+                    vm.Downloadnew();
                     UnfoldTreeview();
                     var vM = this.DataContext as FamilyBrowserVM;
                     this.dataGrid.ItemsSource = vM.Modellist();
@@ -209,8 +210,6 @@ namespace RevitHP
         }
 
 
-
-
         //设置计时器多少秒实现一次
         const int Time = 300;
         //初始化
@@ -258,7 +257,6 @@ namespace RevitHP
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
                 UnfoldTreeview();
-
             }
             else if (item.Audit == "未审核")
             {
@@ -475,20 +473,9 @@ namespace RevitHP
             //catalogid = item.Id;
             //var vM = this.DataContext as FamilyBrowserVM;
             //this.dataGrid.ItemsSource = vM.list(item.Id);
-
-            //var evgetopen = BtnFamilyBrowser.GetEvent();
-            //if (evgetopen!=null)
-            //{
-            //    evgetopen.Raise();
-            //}
-
+          
         }
-
-        private void model_Click(object sender, RoutedEventArgs e)
-        {
-            var vM = this.DataContext as FamilyBrowserVM;
-            vM.openfamily();
-        }
+     
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -502,6 +489,20 @@ namespace RevitHP
                     vM.ismodelfile(item.MD5);               
                 }
             }
+        }
+
+        private void renovation_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isLoginState)
+            {
+            FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
+            vm.Downloadnew();
+            }
+            else
+            {
+                MessageBox.Show("请您先登录！");
+            }
+           
         }
     }
 

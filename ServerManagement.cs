@@ -69,7 +69,6 @@ namespace RevitHP
 
             IRestResponse response = client.Execute(request);
 
-
             if (!response.IsSuccessful)
             {
                 throw response.ErrorException;
@@ -106,7 +105,9 @@ namespace RevitHP
         //注销
         public async Task<bool> HttpClientDoPostLogout()
         {
-            using (var client = new HttpClient())
+            try
+            {
+                using (var client = new HttpClient())
             {
                 var values = new List<KeyValuePair<string, string>>();
                 values.Add(new KeyValuePair<string, string>("ACCESS-TOKEN", family_ACCESS_TOKEN));
@@ -124,6 +125,13 @@ namespace RevitHP
                     return false;
                 }
             }
+            }
+            catch (Exception ex)
+            {
+               string aaa= ex.ToString();
+                throw ;
+            }
+           
         }
 
         //第一次上传文件
