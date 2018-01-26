@@ -28,8 +28,14 @@ namespace RevitHP
             {
                 _parentItem.name = this.UpdateName.Text;
                 _parentItem.Identifying = Convert.ToInt32(CataItem.Stater.Update);
-                VM.SetCatalogUpdate(_parentItem.Id,this.UpdateName.Text);
-
+                if (ServerManagement.id==1)
+                {
+                    VM.SetCatalogAdminUpdate(_parentItem.Id, this.UpdateName.Text);
+                }
+                else
+                {
+               VM.SetCatalogUpdate(_parentItem.Id,this.UpdateName.Text);
+                }         
                 if (_parentItem.name== this.UpdateName.Text)
                 {
                     this.Close();

@@ -11,7 +11,7 @@ CREATE TABLE catalog(
 	name   varchar not null,
 	parent smallint not NULL, -- parent id, 0 means top level
 	newname nvarchar(10) default(''),--修改name
-	NameID INT null,--操作人ID
+	NameID INT default(-1),--操作人ID
 	identifying INT null,--状态标识
 	audit int default(0) --是否审核
 );

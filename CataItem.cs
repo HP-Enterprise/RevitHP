@@ -65,6 +65,20 @@ namespace RevitHP
             }
         }
 
+
+        public int NameId { get; set; }
+        public int nameid
+        {
+            get { return nameid; }
+            set
+            {
+                if (this.NameId != value)
+                {
+                    this.nameid = value;
+                }
+            }
+        }
+
         public string Name { get; set; }
         public string name
         {

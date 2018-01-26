@@ -109,19 +109,28 @@ namespace RevitHP
         private void DeleteNode_Click(object sender, RoutedEventArgs e)
         {
             CataItem item = Treeview1.SelectedItem as CataItem;
+           
             FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
             if (item == null)
             {
                 MessageBox.Show("请选择要删除的节点");
             }
+          
             //获取当前选中节点的父类
             CataItem parent = item.Parent as CataItem;
             if (parent != null)
             {
+                if (item.NameId==ServerManagement.id||ServerManagement.id==1)
+                {
                 //在父节点中删除选中的子节点
                 vm.SetCatalogdelete(item.Id);
                 parent.Children.Remove(item);
                 item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
+                }
+                else
+                {
+                    MessageBox.Show("您没有权限删除这个节点");
+                }
             }
             else
             {
@@ -183,7 +192,6 @@ namespace RevitHP
                 isLoginState = true;
                 this.audit.Visibility = Visibility.Collapsed;
                 this.AuditRefuse.Visibility = Visibility.Collapsed;
-                this.DeleteNode.Visibility = Visibility.Collapsed;
                 this.dataGrid.ItemsSource = null;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
@@ -256,13 +264,14 @@ namespace RevitHP
             {
                 //修改
                 vM.PassAuditUpdate(item.Id, item.newname);
-                UnfoldTreeview();
+                //UnfoldTreeview();
             }
             else if (item.Audit == "未审核")
             {
                 vM.PassAuditAdd(item.Id);
-                UnfoldTreeview();
+                //UnfoldTreeview();
             }
+            vM.FileUplod();
         }
         //拒绝审核
         private void AuditRefuse_Click(object sender, RoutedEventArgs e)
@@ -272,7 +281,7 @@ namespace RevitHP
             if (item.newname.Length > 2)
             {
                 vM.AuditRefuse(item.Id);
-                UnfoldTreeview();
+                //UnfoldTreeview();
             }
             else if (item.Audit == "未审核")
             {
@@ -283,9 +292,10 @@ namespace RevitHP
                     //在父节点中删除选中的子节点                 
                     parent.Children.Remove(item);
                     item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
-                    UnfoldTreeview();
+                    //UnfoldTreeview();
                 }
             }
+            vM.FileUplod();
 
         }
 

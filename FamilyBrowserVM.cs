@@ -27,7 +27,7 @@ namespace RevitHP
         {
             get
             {
-                // Debug.WriteLine(m_biz.Top.Name);
+              
                 var league = new Collection<CataItem>() { m_biz.Top };
                 return league;
             }
@@ -109,10 +109,20 @@ namespace RevitHP
         {
             m_biz.SetCatalogAdd(name, id, parentid);
         }
+        //管理员添加结点
+        public void SetCatalogAdminAdd(string name, int id, int parentid)
+        {
+            m_biz.SetCatalogAdminAdd(name, id, parentid);
+        }
         //修改结点
         public void SetCatalogUpdate(int id, string newname)
         {
             m_biz.SetCatalogUpdate(id, newname);
+        }
+        //修改结点
+        public void SetCatalogAdminUpdate(int id, string newname)
+        {
+            m_biz.SetCatalogAdminUpdate(id, newname);
         }
         //删除节点
         public void SetCatalogdelete(int id)
@@ -166,11 +176,7 @@ namespace RevitHP
         {
             return m_biz.GetList(id);
         }
-
-        public void openfamily()
-        {
-            m_biz.openrfa();
-        }
+        //模型判断  
         public void ismodelfile(string md5)
         {
             m_biz.ismodelfile(md5);

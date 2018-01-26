@@ -152,16 +152,12 @@ namespace RevitHP
                 //执行合并方法
             }
         }
-
-
-
-
+        //下载最新版本数据
         public void IsDownloadNew()
         {
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
-
 
         //读数据库树形节点
         private void LoadCatalog()
@@ -194,19 +190,20 @@ namespace RevitHP
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                            // Debug.WriteLine(dictCatalog.Keys.ToString());
+                          
                         }
                     }
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,name,parent,newname FROM catalog where NameID='{0}' or audit=0 ", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,name,parent,newname,NameID FROM catalog where NameID='{0}' or audit=0 ", ServerManagement.id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             CataItem item = new CataItem();
                             item.Id = reader.GetInt32(0);
+                            
                             if (reader.GetString(3) != "" && ServerManagement.id != 0)
                             {
                                 item.Name = reader.GetString(3);
@@ -215,12 +212,17 @@ namespace RevitHP
                             {
                                 item.Name = reader.GetString(1);
                             }
+                            //if (reader.GetInt32(4) != -1)
+                            //{
+                            item.NameId = reader.GetInt32(4);
+                            //}
+
                             item.Audit = "";
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //组装字典                          
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                            Debug.WriteLine(dictCatalog.Keys.ToString());
+                          
                         }
                     }
                 }
@@ -256,6 +258,16 @@ namespace RevitHP
                 cmd.ExecuteScalar();
             }
         }
+        //管理员添加
+        public void SetCatalogAdminAdd(string name, int id, int parentid)
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("insert into catalog(id,name,parent) values('{0}','{1}','{2}')", id, name, parentid);
+                cmd.ExecuteScalar();
+            }
+        }
+
 
         //修改
         public void SetCatalogUpdate(int id, string newname)
@@ -267,6 +279,18 @@ namespace RevitHP
             }
 
         }
+        //管理员修改
+        public void SetCatalogAdminUpdate(int id, string newname)
+        {
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("UPDATE catalog set name='{0}' where id={1}",newname,id);
+                cmd.ExecuteScalar();
+            }
+
+        }
+
+
         //删除
         public void SetCatalogDelete(int id)
         {
@@ -618,15 +642,15 @@ namespace RevitHP
 
 
 
-        public void openrfa()
-        {
-            openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
-            var evgetopen = BtnFamilyBrowser.GetEvent();
-            if (evgetopen != null)
-            {
-                evgetopen.Raise();
-            }
-        }
+        //public void openrfa()
+        //{
+        //    openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
+        //    var evgetopen = BtnFamilyBrowser.GetEvent();
+        //    if (evgetopen != null)
+        //    {
+        //        evgetopen.Raise();
+        //    }
+        //}
         public void openrfa(string openmodel)
         {
             openfamilypath = openmodel;

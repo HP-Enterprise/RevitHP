@@ -64,7 +64,7 @@
             <TreeView.ContextMenu>
                 <ContextMenu >
                     <MenuItem Header="添加" Name="InputNode" Click="InputNode_Click"/>
-                    <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click" Visibility="Collapsed"/>
+                    <MenuItem Header="删除" Name="DeleteNode" Click="DeleteNode_Click"/>
                     <MenuItem Header="修改" Name="UpdateNode" Click="UpdateNode_Click"/>
                     <MenuItem Header="审核通过" Name="audit" Click="audit_Click" Visibility="Collapsed" />
                     <MenuItem Header="拒绝" Name="AuditRefuse" Click="AuditRefuse_Click"  Visibility="Collapsed" />
