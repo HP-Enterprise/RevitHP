@@ -150,7 +150,7 @@ namespace RevitHP
         }
 
 
-        //登陆注销事件
+        //登录
         private void login_Click(object sender, RoutedEventArgs e)
         {
             if (isLoginState)
@@ -171,7 +171,10 @@ namespace RevitHP
                     vm.Downloadnew();
                     UnfoldTreeview();
                     var vM = this.DataContext as FamilyBrowserVM;
-                    this.dataGrid.ItemsSource = vM.Modellist();
+                    //模型列表（服务器上）
+                    //this.dataGrid.ItemsSource = vM.Modellist();
+                    //模型列表(本地)
+                    this.dataGrid.ItemsSource = vM.list();
                 }
             }
             else
@@ -181,6 +184,7 @@ namespace RevitHP
             }
 
         }
+        //注销
         public void logoutAsync()
         {
             var vm = this.DataContext as FamilyBrowserVM;
@@ -338,6 +342,7 @@ namespace RevitHP
                         var vM = this.DataContext as FamilyBrowserVM;
                         if (vM.modeldelete(md5))
                         {
+
                             this.dataGrid.ItemsSource = vM.Modellist();
                         }
                     }

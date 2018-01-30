@@ -164,10 +164,12 @@ namespace RevitHP
         {
            return m_biz.modeldelete(md5);
         }
+        //模型下载
         public bool ModelDownload(string md5,string path,string name)
         {
           return  m_biz.ModelDownload(md5,path,name);
         }
+        //模型列表查看
         public List<Model> Modellist()
         {
             return m_biz.ModelList();
@@ -176,6 +178,12 @@ namespace RevitHP
         {
             return m_biz.GetList(id);
         }
+
+        public List<Model> list()
+        {
+            return m_biz.GetList();
+        }
+
         //模型判断  
         public void ismodelfile(string md5)
         {

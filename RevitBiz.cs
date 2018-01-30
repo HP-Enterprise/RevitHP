@@ -344,7 +344,7 @@ namespace RevitHP
         }
 
         //合并（测试）
-        public void Updatetreeview()
+        public void merge()
         {
             List<int> parentid = new List<int>();
             List<CataItem> list = new List<CataItem>();
@@ -418,7 +418,7 @@ namespace RevitHP
             NewliteDB.Close();
         }
         //合并（测试）
-        public string OpenDB1()
+        public string merge2()
         {
             List<CataItem> list = new List<CataItem>();
             List<int> parentid = new List<int>();
@@ -614,7 +614,7 @@ namespace RevitHP
             return model.ModelFileList();
         }
 
-        //测试
+        //查看本地数据库(筛选)
         public List<Model> GetList(int id)
         {
             List<Model> list = new List<Model>();
@@ -637,20 +637,35 @@ namespace RevitHP
             }
             return list;
         }
+        //查看本地数据库所有模型列表
+        public List<Model> GetList()
+        {
+            List<Model> list = new List<Model>();
+            using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid FROM Model";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //组装字典
+                        Model mod = new Model();
+                        mod.Id = reader.GetInt32(0);
+                        mod.Mod_Name = reader.GetString(1);
+                        mod.Mod_Size = reader.GetString(2);
+                        mod.CatalogId = reader.GetInt32(3);
+                        list.Add(mod);
+                    }
+                }
+            }
+            return list;
+        }
+
 
         public static string openfamilypath;
 
 
 
-        //public void openrfa()
-        //{
-        //    openfamilypath = m_folder + @"\电动两通阀.0002.rfa";
-        //    var evgetopen = BtnFamilyBrowser.GetEvent();
-        //    if (evgetopen != null)
-        //    {
-        //        evgetopen.Raise();
-        //    }
-        //}
         public void openrfa(string openmodel)
         {
             openfamilypath = openmodel;
