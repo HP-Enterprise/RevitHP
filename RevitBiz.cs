@@ -126,7 +126,7 @@ namespace RevitHP
 
 
         //判断上传
-        public void ispush()
+        public bool ispush()
         {
             //上传时，将文件.1复制.2,并将.2上传.
             copy2();
@@ -151,6 +151,7 @@ namespace RevitHP
                 File.Delete(m_folder + "\\RevHP.2");
                 //执行合并方法
             }
+            return true;
         }
         //下载最新版本数据
         public void IsDownloadNew()
@@ -158,6 +159,8 @@ namespace RevitHP
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
+
+       
 
         //读数据库树形节点
         private void LoadCatalog()
@@ -246,6 +249,8 @@ namespace RevitHP
                 }
             }
         }
+
+       
 
 
         //写入数据库
@@ -488,7 +493,7 @@ namespace RevitHP
 
             }
             NewliteDB.Close();
-            Updatetreeview();
+            //Updatetreeview();
             return "a";
         }
 
@@ -608,7 +613,7 @@ namespace RevitHP
             }
             return model.ModelDownload(path + "\\" + name + ".rfa", md5);
         }
-        //模型列表
+        //模型列表(服务器上)
         public List<Model> ModelList()
         {
             return model.ModelFileList();
@@ -620,7 +625,14 @@ namespace RevitHP
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid FROM Model where catalogid={0}", id);
+                if (ServerManagement.id == 1)
+                {
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where catalogid='{0}'",id);
+                }
+                else
+                {
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where catalogid='{1}' and (audit=0 or NameID='{0}')  ", ServerManagement.id,id);
+                }
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -631,6 +643,22 @@ namespace RevitHP
                         mod.Mod_Name = reader.GetString(1);
                         mod.Mod_Size = reader.GetString(2);
                         mod.CatalogId = reader.GetInt32(3);
+                        mod.MD5 = reader.GetString(4);
+                        //mod.Identifying = reader.GetInt32(5);
+                        if (reader.GetInt32(5) == 1)
+                        {
+                            mod.Audit = "审核中";
+                        }
+                        else if (reader.GetInt32(5) == 0)
+                        {
+                            mod.Audit = "通过审核";
+                        }
+                        else
+                        {
+                            mod.Audit = "已拒绝";
+                        }
+
+
                         list.Add(mod);
                     }
                 }
@@ -643,7 +671,13 @@ namespace RevitHP
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid FROM Model";
+                if (ServerManagement.id == 1) {
+                    cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model";
+                }
+                else
+                {
+                    cmd.CommandText =string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where audit=0 or NameID='{0}'", ServerManagement.id);
+                }            
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -654,18 +688,103 @@ namespace RevitHP
                         mod.Mod_Name = reader.GetString(1);
                         mod.Mod_Size = reader.GetString(2);
                         mod.CatalogId = reader.GetInt32(3);
+                        mod.MD5 = reader.GetString(4);
+                        //mod.Identifying = reader.GetInt32(5);
+                        if (reader.GetInt32(5) == 1)
+                        {
+                            mod.Audit = "审核中";
+                        }
+                        else if (reader.GetInt32(5) == 0)
+                        {
+                            mod.Audit = "通过审核";
+                        }
+                        else
+                        {
+                            mod.Audit = "已拒绝";
+                        }
+
+
                         list.Add(mod);
                     }
                 }
             }
             return list;
         }
+        //删除本地数据库模型列表
+        public bool isdeletelist(string md5)
+        {
+            try
+            {
+             using (var cmd = m_liteDB.CreateCommand())
+            {
+                cmd.CommandText = string.Format("Delete from Model where md5='{0}'", md5);
+                cmd.ExecuteScalar();
+            }
+                return true;
+            }
+            catch (Exception)
+            {
 
+                return false;
+            }
+        }
+        //上传本地数据库模型列表
+        public bool isaddlist(int id,string name,string size,int catalogid,string md5)
+        {
+            try
+            {
+              
+                using (var cmd = m_liteDB.CreateCommand())
+                {
+                    cmd.CommandText = string.Format("INSERT INTO Model(id,mod_name,mod_size,catalogid,md5,identifying,audit,NameID) VALUES ('{0}','{1}','{2}','{3}','{4}',1,1,'{5}')", id,name,size,catalogid,getMD5.GetMD5Hash(md5),ServerManagement.id);
+                    cmd.ExecuteScalar();
+                }
+                return true;
+            }
+            catch (Exception)
+            {
 
+                return false;
+            }
+        }
+        //模型通过审核
+        public bool passmodel(string md5)
+        {
+            try
+            {
+                using (var cmd = m_liteDB.CreateCommand())
+                {
+                    cmd.CommandText = string.Format("Update Model set audit=0 where md5='{0}'", md5);
+                    cmd.ExecuteScalar();
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;              
+            }
+
+        }
+        //模型拒绝
+        public bool isrefusemodel(string md5)
+        {
+            try
+            {
+                using (var cmd = m_liteDB.CreateCommand())
+                {
+                    cmd.CommandText = string.Format("Update Model set audit=2 where md5='{0}'", md5);
+                    cmd.ExecuteScalar();
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        //声明静态的打开模型路径
         public static string openfamilypath;
-
-
-
         public void openrfa(string openmodel)
         {
             openfamilypath = openmodel;
@@ -675,9 +794,9 @@ namespace RevitHP
                 evgetopen.Raise();
             }
         }
-        public void ismodelfile(string md5)
+        public void ismodelfile(string name,string md5)
         {
-            string modelpath = m_folder + md5 + ".rfa";
+            string modelpath = m_folder +"\\"  + name +".rfa";
             if (File.Exists(modelpath))
             {
                 openrfa(modelpath);
@@ -690,6 +809,8 @@ namespace RevitHP
                 }
             }
         }
+
+       
 
     }
 }

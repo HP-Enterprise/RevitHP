@@ -43,10 +43,11 @@ namespace RevitHP
                 {
                     Vm.SetCatalogAdd(this.NodeInput.Text, ra.Next(), _parentItem.Id);
                 }
-
                 list.Identifying = Convert.ToInt32(CataItem.Stater.Input);
                 list.Name = this.NodeInput.Text;
                 _parentItem.Children.Add(list);
+                Vm.FileUplod();
+                DialogResult = true;
                 this.Close();
             }
             else

@@ -10,13 +10,18 @@ namespace RevitHP
     {
 
         public Model() { }
-        public Model(int id,string mod_name,string mod_size,int catalogid)
+        public Model(int id,string mod_name,string mod_size,int catalogid, string md5, string identifying,String audit)
         {
             Id = id;
             Mod_Name = mod_name;
             Mod_Size = mod_size;
             CatalogId = catalogid;
+            MD5 = md5;
+            Identifying = identifying;
+            Audit = audit;
         }
+
+       
 
         public int Id { get; set; }
         public int id
@@ -30,6 +35,47 @@ namespace RevitHP
                 }
             }
         }
+
+        public int NameID { get; set; }
+        public int nameid
+        {
+            get { return nameid; }
+            set
+            {
+                if (this.NameID!=value)
+                {
+                    this.nameid = value;
+                }
+            }
+        }
+        public String Audit { get; set; }
+        public String audit
+        {
+            get { return audit; }
+            set
+            {
+                if (this.Audit != value)
+                {
+                    this.audit = value;
+                }
+            }
+        }
+
+        public string Identifying { get; set; }
+        public string identifying
+        {
+            get { return identifying; }
+            set
+            {
+                if (this.Identifying!=value)
+                {
+                   this.identifying = value;
+                }
+
+            }
+        }
+
+
         public string Mod_Name { get; set; }
         public string mod_name
         {

@@ -34,10 +34,12 @@ namespace RevitHP
                 }
                 else
                 {
-               VM.SetCatalogUpdate(_parentItem.Id,this.UpdateName.Text);
+                 VM.SetCatalogUpdate(_parentItem.Id,this.UpdateName.Text);
                 }         
                 if (_parentItem.name== this.UpdateName.Text)
                 {
+                    VM.FileUplod();
+                    DialogResult = true;
                     this.Close();
                 }
             }

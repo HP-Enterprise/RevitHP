@@ -52,18 +52,7 @@ namespace RevitHP
         {
             PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
-
-        //测试合并
-        public string OpenDB()
-        {
-
-            //RevitBiz biz = new RevitBiz();
-            return m_biz.OpenDB1();
-
-            //调用接口事件
-            //PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
-        }
-
+     
         //文件下载
         public void IsDownload()
         {
@@ -77,23 +66,22 @@ namespace RevitHP
             }
 
         }
-
+        //下载最新版文件
         public void Downloadnew()
         {
             m_biz.IsDownloadNew();
             PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
         }
-
+        //复制文件
         public void copy()
         {
             m_biz.copy();
         }
         //文件上传
-        public void FileUplod()
+        public bool FileUplod()
         {
-            m_biz.ispush();
-            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
-          
+           PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+           return  m_biz.ispush(); 
         }
         //删除文件
         public void DeleteFile()
@@ -160,10 +148,17 @@ namespace RevitHP
         {
            return m_biz.Modelupload(filepath);
         }
+        //模型删除
         public bool modeldelete(string md5)
         {
            return m_biz.modeldelete(md5);
         }
+        //删除
+        public bool modellistdelete(string md5)
+        {
+            return m_biz.isdeletelist(md5);
+        }
+
         //模型下载
         public bool ModelDownload(string md5,string path,string name)
         {
@@ -185,9 +180,23 @@ namespace RevitHP
         }
 
         //模型判断  
-        public void ismodelfile(string md5)
+        public void ismodelfile(string md5,string name)
         {
-            m_biz.ismodelfile(md5);
+            m_biz.ismodelfile(md5,name);
+        }
+        //模型上传
+        public bool isaddlist(int id, string name, string size, int catalogid,string md5)
+        {
+           return m_biz.isaddlist(id,name,size,catalogid,md5);
+        }
+        //模型审核成功
+        public bool ispassmodel(string md5)
+        {
+            return m_biz.passmodel(md5);
+        }
+        public bool isrefusemodel(string md5)
+        {
+            return m_biz.isrefusemodel(md5);
         }
 
     }

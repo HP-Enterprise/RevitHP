@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RevitHP"
         
         mc:Ignorable="d"
-        Title="登录" Height="314.655" Width="348.276" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp" ShowInTaskbar="False" ResizeMode="CanMinimize">
+        Title="登录" Height="314.655" Width="348.276" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp" ShowInTaskbar="False" ResizeMode="NoResize">
     <Window.DataContext>
         <local:LoginVM/>
     </Window.DataContext>
