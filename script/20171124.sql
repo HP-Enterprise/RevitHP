@@ -58,7 +58,8 @@ md5 varchar not null,
 catalogid int not null,
 identifying INT null, --状态标识
 NameID INT default(-1),--操作人ID	
-audit int not null --是否审核
+audit int not null,--是否审核
+DataTime Nvarchar not null
 );
 --INSERT INTO Model(id,mod_name,mod_size,catalogid) VALUES
 --(1,'ff64011aec56c57954b751c7044a1abc','250165K',21),

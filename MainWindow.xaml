@@ -38,12 +38,12 @@
                         <TextBlock Name="login_state" Text="登录" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Button>
-                <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="Uploading_Click">
+                <!--<Button Height="53" Margin="0,0,0,-5" Width="55"  Name="uploading" Click="Uploading_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/upload.png"/>
                         <TextBlock Text="上传文件" HorizontalAlignment="Center"/>
                     </StackPanel>
-                </Button>
+                </Button>-->
                 <Button Height="53" Margin="0,0,0,-5" Width="55"  Name="renovation"  Click="renovation_Click">
                     <StackPanel>
                         <Image Width="33"  Source="Img/renovation.png"/>
@@ -76,13 +76,30 @@
                 <Run Text="{Binding  Name}"  />  
                 <Run Text="{Binding  NewName }"  Foreground="Blue"/>
                 <Run Text="{Binding  Audit}" Foreground="Red" />
+                <!--<Image  Source=""/>-->
                     </TextBlock>
 
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="193,58,190,44" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="193,60,190,44" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
             <DataGrid.Columns>
+
+                <!--<DataGridTemplateColumn Header="状态" Width="Auto" >
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Name="cRUID" HorizontalAlignment="Center" IsChecked="False"  Tag="{Binding ID}"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+
+
+
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
@@ -133,6 +150,21 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn  Header="上传时间" Width="Auto">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding DataTime}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
 
             <DataGrid.ContextMenu>

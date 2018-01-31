@@ -160,7 +160,7 @@ namespace RevitHP
             copy();
         }
 
-       
+
 
         //读数据库树形节点
         private void LoadCatalog()
@@ -193,7 +193,7 @@ namespace RevitHP
                             dictCatalog.Add(reader.GetInt32(0), item);
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                          
+
                         }
                     }
                 }
@@ -206,7 +206,7 @@ namespace RevitHP
                         {
                             CataItem item = new CataItem();
                             item.Id = reader.GetInt32(0);
-                            
+
                             if (reader.GetString(3) != "" && ServerManagement.id != 0)
                             {
                                 item.Name = reader.GetString(3);
@@ -225,7 +225,7 @@ namespace RevitHP
                             //组装字典                          
                             //0位当前id, 2位父节点id
                             dictPID.Add(item.Id, reader.GetInt32(2));
-                          
+
                         }
                     }
                 }
@@ -250,7 +250,7 @@ namespace RevitHP
             }
         }
 
-       
+
 
 
         //写入数据库
@@ -289,7 +289,7 @@ namespace RevitHP
         {
             using (var cmd = m_liteDB.CreateCommand())
             {
-                cmd.CommandText = string.Format("UPDATE catalog set name='{0}' where id={1}",newname,id);
+                cmd.CommandText = string.Format("UPDATE catalog set name='{0}' where id={1}", newname, id);
                 cmd.ExecuteScalar();
             }
 
@@ -566,7 +566,7 @@ namespace RevitHP
         }
         //通过审核（修改）
         public void PassAuditUpdate(int id, string newname)
-        {       
+        {
             using (var cmd = m_liteDB.CreateCommand())
             {
                 cmd.CommandText = string.Format("UPDATE catalog set audit='{0}',name='{2}',nameID=null,newname='' where id={1}", 0, id, newname);
@@ -627,11 +627,11 @@ namespace RevitHP
             {
                 if (ServerManagement.id == 1)
                 {
-                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where catalogid='{0}'",id);
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model where catalogid='{0}'order by DataTime desc ", id);
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where catalogid='{1}' and (audit=0 or NameID='{0}')  ", ServerManagement.id,id);
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model where catalogid='{1}' and (audit=0 or NameID='{0}') order by DataTime desc ", ServerManagement.id, id);
                 }
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -645,6 +645,7 @@ namespace RevitHP
                         mod.CatalogId = reader.GetInt32(3);
                         mod.MD5 = reader.GetString(4);
                         //mod.Identifying = reader.GetInt32(5);
+                        mod.DataTime = reader.GetString(7);
                         if (reader.GetInt32(5) == 1)
                         {
                             mod.Audit = "审核中";
@@ -671,13 +672,14 @@ namespace RevitHP
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
-                if (ServerManagement.id == 1) {
-                    cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model";
+                if (ServerManagement.id == 1)
+                {
+                    cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model order by DataTime desc";
                 }
                 else
                 {
-                    cmd.CommandText =string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying FROM Model where audit=0 or NameID='{0}'", ServerManagement.id);
-                }            
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model where audit=0 or NameID='{0}' order by DataTime desc", ServerManagement.id);
+                }
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -689,6 +691,7 @@ namespace RevitHP
                         mod.Mod_Size = reader.GetString(2);
                         mod.CatalogId = reader.GetInt32(3);
                         mod.MD5 = reader.GetString(4);
+                        mod.DataTime = reader.GetString(7);
                         //mod.Identifying = reader.GetInt32(5);
                         if (reader.GetInt32(5) == 1)
                         {
@@ -715,11 +718,11 @@ namespace RevitHP
         {
             try
             {
-             using (var cmd = m_liteDB.CreateCommand())
-            {
-                cmd.CommandText = string.Format("Delete from Model where md5='{0}'", md5);
-                cmd.ExecuteScalar();
-            }
+                using (var cmd = m_liteDB.CreateCommand())
+                {
+                    cmd.CommandText = string.Format("Delete from Model where md5='{0}'", md5);
+                    cmd.ExecuteScalar();
+                }
                 return true;
             }
             catch (Exception)
@@ -729,14 +732,22 @@ namespace RevitHP
             }
         }
         //上传本地数据库模型列表
-        public bool isaddlist(int id,string name,string size,int catalogid,string md5)
+        public bool isaddlist(int id, string name, string size, int catalogid, string md5)
         {
             try
             {
-              
+
                 using (var cmd = m_liteDB.CreateCommand())
                 {
-                    cmd.CommandText = string.Format("INSERT INTO Model(id,mod_name,mod_size,catalogid,md5,identifying,audit,NameID) VALUES ('{0}','{1}','{2}','{3}','{4}',1,1,'{5}')", id,name,size,catalogid,getMD5.GetMD5Hash(md5),ServerManagement.id);
+                    if (ServerManagement.id == 1)
+                    {
+                        cmd.CommandText = string.Format("INSERT INTO Model(id,mod_name,mod_size,catalogid,md5,identifying,audit,NameID,DataTime) VALUES ('{0}','{1}','{2}','{3}','{4}',1,0,'{5}','{6}')", id, name, size, catalogid, getMD5.GetMD5Hash(md5), ServerManagement.id, DateTime.Now.ToString());
+                    }
+                    else
+                    {
+                        cmd.CommandText = string.Format("INSERT INTO Model(id,mod_name,mod_size,catalogid,md5,identifying,audit,NameID,DataTime) VALUES ('{0}','{1}','{2}','{3}','{4}',1,1,'{5}','{6}')", id, name, size, catalogid, getMD5.GetMD5Hash(md5), ServerManagement.id, DateTime.Now.ToString());
+                    }
+
                     cmd.ExecuteScalar();
                 }
                 return true;
@@ -761,7 +772,7 @@ namespace RevitHP
             }
             catch (Exception)
             {
-                return false;              
+                return false;
             }
 
         }
@@ -794,9 +805,9 @@ namespace RevitHP
                 evgetopen.Raise();
             }
         }
-        public void ismodelfile(string name,string md5)
+        public void ismodelfile(string name, string md5)
         {
-            string modelpath = m_folder +"\\"  + name +".rfa";
+            string modelpath = m_folder + "\\" + name + ".rfa";
             if (File.Exists(modelpath))
             {
                 openrfa(modelpath);
@@ -810,7 +821,7 @@ namespace RevitHP
             }
         }
 
-       
+
 
     }
 }

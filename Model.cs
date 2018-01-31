@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace RevitHP
 {
-  public  class Model
+    public class Model
     {
 
         public Model() { }
-        public Model(int id,string mod_name,string mod_size,int catalogid, string md5, string identifying,String audit)
+        public Model(int id, string mod_name, string mod_size, int catalogid, string md5, string identifying, String audit)
         {
             Id = id;
             Mod_Name = mod_name;
@@ -21,7 +21,7 @@ namespace RevitHP
             Audit = audit;
         }
 
-       
+
 
         public int Id { get; set; }
         public int id
@@ -42,7 +42,7 @@ namespace RevitHP
             get { return nameid; }
             set
             {
-                if (this.NameID!=value)
+                if (this.NameID != value)
                 {
                     this.nameid = value;
                 }
@@ -67,14 +67,27 @@ namespace RevitHP
             get { return identifying; }
             set
             {
-                if (this.Identifying!=value)
+                if (this.Identifying != value)
                 {
-                   this.identifying = value;
+                    this.identifying = value;
                 }
 
             }
         }
 
+        public string DataTime { get; set; }
+        public string datatime
+        {
+            get { return datatime; }
+            set
+            {
+                if (this.DataTime != value)
+                {
+                    this.datatime = value;
+                }
+            }
+
+        }
 
         public string Mod_Name { get; set; }
         public string mod_name
@@ -84,7 +97,7 @@ namespace RevitHP
             {
                 if (this.Mod_Name != value)
                 {
-                    this.mod_name = value;                  
+                    this.mod_name = value;
                 }
             }
         }

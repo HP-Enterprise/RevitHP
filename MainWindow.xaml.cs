@@ -31,6 +31,9 @@ namespace RevitHP
         private static string modelname;
         private static string modelsize;
         private static Random ra = new Random();
+        private static string auditID;
+        private static int nameid;
+        private static string modelaudit;
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // 如果是嵌入在Revit中,只隐匿
@@ -103,6 +106,7 @@ namespace RevitHP
                 {
                     UnfoldTreeview();
                     this.dataGrid.ItemsSource = vm.list();
+                    MessageBox.Show("添加节点成功");
                 }
             }
             else
@@ -131,9 +135,15 @@ namespace RevitHP
                     vm.SetCatalogdelete(item.Id);
                     parent.Children.Remove(item);
                     item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
-                    vm.FileUplod();
+                    if (vm.FileUplod()) { 
                     UnfoldTreeview();
                     this.dataGrid.ItemsSource = vm.list();
+                        MessageBox.Show("删除节点成功");
+                    }
+                    else
+                    {
+                        MessageBox.Show("删除节点失败");
+                    }
                 }
                 else
                 {
@@ -156,7 +166,12 @@ namespace RevitHP
                 if (update.ShowDialog()==true)
                 {                 
                         UnfoldTreeview();
-                        this.dataGrid.ItemsSource = vm.list();              
+                        this.dataGrid.ItemsSource = vm.list();
+                    MessageBox.Show("修改节点成功");
+                }
+                else
+                {
+                    MessageBox.Show("修改节点失败");
                 }
             }
         }
@@ -211,12 +226,18 @@ namespace RevitHP
                 Tv_menu.Visibility = Visibility.Collapsed;
                 audit.Visibility = Visibility.Collapsed;
                 AuditRefuse.Visibility = Visibility.Collapsed;
+                dgmenu1.Visibility = Visibility.Collapsed;
                 this.dataGrid.ItemsSource = null;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
+                this.dataGrid.ItemsSource = null;
                 ServerManagement.id = 0;
                 vm.DeleteFile2();
                 vm.renovation();
+            }
+            else
+            {
+                MessageBox.Show("注销失败!");
             }
         }
 
@@ -224,16 +245,18 @@ namespace RevitHP
         //上传事件      
         private void Uploading_Click(object sender, RoutedEventArgs e)
         {
-            if (!isLoginState)
-            {
-                var vM = this.DataContext as FamilyBrowserVM;
-                //调用上传
-                vM.FileUplod();
-            }
-            else
-            {
-                MessageBox.Show("未登录，请您先登录");
-            }
+            //if (!isLoginState)
+            //{
+            //    var vM = this.DataContext as FamilyBrowserVM;
+            //    //调用上传
+            //    vM.FileUplod();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("未登录，请您先登录");
+            //}
+            //Datagrid.CheckedItem
+
         }
 
 
@@ -290,7 +313,14 @@ namespace RevitHP
                 vM.PassAuditAdd(item.Id);
                 //UnfoldTreeview();
             }
-            vM.FileUplod();
+            if (vM.FileUplod())
+            {
+                MessageBox.Show("审核成功，并以上传");
+            }
+            else
+            {
+                MessageBox.Show("审核失败！");
+            }
         }
         //拒绝审核
         private void AuditRefuse_Click(object sender, RoutedEventArgs e)
@@ -314,7 +344,14 @@ namespace RevitHP
                     //UnfoldTreeview();
                 }
             }
-            vM.FileUplod();
+            if (vM.FileUplod())
+            {
+                MessageBox.Show("审核成功，并以上传");
+            }
+            else
+            {
+                MessageBox.Show("审核失败！");
+            }
 
         }
 
@@ -353,8 +390,8 @@ namespace RevitHP
                 {
                     MessageBoxResult confirmToDel = MessageBox.Show("确认要删除" + name + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (confirmToDel == MessageBoxResult.Yes)
-                    {
-                        if (nameid == ServerManagement.id && auditID != "通过审核")
+                    {                  
+                        if (auditID != "通过审核"||ServerManagement.id==1)
                         {
                             var vM = this.DataContext as FamilyBrowserVM;
                             if (vM.modeldelete(md5))
@@ -363,13 +400,15 @@ namespace RevitHP
                                 {
                                     //执行上传
                                     vM.FileUplod();
+                                    UnfoldTreeview();
                                     this.dataGrid.ItemsSource = vM.list();
                                     name = null;
+                                    MessageBox.Show("删除成功！");
                                 }
                             }
                             else
                             {
-                                this.filename.Text = "删除失败";
+                                MessageBox.Show("删除成功！");
                             }
                         }
                         else
@@ -379,6 +418,10 @@ namespace RevitHP
 
 
                     }
+                }
+                else
+                {
+                    MessageBox.Show("请您选择要删除的模型");
                 }
 
             }
@@ -402,30 +445,30 @@ namespace RevitHP
                         var vM = this.DataContext as FamilyBrowserVM;
                         if (vM.ModelDownload(md5, this.filename.Text, name))
                         {
-                            MessageBox.Show("下载成功");
+                           
                             this.filename.Text = "";
                             md5 = null;
                             name = null;
+                            MessageBox.Show("下载成功");
                         }
                         else
                         {
-                            this.filename.Text = "下载失败";
+                            MessageBox.Show("删除成功！");
                         }
                     }
                 }
                 else
                 {
-                    this.filename.Text = "请您先选择要下载的文件";
+                     MessageBox.Show("请您先选择要下载的文件");
                 }
 
             }
             else
             {
-                this.filename.Text = "请您先登录";
+                MessageBox.Show("请您先登录!");
 
             }
         }
-
 
         //选择模型
         private void select_Click(object sender, RoutedEventArgs e)
@@ -461,8 +504,9 @@ namespace RevitHP
                             {
                                 if (vM.isaddlist(ra.Next(), modelname, modelsize, catalogid, this.filename.Text))
                                 {
-                                    //this.dataGrid.ItemsSource = vM.Modellist(); 
+                                  
                                     vM.FileUplod();
+                                    UnfoldTreeview();
                                     this.dataGrid.ItemsSource = vM.list();
                                     this.filename.Text = "";
                                     MessageBox.Show("上传成功！");
@@ -503,9 +547,7 @@ namespace RevitHP
             }
 
         }
-        public static string auditID;
-        public static int nameid;
-        public static string modelaudit;
+       
         private void dataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             if (sender != null)
@@ -554,6 +596,7 @@ namespace RevitHP
                 FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
                 vm.Downloadnew();
                 this.dataGrid.ItemsSource = vm.list();
+                UnfoldTreeview();
             }
             else
             {
@@ -571,8 +614,12 @@ namespace RevitHP
                     var vM = this.DataContext as FamilyBrowserVM;
                     if (vM.ispassmodel(md5))
                     {
-                        vM.FileUplod();
+                        if (vM.FileUplod())
+                        {
                         this.dataGrid.ItemsSource = vM.list();
+                            UnfoldTreeview();
+                            MessageBox.Show("审核成功！");
+                        }
                     }
                 }
                 else
@@ -596,8 +643,15 @@ namespace RevitHP
                     var vM = this.DataContext as FamilyBrowserVM;
                     if (vM.isrefusemodel(md5))
                     {
-                        vM.FileUplod();
-                        this.dataGrid.ItemsSource = vM.list();
+                        if (vM.ispassmodel(md5))
+                        {
+                            if (vM.FileUplod())
+                            {
+                                this.dataGrid.ItemsSource = vM.list();
+                                UnfoldTreeview();
+                                MessageBox.Show("审核成功！");
+                            }
+                        }
                     }
                 }
                 else
@@ -610,6 +664,8 @@ namespace RevitHP
                 MessageBox.Show("请选择审核文件");
             }
         }
+
+       
     }
 
 }

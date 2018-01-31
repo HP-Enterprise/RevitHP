@@ -17,6 +17,18 @@ namespace RevitHP
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+        private string m_strErrorMsg = String.Empty;
+        public string ErrorMsg
+        {
+            get { return m_strErrorMsg; }
+            set
+            {
+                m_strErrorMsg = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("ErrorMsg"));
+            }
+        }
+
         public FamilyBrowserVM()
         {
             m_biz.init();

@@ -128,8 +128,9 @@ namespace RevitHP
             }
             catch (Exception ex)
             {
-               string aaa= ex.ToString();
-                throw ;
+                return false;
+               //string ceshi= ex.ToString();
+               // throw ;
             }
            
         }

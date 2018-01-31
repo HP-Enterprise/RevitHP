@@ -25,7 +25,7 @@ namespace RevitHP
                 this.pointout.Text = "修改节点名称不能为空"; 
             }
             else
-            {
+            {                
                 _parentItem.name = this.UpdateName.Text;
                 _parentItem.Identifying = Convert.ToInt32(CataItem.Stater.Update);
                 if (ServerManagement.id==1)
@@ -42,6 +42,8 @@ namespace RevitHP
                     DialogResult = true;
                     this.Close();
                 }
+               
+              
             }
           
         }
