@@ -119,7 +119,6 @@
       <DependentUpon>LoginForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginVM.cs" />
-    <Compile Include="MD5List.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelManagement.cs" />
     <Compile Include="RevitBiz.cs" />

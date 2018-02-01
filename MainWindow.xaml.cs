@@ -7,6 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Autodesk.Revit.UI;
+using System.Data;
+using System.Collections.Generic;
+using System.Linq;
 //using Autodesk.Revit.DB;
 
 namespace RevitHP
@@ -27,7 +30,7 @@ namespace RevitHP
         private static string md5;
         private static string name;
         private static string classname;
-        private static int catalogid;
+        public static int catalogid;
         private static string modelname;
         private static string modelsize;
         private static Random ra = new Random();
@@ -135,9 +138,10 @@ namespace RevitHP
                     vm.SetCatalogdelete(item.Id);
                     parent.Children.Remove(item);
                     item.Identifying = Convert.ToInt32(CataItem.Stater.Delete);
-                    if (vm.FileUplod()) { 
-                    UnfoldTreeview();
-                    this.dataGrid.ItemsSource = vm.list();
+                    if (vm.FileUplod())
+                    {
+                        UnfoldTreeview();
+                        this.dataGrid.ItemsSource = vm.list();
                         MessageBox.Show("删除节点成功");
                     }
                     else
@@ -163,10 +167,10 @@ namespace RevitHP
             if (item != null)
             {
                 TreeUpdate update = new TreeUpdate(item, vm);
-                if (update.ShowDialog()==true)
-                {                 
-                        UnfoldTreeview();
-                        this.dataGrid.ItemsSource = vm.list();
+                if (update.ShowDialog() == true)
+                {
+                    UnfoldTreeview();
+                    this.dataGrid.ItemsSource = vm.list();
                     MessageBox.Show("修改节点成功");
                 }
                 else
@@ -190,20 +194,17 @@ namespace RevitHP
                     this.login_state.Text = "注销";
                     Tv_menu.Visibility = Visibility.Visible;
                     if (ServerManagement.id == 1)
-                    {                     
+                    {
                         audit.Visibility = Visibility.Visible;
-                        AuditRefuse.Visibility = Visibility.Visible;                     
-                        dgmenu1.Visibility = Visibility.Visible;                  
+                        AuditRefuse.Visibility = Visibility.Visible;
+                        dgmenu1.Visibility = Visibility.Visible;
                     }
-                   
+
                     //vm.IsDownload();
                     vm.Downloadnew();
                     UnfoldTreeview();
                     var vM = this.DataContext as FamilyBrowserVM;
-                    //模型列表（服务器上）
-                    //this.dataGrid.ItemsSource = vM.Modellist();
-                    //模型列表(本地)
-                    this.dataGrid.ItemsSource = vM.list();
+                    vm.refresh();
                 }
             }
             else
@@ -221,17 +222,16 @@ namespace RevitHP
             islogout.Wait();
             if (islogout.Result)
             {
-
-                isLoginState = true;            
+                isLoginState = true;
                 Tv_menu.Visibility = Visibility.Collapsed;
                 audit.Visibility = Visibility.Collapsed;
                 AuditRefuse.Visibility = Visibility.Collapsed;
                 dgmenu1.Visibility = Visibility.Collapsed;
-                this.dataGrid.ItemsSource = null;
                 this.welcome.Content = "未登录";
                 this.login_state.Text = "登录";
-                this.dataGrid.ItemsSource = null;
-                ServerManagement.id = 0;
+                ServerManagement.id = -1;
+                //刷新表格数据
+                vm.refresh();
                 vm.DeleteFile2();
                 vm.renovation();
             }
@@ -255,7 +255,14 @@ namespace RevitHP
             //{
             //    MessageBox.Show("未登录，请您先登录");
             //}
-            //Datagrid.CheckedItem
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    MessageBox.Show(list[i].ToString());
+                }
+
+            }
 
         }
 
@@ -386,30 +393,39 @@ namespace RevitHP
         {
             if (!isLoginState)
             {
-                if (name != null)
+                if (list.Count > 0)
                 {
-                    MessageBoxResult confirmToDel = MessageBox.Show("确认要删除" + name + "吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    MessageBoxResult confirmToDel = MessageBox.Show("确认要删除这" + list.Count + "个模型吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (confirmToDel == MessageBoxResult.Yes)
-                    {                  
-                        if (auditID != "通过审核"||ServerManagement.id==1)
+                    {
+                        if (auditID != "通过审核" || ServerManagement.id == 1)
                         {
                             var vM = this.DataContext as FamilyBrowserVM;
-                            if (vM.modeldelete(md5))
+                            for (int i = 0; i < list.Count; i++)
                             {
-                                if (vM.modellistdelete(md5))
+                                if (vM.modeldelete(list[i].MD5))
                                 {
-                                    //执行上传
-                                    vM.FileUplod();
-                                    UnfoldTreeview();
-                                    this.dataGrid.ItemsSource = vM.list();
-                                    name = null;
-                                    MessageBox.Show("删除成功！");
+                                    if (!vM.modellistdelete(list[i].MD5))
+                                    {
+                                        MessageBox.Show("删除失败！");
+                                    }
+                                    else
+                                    {
+
+                                        vM.FileUplod();
+                                        UnfoldTreeview();
+                                        MessageBox.Show("删除成功！");
+                                    }
                                 }
+                                else
+                                {
+                                    MessageBox.Show("删除失败！");
+                                }
+
                             }
-                            else
-                            {
-                                MessageBox.Show("删除成功！");
-                            }
+                            list.Clear();
+
+
                         }
                         else
                         {
@@ -437,30 +453,33 @@ namespace RevitHP
         {
             if (!isLoginState)
             {
-                if (name != null)
+
+                MessageBoxResult confirmToDel = MessageBox.Show("确认要下载选中的" + list.Count + "个文件吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirmToDel == MessageBoxResult.Yes)
                 {
-                    MessageBoxResult confirmToDel = MessageBox.Show("确认要下载" + name + "文件吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (confirmToDel == MessageBoxResult.Yes)
+                    var vM = this.DataContext as FamilyBrowserVM;
+                    if (list.Count > 0)
                     {
-                        var vM = this.DataContext as FamilyBrowserVM;
-                        if (vM.ModelDownload(md5, this.filename.Text, name))
+                        for (int i = 0; i < list.Count; i++)
                         {
-                           
-                            this.filename.Text = "";
-                            md5 = null;
-                            name = null;
-                            MessageBox.Show("下载成功");
+                            if (!vM.ModelDownload(list[i].MD5, list[i].Mod_Name))
+                            {
+                                MessageBox.Show("下载失败");
+                            }
+
                         }
-                        else
-                        {
-                            MessageBox.Show("删除成功！");
-                        }
+                        vM.refresh();
+                        this.list.Clear();
+                        MessageBox.Show("下载成功");
                     }
+                    else
+                    {
+                        MessageBox.Show("请您选择需要下载的文件");
+                    }
+
+
                 }
-                else
-                {
-                     MessageBox.Show("请您先选择要下载的文件");
-                }
+
 
             }
             else
@@ -504,10 +523,11 @@ namespace RevitHP
                             {
                                 if (vM.isaddlist(ra.Next(), modelname, modelsize, catalogid, this.filename.Text))
                                 {
-                                  
+
                                     vM.FileUplod();
                                     UnfoldTreeview();
-                                    this.dataGrid.ItemsSource = vM.list();
+                                    vM.refresh();
+                                    //this.dataGrid.ItemsSource = vM.list();
                                     this.filename.Text = "";
                                     MessageBox.Show("上传成功！");
 
@@ -535,7 +555,7 @@ namespace RevitHP
                 MessageBox.Show("请您先登录");
             }
         }
-        //模型下载
+        //模型下载地址选择
         private void downloadpath_Click(object sender, RoutedEventArgs e)
         {
             string path = null;
@@ -547,7 +567,7 @@ namespace RevitHP
             }
 
         }
-       
+
         private void dataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             if (sender != null)
@@ -571,7 +591,8 @@ namespace RevitHP
             classname = item.Name;
             catalogid = item.Id;
             var vM = this.DataContext as FamilyBrowserVM;
-            this.dataGrid.ItemsSource = vM.list(item.Id);
+            vM.refresh();
+            //this.dataGrid.ItemsSource = vM.list(item.Id);
         }
 
         //模型文件插入Revit
@@ -584,19 +605,22 @@ namespace RevitHP
                 if (grid != null && grid.SelectedItems != null && grid.SelectedItems.Count == 1)
                 {
                     Model item = dataGrid.SelectedItem as Model;
-                    vM.ismodelfile(item.Mod_Name,item.MD5);
+                    vM.ismodelfile(item.Mod_Name, item.MD5);
                 }
             }
         }
-
+        //刷新
         private void renovation_Click(object sender, RoutedEventArgs e)
         {
             if (!isLoginState)
             {
                 FamilyBrowserVM vm = this.DataContext as FamilyBrowserVM;
                 vm.Downloadnew();
-                this.dataGrid.ItemsSource = vm.list();
+                catalogid = 0;
+                vm.refresh();
+
                 UnfoldTreeview();
+
             }
             else
             {
@@ -616,7 +640,7 @@ namespace RevitHP
                     {
                         if (vM.FileUplod())
                         {
-                        this.dataGrid.ItemsSource = vM.list();
+                            this.dataGrid.ItemsSource = vM.list();
                             UnfoldTreeview();
                             MessageBox.Show("审核成功！");
                         }
@@ -664,8 +688,38 @@ namespace RevitHP
                 MessageBox.Show("请选择审核文件");
             }
         }
+        List<Model> list = new List<Model>();
+        private void _chkSelected_OnClick(object sender, RoutedEventArgs e)
+        {
 
-       
+            CheckBox chkSelected = e.OriginalSource as CheckBox;
+            if (null == chkSelected)
+            {
+                return;
+            }
+            var item = chkSelected.DataContext as Model;
+
+            var isserlected = item.IsSelected ? false : true;
+            item.IsSelected = isserlected;
+            Model model = new Model();
+            model.MD5 = item.MD5;
+            model.Mod_Name = item.Mod_Name;
+            if (item.IsSelected == true)
+            {
+                list.Add(model);
+            }
+            else
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].MD5 == item.MD5)
+                    {
+                        list.RemoveAt(i);
+                    }
+
+                }
+            }
+        }
     }
 
 }

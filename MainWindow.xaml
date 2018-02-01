@@ -78,14 +78,14 @@
                 <Run Text="{Binding  Audit}" Foreground="Red" />
                 <!--<Image  Source=""/>-->
                     </TextBlock>
-
+                   
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="193,60,190,44" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding dg_list}" AutoGenerateColumns="False" Margin="193,60,190,44" Grid.RowSpan="3" IsReadOnly="True" Grid.Column="1" SelectedCellsChanged="dataGrid_SelectedCellsChanged" MouseDoubleClick="dataGrid_MouseDoubleClick">
             <DataGrid.Columns>
 
-                <!--<DataGridTemplateColumn Header="状态" Width="Auto" >
+                <DataGridTemplateColumn Header="状态" Width="Auto" >
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -93,11 +93,14 @@
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Name="cRUID" HorizontalAlignment="Center" IsChecked="False"  Tag="{Binding ID}"  />
+                            <CheckBox Name="_chkSelected" HorizontalAlignment="Center" Click="_chkSelected_OnClick" IsThreeState="True" IsChecked="{Binding IsSelected}"  Tag="{Binding ID}"  />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                </DataGridTemplateColumn>
 
+                
+                
+                
 
 
                 <DataGridTemplateColumn  Header="文件编号" Width="Auto">
@@ -185,9 +188,9 @@
             <Button  Margin="17,82,0,0" x:Name="modeldelete" Background="Transparent" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldelete_Click" HorizontalAlignment="Left" Width="49">
                 <Image Source="Img/delete.png" RenderTransformOrigin="0.514,0.914" />
             </Button>
-            <Button  Margin="0,153,16,0" x:Name="downloadpath" Background="Transparent" BorderBrush="Transparent" Click="downloadpath_Click" HorizontalAlignment="Right" Width="55" Height="39" VerticalAlignment="Top">
+            <!--<Button  Margin="0,153,16,0" x:Name="downloadpath" Background="Transparent" BorderBrush="Transparent" Click="downloadpath_Click" HorizontalAlignment="Right" Width="55" Height="39" VerticalAlignment="Top">
                 <Image Source="Img/path.png" Width="29" Height="35" />
-            </Button>
+            </Button>-->
             <Button  Margin="0,82,19,0" x:Name="modeldownload" Background="Transparent" HorizontalAlignment="Right" Width="49" Height="39" VerticalAlignment="Top" BorderBrush="Transparent" Click="modeldownload_Click">
                 <Image Source="Img/download.png" />
             </Button>
@@ -197,7 +200,7 @@
             <TextBlock Margin="0,57,16,0" TextWrapping="Wrap" Text="上传模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="48"/>
             <TextBlock HorizontalAlignment="Left" Margin="19,131,0,0" TextWrapping="Wrap" Text="删除模型" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Right" Margin="0,132,16,0" TextWrapping="Wrap" Text="下载模型" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787"/>
-            <TextBlock Margin="0,196,5,0" TextWrapping="Wrap" Text="选择下载路径" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="76"/>
+            <!--<TextBlock Margin="0,196,5,0" TextWrapping="Wrap" Text="选择下载路径" VerticalAlignment="Top" RenderTransformOrigin="0.526,0.787" HorizontalAlignment="Right" Width="76"/>-->
         </Grid>
     </Grid>
 </Window>

@@ -27,8 +27,7 @@ namespace RevitHP
 
 
         //层级结构
-        Dictionary<int, CataItem> dictCatalog = null;
-
+        Dictionary<int, CataItem> dictCatalog = null;    
         ModelManagement model = new ModelManagement();
         //实例
         ServerManagement server = new ServerManagement();
@@ -82,9 +81,7 @@ namespace RevitHP
             }
         }
 
-
-
-
+      
         public int Pull()
         {
             m_liteDB.Close();
@@ -159,9 +156,6 @@ namespace RevitHP
             server.DownloadNew(m_folder + "\\RevHP.0");
             copy();
         }
-
-
-
         //读数据库树形节点
         private void LoadCatalog()
         {
@@ -181,7 +175,7 @@ namespace RevitHP
                             item.Id = reader.GetInt32(0);
                             item.Name = reader.GetString(1);
                             item.NewName = reader.GetString(3);
-                            //item.Audit = reader.GetInt32(4).ToString();
+                          
                             if (reader.GetInt32(4) == 1)
                             {
                                 item.Audit = "未审核";
@@ -249,10 +243,6 @@ namespace RevitHP
                 }
             }
         }
-
-
-
-
         //写入数据库
         //添加
         public void SetCatalogAdd(string name, int id, int parentid)
@@ -605,13 +595,9 @@ namespace RevitHP
             return model.IsModelDelete(md5);
         }
         //模型下载
-        public bool ModelDownload(string md5, string path, string name)
-        {
-            if (path == "")
-            {
-                path = m_folder;
-            }
-            return model.ModelDownload(path + "\\" + name + ".rfa", md5);
+        public bool ModelDownload(string md5, string name)
+        {                        
+            return model.ModelDownload(m_folder + "\\" + name + ".rfa", md5);
         }
         //模型列表(服务器上)
         public List<Model> ModelList()
@@ -667,18 +653,20 @@ namespace RevitHP
             return list;
         }
         //查看本地数据库所有模型列表
+      
         public List<Model> GetList()
         {
+           
             List<Model> list = new List<Model>();
             using (var cmd = m_liteDB.CreateCommand())
             {
                 if (ServerManagement.id == 1)
                 {
-                    cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model order by DataTime desc";
+                    cmd.CommandText = "SELECT id,mod_name,mod_size,catalogid,md5,audit,DataTime FROM Model order by DataTime desc";
                 }
                 else
                 {
-                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,identifying,DataTime FROM Model where audit=0 or NameID='{0}' order by DataTime desc", ServerManagement.id);
+                    cmd.CommandText = string.Format("SELECT id,mod_name,mod_size,catalogid,md5,audit,DataTime FROM Model where audit=0 or NameID='{0}' order by DataTime desc", ServerManagement.id);
                 }
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -691,7 +679,8 @@ namespace RevitHP
                         mod.Mod_Size = reader.GetString(2);
                         mod.CatalogId = reader.GetInt32(3);
                         mod.MD5 = reader.GetString(4);
-                        mod.DataTime = reader.GetString(7);
+                        string a= reader.GetString(6);
+                        mod.DataTime = reader.GetString(6);
                         //mod.Identifying = reader.GetInt32(5);
                         if (reader.GetInt32(5) == 1)
                         {
@@ -705,13 +694,14 @@ namespace RevitHP
                         {
                             mod.Audit = "已拒绝";
                         }
-
-
                         list.Add(mod);
-                    }
+                      
+                        
+                    }  
                 }
+                return list;
             }
-            return list;
+           
         }
         //删除本地数据库模型列表
         public bool isdeletelist(string md5)

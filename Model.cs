@@ -1,26 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RevitHP
 {
-    public class Model
+    public class Model : INotifyPropertyChanged
     {
 
         public Model() { }
-        public Model(int id, string mod_name, string mod_size, int catalogid, string md5, string identifying, String audit)
+        public Model(int id, string mod_name, string mod_size, int catalogid, string md5, String audit,string datatime)
         {
             Id = id;
             Mod_Name = mod_name;
             Mod_Size = mod_size;
             CatalogId = catalogid;
-            MD5 = md5;
-            Identifying = identifying;
+            MD5 = md5;     
             Audit = audit;
+            DataTime = datatime;
+
         }
 
+        private bool _isSelected = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged("IsSelected");
+            }
+        }
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
 
         public int Id { get; set; }
@@ -32,6 +52,7 @@ namespace RevitHP
                 if (this.Id != value)
                 {
                     this.id = value;
+                    OnPropertyChanged("Id");
                 }
             }
         }
@@ -45,6 +66,7 @@ namespace RevitHP
                 if (this.NameID != value)
                 {
                     this.nameid = value;
+                    OnPropertyChanged("NameID");
                 }
             }
         }
@@ -57,23 +79,12 @@ namespace RevitHP
                 if (this.Audit != value)
                 {
                     this.audit = value;
+                    OnPropertyChanged("Audit");
                 }
             }
         }
 
-        public string Identifying { get; set; }
-        public string identifying
-        {
-            get { return identifying; }
-            set
-            {
-                if (this.Identifying != value)
-                {
-                    this.identifying = value;
-                }
-
-            }
-        }
+       
 
         public string DataTime { get; set; }
         public string datatime
@@ -84,6 +95,7 @@ namespace RevitHP
                 if (this.DataTime != value)
                 {
                     this.datatime = value;
+                    OnPropertyChanged("DataTime");
                 }
             }
 
@@ -98,6 +110,7 @@ namespace RevitHP
                 if (this.Mod_Name != value)
                 {
                     this.mod_name = value;
+                    OnPropertyChanged("Mod_Name");
                 }
             }
         }
@@ -111,6 +124,7 @@ namespace RevitHP
                 if (this.Mod_Size != value)
                 {
                     this.mod_size = value;
+                    OnPropertyChanged("Mod_Size");
                 }
             }
         }
@@ -124,6 +138,7 @@ namespace RevitHP
                 if (this.CatalogId != value)
                 {
                     this.catalogid = value;
+                    OnPropertyChanged("CatalogId");
                 }
             }
         }
@@ -138,6 +153,7 @@ namespace RevitHP
                 if (this.MD5 != value)
                 {
                     this.md5 = value;
+                    OnPropertyChanged("MD5");
                 }
             }
         }

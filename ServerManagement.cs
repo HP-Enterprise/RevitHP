@@ -53,7 +53,7 @@ namespace RevitHP
         public static string family_ACCESS_TOKEN;
         //声明公开的用户登录名
         public static string roleName;
-        public static int id=0;
+        public static int id=-1;
 
         //登录方法
         //参数1.Name 用户名
@@ -126,11 +126,9 @@ namespace RevitHP
                 }
             }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return false;
-               //string ceshi= ex.ToString();
-               // throw ;
+                return false;           
             }
            
         }

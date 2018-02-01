@@ -15,20 +15,7 @@ namespace RevitHP
         // Revit业务层逻辑
         private RevitBiz m_biz =RevitBiz.Instance;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
-        private string m_strErrorMsg = String.Empty;
-        public string ErrorMsg
-        {
-            get { return m_strErrorMsg; }
-            set
-            {
-                m_strErrorMsg = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("ErrorMsg"));
-            }
-        }
-
+        public event PropertyChangedEventHandler PropertyChanged;     
         public FamilyBrowserVM()
         {
             m_biz.init();
@@ -38,13 +25,56 @@ namespace RevitHP
         public Collection<CataItem> TreeViewBinding
         {
             get
-            {
-              
+            {            
                 var league = new Collection<CataItem>() { m_biz.Top };
                 return league;
             }
 
         }
+
+        public  ObservableCollection<Model> dg_list
+        {
+            get
+            {
+                if (ServerManagement.id < 0)
+                {
+
+                    return null;
+                }
+                return selectlist();
+
+
+
+
+            }
+           
+        }
+
+        public ObservableCollection<Model> selectlist()
+        {
+            ObservableCollection<Model> convertedList = new ObservableCollection<Model>();
+            if (MainWindow.catalogid==0)
+            {
+                foreach (Model listObject in m_biz.GetList())
+                {
+                    convertedList.Add(listObject);
+                }
+                return convertedList;
+            }
+            else
+            {
+                foreach (Model listObject in m_biz.GetList(MainWindow.catalogid))
+                {
+                    convertedList.Add(listObject);
+                }
+                return convertedList;
+            }
+
+
+
+        }
+
+
 
         //登录
         public bool isloginAsync(string Name, SecureString Password)
@@ -92,7 +122,8 @@ namespace RevitHP
         //文件上传
         public bool FileUplod()
         {
-           PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
+            PropertyChanged(this, new PropertyChangedEventArgs("dg_list"));
+            PropertyChanged(this, new PropertyChangedEventArgs("TreeViewBinding"));
            return  m_biz.ispush(); 
         }
         //删除文件
@@ -172,9 +203,9 @@ namespace RevitHP
         }
 
         //模型下载
-        public bool ModelDownload(string md5,string path,string name)
+        public bool ModelDownload(string md5,string name)
         {
-          return  m_biz.ModelDownload(md5,path,name);
+          return  m_biz.ModelDownload(md5,name);
         }
         //模型列表查看
         public List<Model> Modellist()
@@ -188,7 +219,7 @@ namespace RevitHP
 
         public List<Model> list()
         {
-            return m_biz.GetList();
+            return m_biz.GetList(1);
         }
 
         //模型判断  
@@ -211,5 +242,11 @@ namespace RevitHP
             return m_biz.isrefusemodel(md5);
         }
 
+        internal void refresh()
+        {         
+            PropertyChanged(this, new PropertyChangedEventArgs("dg_list"));
+        }
+
+        
     }
 }
